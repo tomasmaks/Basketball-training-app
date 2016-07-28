@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Becomebasketballpro.iml" filepath="$PROJECT_DIR$/Becomebasketballpro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Basketball-training-app.iml" filepath="$PROJECT_DIR$/Basketball-training-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

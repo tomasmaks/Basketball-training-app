@@ -27,18 +27,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+        ArticleListFragment fragment = new ArticleListFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
 
 
 
-
-
-
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -89,12 +86,19 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            startActivity(new Intent(MainActivity.this.getApplicationContext(), ArticleListActivity.class));
-        } else if (id == R.id.nav_gallery) {
+            //startActivity(new Intent(MainActivity.this.getApplicationContext(), MainActivity.class));
+            ArticleListFragment fragment = new ArticleListFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_workout_video) {
+            //startActivity(new Intent(MainActivity.this.getApplicationContext(), SecondActivity.class));
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_nutrition) {
+
+        } else if (id == R.id.nav_training) {
 
         }
 
