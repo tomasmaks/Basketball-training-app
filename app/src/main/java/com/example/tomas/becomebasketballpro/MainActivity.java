@@ -1,72 +1,116 @@
 package com.example.tomas.becomebasketballpro;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
+import android.util.ArrayMap;
+
+import com.example.tomas.becomebasketballpro.Fragments.CustomerDetailsFragment;
+import com.example.tomas.becomebasketballpro.Fragments.CustomerListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
+import com.example.tomas.becomebasketballpro.Fragments.OrderListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.ProductListFragment;
+
+
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements  NavigationDrawerFragment.NavigationDrawerCallbacks {
 
+    /**
+     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     */
+    private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    Toolbar mToolbar;
-
-
-    NavigationView mNavigationView;
+    /**
+     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     */
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
 
-        ArticleListFragment fragment = new ArticleListFragment();
-        android.support.v4.app.FragmentTransaction fragmentTransaction =
-                getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+    public void onNavigationDrawerItemSelected(int position) {
+        Fragment mFragment = null;
+        switch (position){
+            case 0:
+                mFragment = CustomerListFragment.newInstance(0);
+                break;
+            case 1:
+                mFragment = ProductListFragment.newInstance(1);
+                break;
+            case 2:
+                mFragment = OrderListFragment.newInstance(2);
+                break;
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, mFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    public void onSectionAttached(int number) {
+        switch (number) {
+            case 0:
+                mTitle = getString(R.string.title_section0);
+                break;
+            case 1:
+                mTitle = getString(R.string.title_section1);
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section2);
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
+                break;
+            case 5:
+                mTitle = getString(R.string.title_section5);
+                break;
         }
     }
 
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -84,37 +128,59 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+//    public void ReplaceFragment(Enums.FragmentEnums frag, int sectionNumber){
+//
+//        NavigationDrawerFragment navFrag = (NavigationDrawerFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//
+//        switch (frag){
+//            case CustomerDetailsFragment:
+//                CustomerDetailsFragment serviceFrag = CustomerDetailsFragment.newInstance(sectionNumber);
+//                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                fragmentManager.beginTransaction().replace(R.id.container, serviceFrag)
+//                        .addToBackStack(null).commit();
+//                break;
+//            case ProductDetailsFragment:
+//                ProductDetailsFragment profileFrag = ProductDetailsFragment.newInstance(sectionNumber);
+//                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                fragmentManager.beginTransaction().replace(R.id.container,profileFrag)
+//                        .addToBackStack(null).commit();
+//                break;
+//            case OrderDetailsFragment:
+//                OrderDetailsFragment clientFrag = OrderDetailsFragment.newInstance(sectionNumber);
+//                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
+//                fragmentManager.beginTransaction().replace(R.id.container,clientFrag)
+//                        .addToBackStack(null).commit();
+//                break;
+//
+//        }
+//    }
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            //startActivity(new Intent(MainActivity.this.getApplicationContext(), MainActivity.class));
-            ArticleListFragment fragment = new ArticleListFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.commit();
-
-        } else if (id == R.id.nav_workout_video) {
-            //startActivity(new Intent(MainActivity.this.getApplicationContext(), SecondActivity.class));
-
-        } else if (id == R.id.nav_nutrition) {
-
-        } else if (id == R.id.nav_training) {
-
-        }
-
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public void onBackPressed() {
+        super.onBackPressed();
+        NavigationDrawerFragment navFrag = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        navFrag.mDrawerToggle.setDrawerIndicatorEnabled(true);
+        onSectionAttached(navFrag.mCurrentSelectedPosition);
     }
 
-
+    public void switchFragment(Fragment fragment, boolean clearBackStack) {
+        if (fragment == null) {
+            return;
+        }
+        if (clearBackStack)
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        if (!clearBackStack) transaction.addToBackStack(null);
+        try {
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

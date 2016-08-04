@@ -1,38 +1,20 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal">
 
-    <!--<include layout="@layout/include_article_list_toolbar"/>-->
-
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <ListView
+        android:id="@+id/mListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingBottom="@dimen/material_component_cards_padding_from_edge_of_screen_to_card"
-                android:paddingLeft="@dimen/material_component_cards_padding_from_edge_of_screen_to_card"
-                android:paddingRight="@dimen/material_component_cards_padding_from_edge_of_screen_to_card"
-                android:paddingTop="@dimen/material_component_cards_padding_from_edge_of_screen_to_card"
-                android:scrollbarStyle="outsideOverlay"
-                tools:ignore="PrivateResource" />
-
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-    </FrameLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+        android:clipToPadding="false"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:scrollbarStyle="outsideOverlay"
+        tools:ignore="PrivateResource" />
+</android.support.v4.widget.SwipeRefreshLayout>
