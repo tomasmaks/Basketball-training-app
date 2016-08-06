@@ -7,7 +7,7 @@ public class Enums {
 
     public enum FragmentEnums
     {
-        CustomerDetailsFragment,
+        ArticleDetailsFragment,
         ProductDetailsFragment,
         OrderDetailsFragment
     }

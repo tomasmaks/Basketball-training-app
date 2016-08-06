@@ -4,9 +4,15 @@ package com.example.tomas.becomebasketballpro.Fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,17 +45,28 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ArticleListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ArticleListFragment extends Fragment {
+public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 
+
+   // @BindView(R.layout.fragment_article_list)
+    Context context;
+
+    View mRootView;
     ListView mListView;
-    private final String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/ef3a274b651ea47443c3c44ee9d97fd649b06298/article.json";
+    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/87cadf10d349f19eca3b098e2552122c0140ef90/article.json";
     private ProgressDialog dialog;
+    MovieAdapter adapter;
+    private SwipeRefreshLayout refreshLayout = null;
+
+
 
     public static ArticleListFragment newInstance(int sectionNumber) {
         ArticleListFragment fragment = new ArticleListFragment();
@@ -83,24 +100,39 @@ public class ArticleListFragment extends Fragment {
                 .build();
         ImageLoader.getInstance().init(config); // Do it on Application start
 
-
 //        int columnCount = getResources().getInteger(R.integer.grid_column_count);
 //        StaggeredGridLayoutManager staggeredGridLayoutManager =
 //        new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
 //        mListView.setListManager(staggeredGridLayoutManager);
-
-
     }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_customer_list, container, false);
+        mRootView  = inflater.inflate(R.layout.fragment_article_list, container, false);
 
-        return rootView;
+        mListView = (ListView) mRootView.findViewById(R.id.mListView);
+
+        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
+        refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
+        refreshLayout.setOnRefreshListener(this);
+
+        return mRootView;
+
+
 
     }
+
+//    private void setupRefreshLayout(View mRootView) {
+//
+//        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
+//       mSwipeRefreshManager = new SwipeRefreshManager(mSwipeRefreshLayout, mRefreshHandler);
+//
+//    }
 
 
     @Override
@@ -110,27 +142,56 @@ public class ArticleListFragment extends Fragment {
                 getArguments().getInt(Constants.ARG_SECTION_NUMBER));
     }
 
-//    private void updateWeather() {
-//        FetchWeatherTask weatherTask = new FetchWeatherTask();
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        String location = prefs.getString(getString(R.string.pref_location_key),
-//                getString(R.string.pref_location_default));
-//        weatherTask.execute(URL_TO_HIT);
-//    }
 
     @Override
     public void onStart() {
         super.onStart();
-        new FetchWeatherTask().execute(URL_TO_HIT);
+        new FetchTask().execute(URL_TO_HIT);
     }
 
-    public class FetchWeatherTask extends AsyncTask<String,String, List<ArticleModel>> {
+    @Override
+    public void onRefresh() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+                handler.sendEmptyMessage(0);
+            }
+        }).start();
+
+
+    }
+
+    private MyHandler handler = new MyHandler();
+    class MyHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    new FetchTask().execute(URL_TO_HIT);
+                    Toast.makeText(getActivity().getApplicationContext(), "refresh success", Toast.LENGTH_SHORT).show();
+                    refreshLayout.setRefreshing(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+
+    public class FetchTask extends AsyncTask<String,String, List<ArticleModel>> {
+
+        private final String LOG_TAG = FetchTask.class.getSimpleName();
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            //dialog.show();
         }
 
 
@@ -155,7 +216,7 @@ public class ArticleListFragment extends Fragment {
                 String finalJson = buffer.toString();
 
                 JSONObject parentObject = new JSONObject(finalJson);
-                JSONArray parentArray = parentObject.getJSONArray("articles");
+                JSONArray parentArray = parentObject.getJSONArray("article");
 
                 List<ArticleModel> articleModelList = new ArrayList<>();
 
@@ -211,21 +272,22 @@ public class ArticleListFragment extends Fragment {
         @Override
         protected void onPostExecute(final List<ArticleModel> result) {
             super.onPostExecute(result);
+
             dialog.dismiss();
 
 
-            if(result != null) {
-                MovieAdapter adapter = new MovieAdapter(getActivity(), R.layout.fragment_customer_list_items, result);
+              if(result != null) {
+                adapter = new MovieAdapter(getActivity().getApplicationContext(), R.layout.fragment_article_list_items, result);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         ArticleModel articleModel = result.get(position);
-                        CustomerDetailsFragment customerDetailsFragment = new CustomerDetailsFragment();
+                        ArticleDetailsFragment articleDetailsFragment = new ArticleDetailsFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("articleModel", new Gson().toJson(articleModel));
-                        customerDetailsFragment.setArguments(bundle);
-                        ((MainActivity) getActivity()).switchFragment(customerDetailsFragment, false);
+                        articleDetailsFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).switchFragment(articleDetailsFragment, false);
 
                     }
                 });
@@ -257,8 +319,8 @@ public class ArticleListFragment extends Fragment {
                 convertView = inflater.inflate(resource, null);
                 //holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
                 holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
-               // holder.articleSubtitle = (TextView)convertView.findViewById(R.id.article_subtitle);
-               // holder.articleAuthor = (TextView)convertView.findViewById(R.id.article_author);
+                // holder.articleSubtitle = (TextView)convertView.findViewById(R.id.article_subtitle);
+                // holder.articleAuthor = (TextView)convertView.findViewById(R.id.article_author);
 
                 convertView.setTag(holder);
             } else {
@@ -267,11 +329,11 @@ public class ArticleListFragment extends Fragment {
 
 
             // Then later, when you want to display image
-           // ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
+            // ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
 
             holder.articleTitle.setText(articleModelList.get(position).getTitle());
             //holder.articleSubtitle.setText(articleModelList.get(position).getSubtitle());
-           // holder.articleAuthor.setText(articleModelList.get(position).getAuthor());
+            // holder.articleAuthor.setText(articleModelList.get(position).getAuthor());
 
             return convertView;
         }
@@ -280,8 +342,8 @@ public class ArticleListFragment extends Fragment {
         class ViewHolder{
             //private DynamicHeightNetworkImageView thumbnail;
             private TextView articleTitle;
-           // private TextView articleSubtitle;
-           // private TextView articleAuthor;
+            // private TextView articleSubtitle;
+            // private TextView articleAuthor;
         }
 
     }

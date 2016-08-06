@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <item android:id="@+id/action_add_customer"
+    <item android:id="@+id/action_add_article"
         android:title="Add Customer"
         android:icon="@drawable/ic_action_content_add_circle"
         app:showAsAction="always"/>

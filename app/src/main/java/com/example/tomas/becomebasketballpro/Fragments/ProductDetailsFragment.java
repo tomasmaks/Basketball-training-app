@@ -4,10 +4,7 @@ package com.example.tomas.becomebasketballpro.Fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,28 +14,26 @@ import com.example.tomas.becomebasketballpro.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ArticleDetailsFragment#newInstance} factory method to
+ * Use the {@link ProductDetailsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ArticleDetailsFragment extends Fragment {
+public class ProductDetailsFragment extends Fragment {
 
-    public static ArticleDetailsFragment newInstance(int sectionNumber) {
-        ArticleDetailsFragment fragment = new ArticleDetailsFragment();
+    public static ProductDetailsFragment newInstance(int sectionNumber) {
+        ProductDetailsFragment fragment = new ProductDetailsFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
-    public ArticleDetailsFragment() {
+
+    public ProductDetailsFragment() {
         // Required empty public constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        ActionBar actionBar = ((ActionBarActivity) getActivity()).getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -46,8 +41,9 @@ public class ArticleDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_article_details, container, false);
+        return inflater.inflate(R.layout.fragment_add_edit_product, container, false);
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -55,18 +51,6 @@ public class ArticleDetailsFragment extends Fragment {
         ((MainActivity) activity).onSectionAttached(
                 getArguments().getInt(Constants.ARG_SECTION_NUMBER));
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
 
 
 }

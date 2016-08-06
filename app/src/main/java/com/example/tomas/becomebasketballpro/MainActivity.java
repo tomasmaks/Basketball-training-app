@@ -7,21 +7,21 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.util.ArrayMap;
 
-import com.example.tomas.becomebasketballpro.Fragments.CustomerDetailsFragment;
-import com.example.tomas.becomebasketballpro.Fragments.CustomerListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.ArticleDetailsFragment;
+import com.example.tomas.becomebasketballpro.Fragments.ArticleListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
+import com.example.tomas.becomebasketballpro.Fragments.OrderDetailsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.OrderListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.ProductDetailsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.ProductListFragment;
+import com.example.tomas.becomebasketballpro.Helpers.Enums;
 
 
-
-public class MainActivity extends AppCompatActivity
-        implements  NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -53,13 +53,13 @@ public class MainActivity extends AppCompatActivity
         Fragment mFragment = null;
         switch (position){
             case 0:
-                mFragment = CustomerListFragment.newInstance(0);
+                mFragment = ArticleListFragment.newInstance(0);
                 break;
             case 1:
-                mFragment = ProductListFragment.newInstance(1);
+                mFragment = OrderListFragment.newInstance(1);
                 break;
             case 2:
-                mFragment = OrderListFragment.newInstance(2);
+                mFragment = ProductListFragment.newInstance(2);
                 break;
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -128,15 +128,15 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-//    public void ReplaceFragment(Enums.FragmentEnums frag, int sectionNumber){
-//
+    public void ReplaceFragment(Enums.FragmentEnums frag, int sectionNumber){
+
 //        NavigationDrawerFragment navFrag = (NavigationDrawerFragment)
 //                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 //        FragmentManager fragmentManager = getSupportFragmentManager();
-//
+
 //        switch (frag){
-//            case CustomerDetailsFragment:
-//                CustomerDetailsFragment serviceFrag = CustomerDetailsFragment.newInstance(sectionNumber);
+//            case ArticleDetailsFragment:
+//                ArticleDetailsFragment serviceFrag = ArticleDetailsFragment.newInstance(sectionNumber);
 //                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
 //                fragmentManager.beginTransaction().replace(R.id.container, serviceFrag)
 //                        .addToBackStack(null).commit();
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
 //                break;
 //
 //        }
-//    }
+    }
 
     @Override
     public void onBackPressed() {
@@ -181,6 +181,5 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
-
 
 }

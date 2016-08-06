@@ -27,11 +27,6 @@ import com.example.tomas.becomebasketballpro.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Fragment used for managing interactions for and presentation of a navigation drawer.
- * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
- * design guidelines</a> for a complete explanation of the behaviors implemented here.
- */
 public class NavigationDrawerFragment extends Fragment {
 
     /**
@@ -63,7 +58,7 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
     private List<DrawerItem> dataList;
-    private CustomDrawerAdapter mDrawerAdapter;
+    public CustomDrawerAdapter mDrawerAdapter;
 
     public NavigationDrawerFragment() {
     }
@@ -282,8 +277,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void addItemsToDataList() {
-        dataList.add(new DrawerItem("Customer", R.drawable.ic_action_social_group));
-        dataList.add(new DrawerItem("Products", R.drawable.ic_action_image_photo_camera));
-        dataList.add(new DrawerItem("Orders", R.drawable.ic_action_action_shopping_cart));
+        dataList.add(new DrawerItem("News", R.drawable.ic_action_social_group));
+        dataList.add(new DrawerItem("Order", R.drawable.ic_action_image_photo_camera));
+        dataList.add(new DrawerItem("Products", R.drawable.ic_action_action_shopping_cart));
     }
 }
