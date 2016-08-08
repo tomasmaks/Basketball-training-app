@@ -6,8 +6,9 @@ package com.example.tomas.becomebasketballpro.Model;
 public class ArticleModel {
     private String thumbnail;
     private String articleTitle;
-    private String articleSubtitle;
-    private String articleAuthor;
+    private String articleData;
+    private String articleImage;
+    private String articleBody;
 
 
     public String getThumbnail() {
@@ -26,19 +27,29 @@ public class ArticleModel {
         this.articleTitle = articleTitle;
     }
 
-    public String getSubtitle() {
-        return articleSubtitle;
+    public String getData() {
+        return articleData;
     }
 
-    public void setSubtitle(String articleSubtitle) {
-        this.articleSubtitle = articleSubtitle;
+    public void setData(String articleData) {
+        this.articleData = articleData;
     }
 
-    public String getAuthor() {
-        return articleAuthor;
+    public String getImage() {
+        return articleImage;
     }
 
-    public void setAuthor(String articleAuthor) {
-        this.articleAuthor = articleAuthor;
+    public void setImage(String articleImage) {
+        this.articleImage = articleImage;
     }
+
+    public String getBody() {
+        return articleBody;
+    }
+
+    public void setBody(String articleBody) {
+        this.articleBody = articleBody;
+    }
+
+
 }

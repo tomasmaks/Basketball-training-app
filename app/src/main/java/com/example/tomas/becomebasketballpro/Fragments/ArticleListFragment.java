@@ -4,6 +4,7 @@ package com.example.tomas.becomebasketballpro.Fragments;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,10 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -61,7 +65,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/87cadf10d349f19eca3b098e2552122c0140ef90/article.json";
+    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/4af2e4b580f97847d69abae89a19d865875090a8/article.json";
     private ProgressDialog dialog;
     MovieAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
@@ -100,10 +104,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                 .build();
         ImageLoader.getInstance().init(config); // Do it on Application start
 
-//        int columnCount = getResources().getInteger(R.integer.grid_column_count);
-//        StaggeredGridLayoutManager staggeredGridLayoutManager =
-//        new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-//        mListView.setListManager(staggeredGridLayoutManager);
     }
 
 
@@ -126,13 +126,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
 
     }
-
-//    private void setupRefreshLayout(View mRootView) {
-//
-//        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-//       mSwipeRefreshManager = new SwipeRefreshManager(mSwipeRefreshLayout, mRefreshHandler);
-//
-//    }
 
 
     @Override
@@ -174,7 +167,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             switch (msg.what) {
                 case 0:
                     new FetchTask().execute(URL_TO_HIT);
-                    Toast.makeText(getActivity().getApplicationContext(), "refresh success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
                 default:
@@ -191,9 +184,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //dialog.show();
         }
-
 
 
         @Override
@@ -227,22 +218,12 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                      * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
                      */
                     ArticleModel articleModel = gson.fromJson(finalObject.toString(), ArticleModel.class);
-                    //articleModel.setThumbnail(finalObject.getString("thumb"));
+                    articleModel.setThumbnail(finalObject.getString("thumb"));
                     articleModel.setTitle(finalObject.getString("title"));
-//
-//                    movieModel.setDuration(finalObject.getString("duration"));
-//                    movieModel.setTagline(finalObject.getString("tagline"));
-//                    movieModel.setImage(finalObject.getString("image"));
-//                    movieModel.setStory(finalObject.getString("story"));
-//
-//                    List<ArticleModel.Cast> castList = new ArrayList<>();
-//                    for(int j=0; j<finalObject.getJSONArray("cast").length(); j++){
-//                        MovieModel.Cast cast = new MovieModel.Cast();
-//                        cast.setName(finalObject.getJSONArray("cast").getJSONObject(j).getString("name"));
-//                        castList.add(cast);
-//                    }
-//                    movieModel.setCastList(castList);
-                    // adding the final object in the list
+                    articleModel.setBody(finalObject.getString("body"));
+                    articleModel.setImage(finalObject.getString("photo"));
+                    articleModel.setData(finalObject.getString("published_date"));
+
                     articleModelList.add(articleModel);
                 }
                 return articleModelList;
@@ -283,11 +264,9 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         ArticleModel articleModel = result.get(position);
-                        ArticleDetailsFragment articleDetailsFragment = new ArticleDetailsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("articleModel", new Gson().toJson(articleModel));
-                        articleDetailsFragment.setArguments(bundle);
-                        ((MainActivity) getActivity()).switchFragment(articleDetailsFragment, false);
+                        Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
+                        intent.putExtra("articleModel", new Gson().toJson(articleModel));
+                        getActivity().startActivity(intent);
 
                     }
                 });
@@ -317,10 +296,9 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             if(convertView == null){
                 holder = new ViewHolder();
                 convertView = inflater.inflate(resource, null);
-                //holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
+                holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
                 holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
-                // holder.articleSubtitle = (TextView)convertView.findViewById(R.id.article_subtitle);
-                // holder.articleAuthor = (TextView)convertView.findViewById(R.id.article_author);
+                holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
 
                 convertView.setTag(holder);
             } else {
@@ -329,21 +307,20 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
 
             // Then later, when you want to display image
-            // ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
+            ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
+           // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
 
             holder.articleTitle.setText(articleModelList.get(position).getTitle());
-            //holder.articleSubtitle.setText(articleModelList.get(position).getSubtitle());
-            // holder.articleAuthor.setText(articleModelList.get(position).getAuthor());
+            holder.articleData.setText("Added on: " + articleModelList.get(position).getData());
 
             return convertView;
         }
 
 
         class ViewHolder{
-            //private DynamicHeightNetworkImageView thumbnail;
+            private DynamicHeightNetworkImageView thumbnail;
             private TextView articleTitle;
-            // private TextView articleSubtitle;
-            // private TextView articleAuthor;
+            private TextView articleData;
         }
 
     }

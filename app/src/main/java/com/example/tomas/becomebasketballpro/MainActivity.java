@@ -10,12 +10,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.tomas.becomebasketballpro.Fragments.ArticleDetailsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.ArticleListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
-import com.example.tomas.becomebasketballpro.Fragments.OrderDetailsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.OrderListFragment;
-import com.example.tomas.becomebasketballpro.Fragments.ProductDetailsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.ProductListFragment;
 import com.example.tomas.becomebasketballpro.Helpers.Enums;
 
@@ -128,34 +125,6 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void ReplaceFragment(Enums.FragmentEnums frag, int sectionNumber){
-
-//        NavigationDrawerFragment navFrag = (NavigationDrawerFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-
-//        switch (frag){
-//            case ArticleDetailsFragment:
-//                ArticleDetailsFragment serviceFrag = ArticleDetailsFragment.newInstance(sectionNumber);
-//                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                fragmentManager.beginTransaction().replace(R.id.container, serviceFrag)
-//                        .addToBackStack(null).commit();
-//                break;
-//            case ProductDetailsFragment:
-//                ProductDetailsFragment profileFrag = ProductDetailsFragment.newInstance(sectionNumber);
-//                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                fragmentManager.beginTransaction().replace(R.id.container,profileFrag)
-//                        .addToBackStack(null).commit();
-//                break;
-//            case OrderDetailsFragment:
-//                OrderDetailsFragment clientFrag = OrderDetailsFragment.newInstance(sectionNumber);
-//                navFrag.mDrawerToggle.setDrawerIndicatorEnabled(false);
-//                fragmentManager.beginTransaction().replace(R.id.container,clientFrag)
-//                        .addToBackStack(null).commit();
-//                break;
-//
-//        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -164,22 +133,6 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         navFrag.mDrawerToggle.setDrawerIndicatorEnabled(true);
         onSectionAttached(navFrag.mCurrentSelectedPosition);
-    }
-
-    public void switchFragment(Fragment fragment, boolean clearBackStack) {
-        if (fragment == null) {
-            return;
-        }
-        if (clearBackStack)
-            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        if (!clearBackStack) transaction.addToBackStack(null);
-        try {
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 }
