@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.okason.navigationdrawerexample.Fragments.ProductListFragment">
+             tools:context="com.example.tomas.becomebasketballpro.ProductListFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

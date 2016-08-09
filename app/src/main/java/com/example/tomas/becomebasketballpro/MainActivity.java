@@ -3,7 +3,6 @@ package com.example.tomas.becomebasketballpro;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -12,9 +11,8 @@ import android.view.MenuItem;
 
 import com.example.tomas.becomebasketballpro.Fragments.ArticleListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
-import com.example.tomas.becomebasketballpro.Fragments.OrderListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.NewsListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.ProductListFragment;
-import com.example.tomas.becomebasketballpro.Helpers.Enums;
 
 
 public class MainActivity extends ActionBarActivity
@@ -53,7 +51,7 @@ public class MainActivity extends ActionBarActivity
                 mFragment = ArticleListFragment.newInstance(0);
                 break;
             case 1:
-                mFragment = OrderListFragment.newInstance(1);
+                mFragment = NewsListFragment.newInstance(1);
                 break;
             case 2:
                 mFragment = ProductListFragment.newInstance(2);

@@ -128,12 +128,12 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(Constants.ARG_SECTION_NUMBER));
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//        ((MainActivity) activity).onSectionAttached(
+//                getArguments().getInt(Constants.ARG_SECTION_NUMBER));
+//    }
 
 
     @Override

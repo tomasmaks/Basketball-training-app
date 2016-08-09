@@ -44,13 +44,4 @@ public class ProductListFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_product_list, container, false);
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(Constants.ARG_SECTION_NUMBER));
-    }
-
-
-
 }
