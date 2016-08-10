@@ -3,6 +3,7 @@ package com.example.tomas.becomebasketballpro;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -10,9 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.tomas.becomebasketballpro.Fragments.ArticleListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.HomeListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.MotivationListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NewsListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.ProductListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.SuccessListFragment;
 
 
 public class MainActivity extends ActionBarActivity
@@ -48,7 +52,7 @@ public class MainActivity extends ActionBarActivity
         Fragment mFragment = null;
         switch (position){
             case 0:
-                mFragment = ArticleListFragment.newInstance(0);
+                mFragment = HomeListFragment.newInstance(0);
                 break;
             case 1:
                 mFragment = NewsListFragment.newInstance(1);
@@ -56,6 +60,15 @@ public class MainActivity extends ActionBarActivity
             case 2:
                 mFragment = ProductListFragment.newInstance(2);
                 break;
+            case 3:
+                mFragment = SuccessListFragment.newInstance(3);
+                break;
+            case 4:
+                mFragment = MotivationListFragment.newInstance(4);
+                break;
+
+
+
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -131,6 +144,22 @@ public class MainActivity extends ActionBarActivity
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         navFrag.mDrawerToggle.setDrawerIndicatorEnabled(true);
         onSectionAttached(navFrag.mCurrentSelectedPosition);
+    }
+
+    public void switchFragment(Fragment fragment, boolean clearBackStack) {
+        if (fragment == null) {
+            return;
+        }
+        if (clearBackStack)
+            getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        if (!clearBackStack) transaction.addToBackStack(null);
+        try {
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

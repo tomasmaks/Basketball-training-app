@@ -1,11 +1,8 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,27 +10,24 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.R;
+import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
 import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.example.tomas.becomebasketballpro.Helpers.Constants;
-import com.example.tomas.becomebasketballpro.MainActivity;
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
-import com.example.tomas.becomebasketballpro.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,31 +43,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ArticleListFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Tomas on 09/08/2016.
  */
-public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-
-
-
+public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     // @BindView(R.layout.fragment_article_list)
     Context context;
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/4af2e4b580f97847d69abae89a19d865875090a8/article.json";
+    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/a5da9d85d0da4a1244a898f21f22365e/raw/fa5ea749ad14d3e2777cf931685f76d627440c9c/SuccessStories.json";
     private ProgressDialog dialog;
-    ArticleAdapter adapter;
+    SuccessAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
 
 
 
-    public static ArticleListFragment newInstance(int sectionNumber) {
-        ArticleListFragment fragment = new ArticleListFragment();
+    public static SuccessListFragment newInstance(int sectionNumber) {
+        SuccessListFragment fragment = new SuccessListFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -81,7 +68,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
-    public ArticleListFragment() {
+    public SuccessListFragment() {
         // Required empty public constructor
     }
 
@@ -113,7 +100,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRootView  = inflater.inflate(R.layout.fragment_article_list, container, false);
+        mRootView  = inflater.inflate(R.layout.fragment_success_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 
@@ -127,19 +114,10 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
     }
 
-
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        ((MainActivity) activity).onSectionAttached(
-//                getArguments().getInt(Constants.ARG_SECTION_NUMBER));
-//    }
-
-
     @Override
     public void onStart() {
         super.onStart();
-        new FetchTask().execute(URL_TO_HIT);
+        new FetchSuccessTask().execute(URL_TO_HIT);
     }
 
     @Override
@@ -166,7 +144,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    new FetchTask().execute(URL_TO_HIT);
+                    new FetchSuccessTask().execute(URL_TO_HIT);
                     Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
@@ -177,9 +155,9 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
-    public class FetchTask extends AsyncTask<String,String, List<ArticleModel>> {
+    public class FetchSuccessTask extends AsyncTask<String,String, List<ArticleModel>> {
 
-        private final String LOG_TAG = FetchTask.class.getSimpleName();
+        private final String LOG_TAG = FetchSuccessTask.class.getSimpleName();
 
         @Override
         protected void onPreExecute() {
@@ -207,7 +185,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                 String finalJson = buffer.toString();
 
                 JSONObject parentObject = new JSONObject(finalJson);
-                JSONArray parentArray = parentObject.getJSONArray("article");
+                JSONArray parentArray = parentObject.getJSONArray("SuccessStories");
 
                 List<ArticleModel> articleModelList = new ArrayList<>();
 
@@ -258,13 +236,13 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
 
             if(result != null) {
-                adapter = new ArticleAdapter(getActivity().getApplicationContext(), R.layout.fragment_article_list_items, result);
+                adapter = new SuccessAdapter(getActivity().getApplicationContext(), R.layout.fragment_success_list_items, result);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-                        ArticleModel articleModel = result.get(position2);
-                        Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ArticleModel articleModel = result.get(position);
+                        Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
                         intent.putExtra("articleModel", new Gson().toJson(articleModel));
                         getActivity().startActivity(intent);
 
@@ -276,12 +254,12 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
         }
     }
 
-    public class ArticleAdapter extends ArrayAdapter{
+    public class SuccessAdapter extends ArrayAdapter {
 
         private List<ArticleModel> articleModelList;
         private int resource;
         private LayoutInflater inflater;
-        public ArticleAdapter(Context context, int resource, List<ArticleModel> objects) {
+        public SuccessAdapter(Context context, int resource, List<ArticleModel> objects) {
             super(context, resource, objects);
             articleModelList = objects;
             this.resource = resource;
@@ -326,6 +304,3 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 }
-
-
-

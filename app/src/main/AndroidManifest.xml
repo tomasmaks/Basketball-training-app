@@ -26,6 +26,12 @@
         <activity
             android:name=".ArticleDetailsActivity">
         </activity>
+        <activity
+            android:name=".SuccessDetailsActivity">
+        </activity>
+        <activity
+            android:name=".MotivationDetailsActivity">
+        </activity>
 
     </application>
 

@@ -79,16 +79,13 @@ public class NewsListFragment extends Fragment {
             Fragment fragment = null;
             switch (position2) {
                 case 0:
-                    fragment = new ProductListFragment();
+                    fragment = new ArticleListFragment();
                     break;
                 case 1:
-                    fragment = new ProductListFragment();
+                    fragment = new SuccessListFragment();
                     break;
                 case 2:
-                    fragment = new ProductListFragment();
-                    break;
-                case 3:
-                    fragment = new ArticleListFragment();
+                    fragment = new MotivationListFragment();
                     break;
                 default:
                     break;
@@ -98,19 +95,17 @@ public class NewsListFragment extends Fragment {
         }
         @Override
         public int getCount() {
-            return 4;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position2) {
             if (position2 == 0) {
-                return "FIRST FRAG";
+                return "NEWS";
             } else if (position2 == 1) {
-                return "SECOND FRAG";
+                return "SUCCESS STORIES";
             } else if (position2 == 2) {
-                return "THIRD FRAG";
-            } else if (position2 == 3) {
-                return "FOURTH FRAG";
+                return "MOTIVATION";
             } else {
                 return super.getPageTitle(position2);
             }

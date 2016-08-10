@@ -51,8 +51,6 @@
                 android:paddingLeft="@dimen/material_component_cards_left_and_right_padding"
                 android:paddingRight="@dimen/material_component_cards_left_and_right_padding"
                 android:paddingTop="@dimen/material_component_cards_top_and_bottom_padding"/>
-
-
         </LinearLayout>
     </LinearLayout>
 

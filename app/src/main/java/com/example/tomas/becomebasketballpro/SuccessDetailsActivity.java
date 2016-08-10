@@ -1,25 +1,20 @@
 package com.example.tomas.becomebasketballpro;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 /**
- * Created by Tomas on 06/08/2016.
+ * Created by Tomas on 09/08/2016.
  */
-public class ArticleDetailsActivity extends ActionBarActivity {
+public class SuccessDetailsActivity extends ActionBarActivity {
+
 
     private ImageView article_image;
     private TextView article_title;
@@ -30,7 +25,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.article_detail);
+        setContentView(R.layout.success_detail);
 
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
@@ -81,5 +76,8 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
 }
