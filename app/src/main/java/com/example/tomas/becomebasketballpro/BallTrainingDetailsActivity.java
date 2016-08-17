@@ -47,20 +47,22 @@ public class BallTrainingDetailsActivity extends ListActivity {
 
     // tracks JSONArray
     JSONArray Albums = null;
+    JSONArray Songs = null;
 
     // Album id
     String album_id, album_name;
 
     // tracks JSON url
     // id - should be posted as GET params to get track list (ex: id = 5)
-    private String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/b2c85a907c6c4ad8b3e03e3ea748dd6fe606d121/album_tracks.json";
+    String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/c1f6a4b0ffbda4bbf1b47220549aee383d1b94d1/album_tracks.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_ALBUM = "album";
-    private static final String TAG_DURATION = "duration";
-    private static final String TABLE_EVENT = "BasketballTraining";
+   // private static final String TAG_DURATION = "duration";
+    private static final String TABLE_EVENT = "Basketball";
+    private static final String TAG_ARRAY = "songs";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -140,8 +142,24 @@ public class BallTrainingDetailsActivity extends ListActivity {
                     // Storing each json item in variable
                     String id = evt.getString(TAG_ID);
                     String album = evt.getString(TAG_ALBUM);
-                    //String name = evt.getString(TAG_NAME);
-                    String duration = evt.getString(TAG_DURATION);
+
+                    Songs = json.getJSONArray(TAG_ARRAY);
+
+                    for (int j = 0; j < Songs.length(); j++) {
+                        JSONObject nzn = Songs.getJSONObject(j);
+
+                        String name = nzn.getString(TAG_NAME);
+                        //String duration = nzn.getString(TAG_DURATION);
+
+                        HashMap<String, String> map2 = new HashMap<String, String>();
+
+                        map2.put(TAG_NAME, name);
+                        //map2.put(TAG_DURATION, duration);
+
+                        tracksList.add(map2);
+
+                    }
+
 
                     // creating new HashMap
                     HashMap<String, String> map = new HashMap<String, String>();
@@ -149,8 +167,7 @@ public class BallTrainingDetailsActivity extends ListActivity {
                     // adding each child node to HashMap key => value
                     map.put(TAG_ID, id);
                     map.put(TAG_ALBUM, album);
-                   // map.put(TAG_NAME, name);
-                    map.put(TAG_DURATION, duration);
+
 
                     // adding HashList to ArrayList
                     tracksList.add(map);
@@ -175,9 +192,8 @@ public class BallTrainingDetailsActivity extends ListActivity {
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             BallTrainingDetailsActivity.this, tracksList,
-                            R.layout.fragment_balltraining_list_items, new String[]{album_id, TAG_ID, TAG_NAME,
-                            TAG_DURATION}, new int[]{
-                            R.id.album_id, R.id.song_id, R.id.album_name, R.id.song_duration});
+                            R.layout.fragment_balltraining_list_items, new String[]{album_id, TAG_ID, TAG_NAME}, new int[]{
+                            R.id.album_id, R.id.song_id, R.id.album_name});
                     // updating listview
                     setListAdapter(adapter);
 
