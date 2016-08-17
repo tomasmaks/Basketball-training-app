@@ -1,5 +1,6 @@
 package com.example.tomas.becomebasketballpro;
 
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,12 +10,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
-import com.example.tomas.becomebasketballpro.Fragments.ArticleListFragment;
-import com.example.tomas.becomebasketballpro.Fragments.HomeListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.BallTrainingFragment;
+import com.example.tomas.becomebasketballpro.Fragments.HomeFragment;
 import com.example.tomas.becomebasketballpro.Fragments.MotivationListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
-import com.example.tomas.becomebasketballpro.Fragments.NewsListFragment;
+import com.example.tomas.becomebasketballpro.Fragments.NewsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.ProductListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.SuccessListFragment;
 
@@ -52,20 +54,24 @@ public class MainActivity extends ActionBarActivity
         Fragment mFragment = null;
         switch (position){
             case 0:
-                mFragment = HomeListFragment.newInstance(0);
+                mFragment = HomeFragment.newInstance(0);
                 break;
             case 1:
-                mFragment = NewsListFragment.newInstance(1);
+                mFragment = NewsFragment.newInstance(1);
                 break;
             case 2:
-                mFragment = ProductListFragment.newInstance(2);
+                mFragment = BallTrainingFragment.newInstance(2);
                 break;
             case 3:
-                mFragment = SuccessListFragment.newInstance(3);
+                mFragment = ProductListFragment.newInstance(3);
                 break;
             case 4:
-                mFragment = MotivationListFragment.newInstance(4);
+                mFragment = SuccessListFragment.newInstance(4);
                 break;
+            case 5:
+                mFragment = MotivationListFragment.newInstance(5);
+                break;
+
 
 
 
@@ -161,5 +167,6 @@ public class MainActivity extends ActionBarActivity
             e.printStackTrace();
         }
     }
+
 
 }

@@ -4,12 +4,15 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
+
+
     defaultConfig {
         applicationId "com.example.tomas.becomebasketballpro"
         minSdkVersion 15
-        targetSdkVersion 18
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        useLibrary 'org.apache.http.legacy'
     }
     buildTypes {
         release {
@@ -41,6 +44,8 @@ dependencies {
 
 
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
 
 
 

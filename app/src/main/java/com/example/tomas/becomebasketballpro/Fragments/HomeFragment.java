@@ -12,16 +12,11 @@ import android.widget.RelativeLayout;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.R;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-
-import java.util.List;
 
 /**
  * Created by Tomas on 10/08/2016.
  */
-public class HomeListFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
 
     Context context;
@@ -33,8 +28,8 @@ public class HomeListFragment extends Fragment {
     private RelativeLayout btn_lay2;
     private RelativeLayout btn_lay3;
 
-    public static HomeListFragment newInstance(int sectionNumber) {
-        HomeListFragment fragment = new HomeListFragment();
+    public static HomeFragment newInstance(int sectionNumber) {
+        HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -42,7 +37,7 @@ public class HomeListFragment extends Fragment {
     }
 
 
-    public HomeListFragment() {
+    public HomeFragment() {
         // Required empty public constructor
     }
 
@@ -58,7 +53,7 @@ public class HomeListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRootView  = inflater.inflate(R.layout.fragment_home_list_items, container, false);
+        mRootView  = inflater.inflate(R.layout.fragment_home, container, false);
 
         btn_lay = (RelativeLayout) mRootView.findViewById(R.id.btn_lay);
 
@@ -66,7 +61,7 @@ public class HomeListFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                NewsListFragment newsFragment = new NewsListFragment();
+                NewsFragment newsFragment = new NewsFragment();
                 Bundle bundle = new Bundle();
                 newsFragment.setArguments(bundle);
                 ((MainActivity) getActivity()).switchFragment(newsFragment, false);
@@ -79,7 +74,7 @@ public class HomeListFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                NewsListFragment newsFragment = new NewsListFragment();
+                NewsFragment newsFragment = new NewsFragment();
                 Bundle bundle = new Bundle();
                 newsFragment.setArguments(bundle);
                 ((MainActivity) getActivity()).switchFragment(newsFragment, false);
@@ -92,7 +87,7 @@ public class HomeListFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                NewsListFragment newsFragment = new NewsListFragment();
+                NewsFragment newsFragment = new NewsFragment();
                 Bundle bundle = new Bundle();
                 newsFragment.setArguments(bundle);
                 ((MainActivity) getActivity()).switchFragment(newsFragment, false);

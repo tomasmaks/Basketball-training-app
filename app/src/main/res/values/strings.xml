@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">Become Basketball Pro</string>
 
-    <string name="title_section0">Basketball news</string>
+    <string name="title_section0">Home</string>
     <string name="title_section1">News</string>
-    <string name="title_section2">Orders</string>
+    <string name="title_section2">Basketball Training</string>
     <string name="title_section3">Customer Details</string>
     <string name="title_section4">Product Details</string>
     <string name="title_section5">Order Details</string>

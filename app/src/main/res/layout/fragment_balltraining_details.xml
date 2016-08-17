@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff" >
+
+    <!-- Song Title -->
+    <TextView android:id="@+id/song_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25dip"
+        android:padding="10dip"
+        android:textColor="#444444"
+        android:textStyle="bold"/>
+
+    <!-- Album Name -->
+    <TextView android:id="@+id/album_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:textSize="15dip"
+        android:textColor="#000000"
+        android:paddingBottom="10dip"/>
+
+    <!-- Song Duration -->
+    <TextView android:id="@+id/duration"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dip"
+        android:textSize="15dip"
+        android:textColor="#000000"
+        android:paddingBottom="10dip"/>
+
+</LinearLayout>

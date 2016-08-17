@@ -17,7 +17,7 @@ import com.example.tomas.becomebasketballpro.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewsListFragment extends Fragment {
+public class NewsFragment extends Fragment {
 
 
     private PagerSlidingTabStrip tabs;
@@ -25,12 +25,12 @@ public class NewsListFragment extends Fragment {
     private MyPagerAdapter adapter;
     private View root;
 
-    public NewsListFragment() {
+    public NewsFragment() {
         // Required empty public constructor
     }
 
-    public static NewsListFragment newInstance(int sectionNumber) {
-        NewsListFragment fragment = new NewsListFragment();
+    public static NewsFragment newInstance(int sectionNumber) {
+        NewsFragment fragment = new NewsFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);

@@ -13,8 +13,11 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -62,13 +65,15 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
     // @BindView(R.layout.fragment_article_list)
     Context context;
-
     View mRootView;
     ListView mListView;
     private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/4af2e4b580f97847d69abae89a19d865875090a8/article.json";
     private ProgressDialog dialog;
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
+
+
+
 
 
 
