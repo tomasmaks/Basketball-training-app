@@ -36,7 +36,7 @@ public class BallTrainingSingleActivity extends Activity {
 
     // single song JSON url
     // GET parameters album, song
-    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/2c32aafd3afb7fc3e1c5af43bbd0e658c0f912d6/album_tracks.json";
+    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/4c296970f7f2de04c706d023c4125f59bc614752/album_tracks.json";
 
     // ALL JSON node names
     private static final String PARENT_ID = "ids";
@@ -56,6 +56,8 @@ public class BallTrainingSingleActivity extends Activity {
         Intent i = getIntent();
         song_id = i.getStringExtra("song_id");
         album_id = i.getStringExtra("album_id");
+        Log.d("TAG", album_id.toString());
+        Log.d("TAG2", song_id.toString());
 
         // calling background thread
         new LoadSingleTrack().execute();
@@ -91,33 +93,36 @@ public class BallTrainingSingleActivity extends Activity {
 
             try {
                 jsonArray = json.getJSONArray(TABLE_EVENT);
-
+                Log.d(TAG_ALBUM, jsonArray.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
 
-                   JSONObject details = jsonArray.getJSONObject(i);
+                    JSONObject details = jsonArray.getJSONObject(i);
                     String albumId = details.getString(PARENT_ID);
+                    Log.d(TAG_ARRAY, details.toString());
+                    if (albumId.equals(album_id)) {
 
-                   // if (albumId.equals(PARENT_ID)) {
 
-                     songs = details.getJSONArray(TAG_ARRAY);
-                    for (int j = 0; j < songs.length(); j++) {
-                        JSONObject nzn = songs.getJSONObject(j);
-                        String songId = nzn.getString(SONG_ID);
-                        if (songId.equals(song_id)) {
-                            song_name = nzn.getString(TAG_NAME);
-                            duration = nzn.getString(TAG_DURATION);
-                   //    }
-                   }
+                        songs = details.getJSONArray(TAG_ARRAY);
+
+                        for (int j = 0; j < songs.length(); j++) {
+                            JSONObject nzn = songs.getJSONObject(j);
+                            String songId = nzn.getString(SONG_ID);
+                            if (songId.equals(song_id)) {
+                                song_name = nzn.getString(TAG_NAME);
+                                duration = nzn.getString(TAG_DURATION);
+                            }
+                        }
+                    }
                 }
-                }
-                }catch(JSONException e){
-                    e.printStackTrace();
-                }
-            return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            return null;
+        }
+
         /**
          * After completing background task Dismiss the progress dialog
-         * **/
+         **/
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting song information
 

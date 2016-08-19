@@ -18,6 +18,7 @@ import android.widget.RatingBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 
 import org.apache.http.NameValuePair;
@@ -54,7 +55,7 @@ public class BallTrainingDetailsActivity extends ListActivity {
 
     // tracks JSON url
     // id - should be posted as GET params to get track list (ex: id = 5)
-    String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/698ebc2c07bc1c61ac37c49b3d6c7c3ccd9b1d6f/album_tracks.json";
+    String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/4c296970f7f2de04c706d023c4125f59bc614752/album_tracks.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "id";
@@ -63,7 +64,7 @@ public class BallTrainingDetailsActivity extends ListActivity {
     private static final String TAG_DURATION = "duration";
     private static final String TABLE_EVENT = "Basketball";
     private static final String TAG_ARRAY = "songs";
-    private static final String PARENT_ID = "id";
+    private static final String PARENT_ID = "ids";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,12 +158,12 @@ public class BallTrainingDetailsActivity extends ListActivity {
                             JSONObject nzn = Songs.getJSONObject(j);
 
                             String song_id = nzn.getString(TAG_ID);
-
                             String name = nzn.getString(TAG_NAME);
                             String duration = nzn.getString(TAG_DURATION);
 
                             HashMap<String, String> map = new HashMap<String, String>();
                             map.put(TAG_ID, song_id);
+                            map.put("album_id", album_id);
                             map.put(TAG_NAME, name);
                             map.put(TAG_DURATION, duration);
 
@@ -191,8 +192,8 @@ public class BallTrainingDetailsActivity extends ListActivity {
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             BallTrainingDetailsActivity.this, tracksList,
-                            R.layout.fragment_balltraining_list_items, new String[]{TAG_ID, TAG_NAME, TAG_DURATION}, new int[]{
-                            R.id.song_id, R.id.album_name, R.id.song_duration});
+                            R.layout.fragment_balltraining_list_items, new String[]{TAG_ID, "album_id", TAG_NAME, TAG_DURATION}, new int[]{
+                            R.id.song_id, R.id.album_id, R.id.album_name, R.id.song_duration});
                     // updating listview
                     setListAdapter(adapter);
 
