@@ -50,19 +50,20 @@ public class BallTrainingDetailsActivity extends ListActivity {
     JSONArray Songs = null;
 
     // Album id
-    String album_id, album_name;
+    String album_ids, album_name;
 
     // tracks JSON url
     // id - should be posted as GET params to get track list (ex: id = 5)
-    String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/c1f6a4b0ffbda4bbf1b47220549aee383d1b94d1/album_tracks.json";
+    String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/698ebc2c07bc1c61ac37c49b3d6c7c3ccd9b1d6f/album_tracks.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_ALBUM = "album";
-   // private static final String TAG_DURATION = "duration";
+    private static final String TAG_DURATION = "duration";
     private static final String TABLE_EVENT = "Basketball";
     private static final String TAG_ARRAY = "songs";
+    private static final String PARENT_ID = "id";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +71,7 @@ public class BallTrainingDetailsActivity extends ListActivity {
         setContentView(R.layout.fragment_balltraining_list);
         // Get album id
         Intent i = getIntent();
-        album_id = i.getStringExtra("album_id");
+        album_ids = i.getStringExtra("album_id");
 
         // Hashmap for ListView
         tracksList = new ArrayList<HashMap<String, String>>();
@@ -89,20 +90,19 @@ public class BallTrainingDetailsActivity extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View view, int arg2,
                                     long arg3) {
+
                 // On selecting single track get song information
                 Intent i = new Intent(getApplicationContext(), BallTrainingSingleActivity.class);
 
-                // to get song information
-                // both album id and song is needed
                 String album_id = ((TextView) view.findViewById(R.id.album_id)).getText().toString();
                 String song_id = ((TextView) view.findViewById(R.id.song_id)).getText().toString();
 
-                Toast.makeText(getApplicationContext(), "Album Id: " + album_id + ", Song Id: " + song_id, Toast.LENGTH_SHORT).show();
-
+                // to get song information
+                // both album id and song is needed
                 i.putExtra("album_id", album_id);
                 i.putExtra("song_id", song_id);
 
-                startActivity(i);
+                view.getContext().startActivity(i);
             }
         });
 
@@ -127,6 +127,13 @@ public class BallTrainingDetailsActivity extends ListActivity {
         protected String doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+// post album id as GET parameter
+            params.add(new BasicNameValuePair(PARENT_ID, album_ids));
+
+            // post album id as GET parameter
+//            params.add(new BasicNameValuePair(TAG_ID, album_id));
             // getting JSON string from URL
             JSONObject json = jsonParser.makeHttpRequest(url_details,
                     "GET", params);
@@ -140,37 +147,29 @@ public class BallTrainingDetailsActivity extends ListActivity {
                     JSONObject evt = Albums.getJSONObject(i);
 
                     // Storing each json item in variable
-                    String id = evt.getString(TAG_ID);
-                    String album = evt.getString(TAG_ALBUM);
+                    String album_id = evt.getString(PARENT_ID);
+                    //String album_name = evt.getString(TAG_ALBUM);
+                    if (album_id.equals(album_ids)) {
 
-                    Songs = json.getJSONArray(TAG_ARRAY);
+                        Songs = evt.getJSONArray(TAG_ARRAY);
 
-                    for (int j = 0; j < Songs.length(); j++) {
-                        JSONObject nzn = Songs.getJSONObject(j);
+                        for (int j = 0; j < Songs.length(); j++) {
+                            JSONObject nzn = Songs.getJSONObject(j);
 
-                        String name = nzn.getString(TAG_NAME);
-                        //String duration = nzn.getString(TAG_DURATION);
+                            String song_id = nzn.getString(TAG_ID);
 
-                        HashMap<String, String> map2 = new HashMap<String, String>();
+                            String name = nzn.getString(TAG_NAME);
+                            String duration = nzn.getString(TAG_DURATION);
 
-                        map2.put(TAG_NAME, name);
-                        //map2.put(TAG_DURATION, duration);
+                            HashMap<String, String> map = new HashMap<String, String>();
+                            map.put(TAG_ID, song_id);
+                            map.put(TAG_NAME, name);
+                            map.put(TAG_DURATION, duration);
 
-                        tracksList.add(map2);
+                            tracksList.add(map);
 
+                        }
                     }
-
-
-                    // creating new HashMap
-                    HashMap<String, String> map = new HashMap<String, String>();
-
-                    // adding each child node to HashMap key => value
-                    map.put(TAG_ID, id);
-                    map.put(TAG_ALBUM, album);
-
-
-                    // adding HashList to ArrayList
-                    tracksList.add(map);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -192,8 +191,8 @@ public class BallTrainingDetailsActivity extends ListActivity {
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             BallTrainingDetailsActivity.this, tracksList,
-                            R.layout.fragment_balltraining_list_items, new String[]{album_id, TAG_ID, TAG_NAME}, new int[]{
-                            R.id.album_id, R.id.song_id, R.id.album_name});
+                            R.layout.fragment_balltraining_list_items, new String[]{TAG_ID, TAG_NAME, TAG_DURATION}, new int[]{
+                            R.id.song_id, R.id.album_name, R.id.song_duration});
                     // updating listview
                     setListAdapter(adapter);
 

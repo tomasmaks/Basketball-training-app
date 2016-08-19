@@ -38,7 +38,7 @@
         android:paddingTop="15dip"
         android:textColor="#000000"
         android:textSize="16dip"
-        android:layout_toRightOf="@+id/track_no"/>
+        />
 
     <!-- Song duration -->
     <TextView
