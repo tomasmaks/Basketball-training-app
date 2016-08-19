@@ -163,7 +163,7 @@ public class BallTrainingDetailsActivity extends ListActivity {
 
                             HashMap<String, String> map = new HashMap<String, String>();
                             map.put(TAG_ID, song_id);
-                            map.put("album_id", album_id);
+                            map.put(PARENT_ID, album_id);
                             map.put(TAG_NAME, name);
                             map.put(TAG_DURATION, duration);
 
@@ -192,7 +192,7 @@ public class BallTrainingDetailsActivity extends ListActivity {
                      * */
                     ListAdapter adapter = new SimpleAdapter(
                             BallTrainingDetailsActivity.this, tracksList,
-                            R.layout.fragment_balltraining_list_items, new String[]{TAG_ID, "album_id", TAG_NAME, TAG_DURATION}, new int[]{
+                            R.layout.fragment_balltraining_list_items, new String[]{TAG_ID, PARENT_ID, TAG_NAME, TAG_DURATION}, new int[]{
                             R.id.song_id, R.id.album_id, R.id.album_name, R.id.song_duration});
                     // updating listview
                     setListAdapter(adapter);
