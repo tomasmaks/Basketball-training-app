@@ -3,30 +3,24 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- Album id / Hidden by default -->
     <TextView
-        android:id="@+id/album_id"
+        android:id="@+id/category_id"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <!-- Album Name -->
     <TextView
-        android:id="@+id/album_name"
+        android:id="@+id/category_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="16dip"
         android:textColor="#000000"
         android:paddingTop="15dip"
         android:paddingBottom="15dip"
-        android:paddingLeft="10dip"
         android:textStyle="bold"/>
 
-    <!-- Album Songs count -->
-    <TextView android:id="@+id/songs_count"
+    <TextView android:id="@+id/count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:textColor="#ffffff"
         android:textStyle="bold"
         android:background="#9ed321"
@@ -36,38 +30,3 @@
 
 </RelativeLayout>
 
-
-
-
-
-
-
-
-
-
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="250dp"-->
-    <!--android:foreground="?android:attr/selectableItemBackground">-->
-
-
-
-    <!--<ImageView-->
-        <!--android:id="@+id/thumbnail"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scaleType="fitXY"/>-->
-
-    <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-        <!--&lt;!&ndash;android:id="@+id/category"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:layout_gravity="top"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:padding="16dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textColor="#bfbfbf"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textSize="30dp"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:maxLines="1"&ndash;&gt;-->
-        <!--&lt;!&ndash;android:textStyle="bold"&ndash;&gt;-->
-        <!--&lt;!&ndash;/>&ndash;&gt;-->
-
-<!--</RelativeLayout>-->

@@ -72,9 +72,6 @@ public class MainActivity extends ActionBarActivity
                 mFragment = MotivationListFragment.newInstance(5);
                 break;
 
-
-
-
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()

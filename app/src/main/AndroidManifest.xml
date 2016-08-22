@@ -33,10 +33,7 @@
             android:name=".MotivationDetailsActivity">
         </activity>
         <activity
-            android:name=".BallTrainingDetailsActivity">
-        </activity>
-        <activity
-            android:name=".BallTrainingSingleActivity">
+            android:name=".BallTrainingThirdActivity">
         </activity>
 
     </application>

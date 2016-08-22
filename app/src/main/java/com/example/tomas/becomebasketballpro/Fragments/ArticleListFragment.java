@@ -73,10 +73,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     private SwipeRefreshLayout refreshLayout = null;
 
 
-
-
-
-
     public static ArticleListFragment newInstance(int sectionNumber) {
         ArticleListFragment fragment = new ArticleListFragment();
         Bundle args = new Bundle();
@@ -131,14 +127,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
 
     }
-
-
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        ((MainActivity) activity).onSectionAttached(
-//                getArguments().getInt(Constants.ARG_SECTION_NUMBER));
-//    }
 
 
     @Override

@@ -5,31 +5,12 @@
     android:orientation="vertical"
     android:background="#ffffff" >
 
-    <!-- Song Title -->
-    <TextView android:id="@+id/song_title"
+    <TextView android:id="@+id/exercise_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="25dip"
         android:padding="10dip"
         android:textColor="#444444"
         android:textStyle="bold"/>
-
-    <!--&lt;!&ndash; Album Name &ndash;&gt;-->
-    <!--<TextView android:id="@+id/album_name"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:paddingLeft="10dip"-->
-        <!--android:textSize="15dip"-->
-        <!--android:textColor="#000000"-->
-        <!--android:paddingBottom="10dip"/>-->
-
-    <!-- Song Duration -->
-    <TextView android:id="@+id/duration"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dip"
-        android:textSize="15dip"
-        android:textColor="#000000"
-        android:paddingBottom="10dip"/>
 
 </LinearLayout>

@@ -74,10 +74,10 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                NewsFragment newsFragment = new NewsFragment();
+                BallTrainingFragment ballTrainingFragment = new BallTrainingFragment();
                 Bundle bundle = new Bundle();
-                newsFragment.setArguments(bundle);
-                ((MainActivity) getActivity()).switchFragment(newsFragment, false);
+                ballTrainingFragment.setArguments(bundle);
+                ((MainActivity) getActivity()).switchFragment(ballTrainingFragment, false);
             }
         });
 
