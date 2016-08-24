@@ -18,7 +18,9 @@ import android.text.Html;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
+import com.google.gson.Gson;
 
 public class BallTrainingThirdActivity extends Activity {
 
@@ -31,7 +33,7 @@ public class BallTrainingThirdActivity extends Activity {
     String category_id = null;
     String exercise_id = null;
 
-    String category_name, exercise_name;
+    String exercise_description, exercise_name, exercise_body;
 
     // single song JSON url
     // GET parameters album, song
@@ -43,7 +45,8 @@ public class BallTrainingThirdActivity extends Activity {
     private static final String TAG_ARRAY = "exercises";
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
-    private static final String TAG_CATEGORY = "category";
+    private static final String TAG_DESCRIPTION = "description";
+    private static final String TAG_BODY = "body";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,11 +91,13 @@ public class BallTrainingThirdActivity extends Activity {
                     params);
 
             try {
+                Gson gson = new Gson();
+
                 jsonArray = json.getJSONArray(TABLE_EVENT);
 
                 for (int i = 0; i < jsonArray.length(); i++) {
-
                     JSONObject details = jsonArray.getJSONObject(i);
+
                     String categoryId = details.getString(PARENT_ID);
 
                     if (categoryId.equals(category_id)) {
@@ -104,11 +109,27 @@ public class BallTrainingThirdActivity extends Activity {
                             JSONObject nzn = exercises.getJSONObject(j);
                             String exerciseId = nzn.getString(TAG_ID);
                             if (exerciseId.equals(exercise_id)) {
+                                BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
+
+                                ballTrainingModel.setName(exercise_name);
                                 exercise_name = nzn.getString(TAG_NAME);
+                                ballTrainingModel.setDescription(exercise_description);
+                                exercise_description = nzn.getString(TAG_DESCRIPTION);
+                                ballTrainingModel.setBody(exercise_body);
+                                exercise_body = nzn.getString(TAG_BODY);
+                                ballTrainingModel.setIds(categoryId);
+                                ballTrainingModel.setId(exerciseId);
+
+                               // ballTrainingModelList.add(ballTrainingModel);
                             }
+
                         }
+
                     }
+
                 }
+
+                //return ballTrainingModelList;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -125,13 +146,19 @@ public class BallTrainingThirdActivity extends Activity {
             runOnUiThread(new Runnable() {
                 public void run() {
 
+                   // balltraining_title = (TextView) findViewById(R.id.exercise_title);
+                   // balltraining_title.setText(ballTrainingModel.getName());
+
                     TextView txt_exer_name = (TextView) findViewById(R.id.exercise_title);
-
-                    // displaying song data in view
                     txt_exer_name.setText(exercise_name);
+                    TextView txt_exer_description = (TextView) findViewById(R.id.exercise_description);
+                    txt_exer_description.setText(exercise_description);
+                    TextView txt_exer_body = (TextView) findViewById(R.id.exercise_body);
+                    txt_exer_body.setText(exercise_body);
 
-                    // Change Activity Title with Song title
-                    setTitle(exercise_name);
+
+
+
                 }
             });
 

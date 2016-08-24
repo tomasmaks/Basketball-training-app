@@ -183,7 +183,7 @@ public class BallTrainingSecondFragment extends ListFragment {
                     /**
                      * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
                      */
-                        String category_Id = finalObject.getString(PARENT_ID);
+                    String category_Id = finalObject.getString(PARENT_ID);
 
 
                     if (category_Id.equals(category_ids)) {
