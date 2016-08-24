@@ -1,6 +1,8 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,14 +11,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
+import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -27,6 +34,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +50,13 @@ import java.util.List;
  */
 public class BallTrainingSecondFragment extends ListFragment {
     View mRootView;
+    ListAdapter adapter;
+    Context context;
     // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
 
-    ArrayList<HashMap<String, String>> exercisesList;
+    //ArrayList<HashMap<String, String>> exercisesList;
+    List<BallTrainingModel> ballTrainingModelList;
 
     // tracks JSONArray
     JSONArray Categories = null;
@@ -66,7 +83,7 @@ public class BallTrainingSecondFragment extends ListFragment {
         category_ids = getArguments().getString("category_id");
 
         // Hashmap for ListView
-        exercisesList = new ArrayList<HashMap<String, String>>();
+        //ballTrainingModelList = new ArrayList<HashMap<String, String>>();
 
         // Loading tracks in Background Thread
         new LoadExercises().execute();
@@ -129,7 +146,7 @@ public class BallTrainingSecondFragment extends ListFragment {
     /**
      * Background Async Task to Load all tracks under one album
      */
-    class LoadExercises extends AsyncTask<String, String, String> {
+    class LoadExercises extends AsyncTask<String, String, List<BallTrainingModel>> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -142,80 +159,144 @@ public class BallTrainingSecondFragment extends ListFragment {
         /**
          * getting tracks json and parsing
          */
-        protected String doInBackground(String... args) {
+        protected List<BallTrainingModel> doInBackground(String... params) {
             // Building Parameters
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            List<NameValuePair> param = new ArrayList<NameValuePair>();
 
-
-// post album id as GET parameter
-            params.add(new BasicNameValuePair(PARENT_ID, category_ids));
-
-            // post album id as GET parameter
-//            params.add(new BasicNameValuePair(TAG_ID, album_id));
-            // getting JSON string from URL
-            JSONObject json = jsonParser.makeHttpRequest(url_details,
-                    "GET", params);
+//
+//           post album id as GET parameter
+           param.add(new BasicNameValuePair(PARENT_ID, category_ids));
+//
+//            // getting JSON string from URL
+           JSONObject json = jsonParser.makeHttpRequest(url_details,
+                    "GET", param);
 
             try {
-                // products found
-                // Getting Array of Products
+
+                List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
+                Gson gson = new Gson();
+
                 Categories = json.getJSONArray(TABLE_EVENT);
-                // looping through All Contacts
-                for (int i = 0; i < Categories.length(); i++) {
-                    JSONObject evt = Categories.getJSONObject(i);
 
-                    // Storing each json item in variable
-                    String category_id = evt.getString(PARENT_ID);
-                    //String album_name = evt.getString(TAG_ALBUM);
-                    if (category_id.equals(category_ids)) {
+                for(int i=0; i < Categories.length(); i++) {
+                    JSONObject finalObject = Categories.getJSONObject(i);
+                    /**
+                     * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
+                     */
+                        String category_Id = finalObject.getString(PARENT_ID);
 
-                        Exercises = evt.getJSONArray(TAG_ARRAY);
+
+                    if (category_Id.equals(category_ids)) {
+
+                        Exercises = finalObject.getJSONArray(TAG_ARRAY);
 
                         for (int j = 0; j < Exercises.length(); j++) {
-                            JSONObject nzn = Exercises.getJSONObject(j);
 
-                            String exercise_id = nzn.getString(TAG_ID);
-                            String name = nzn.getString(TAG_NAME);
-                            String thumb = nzn.getString(TAG_THUMB);
+                            JSONObject finalObject2 = Exercises.getJSONObject(j);
 
-                            HashMap<String, String> map = new HashMap<String, String>();
-                            map.put(TAG_ID, exercise_id);
-                            map.put(PARENT_ID, category_id);
-                            map.put(TAG_NAME, name);
-                            map.put(TAG_THUMB, thumb);
+                            BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
 
-                            exercisesList.add(map);
-
+                            ballTrainingModel.setId(finalObject2.getString(TAG_ID));
+                            ballTrainingModel.setName(finalObject2.getString(TAG_NAME));
+                            ballTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
+                            ballTrainingModel.setIds(category_Id);
+                            ballTrainingModelList.add(ballTrainingModel);
                         }
+
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                return ballTrainingModelList;
 
-            return null;
+            }  catch (JSONException e) {
+                e.printStackTrace();
+
+            }
+            return  null;
+
         }
 
 
         /**
          * After completing background task Dismiss the progress dialog
          **/
-        protected void onPostExecute(String file_url) {
+        protected void onPostExecute(final List<BallTrainingModel> result) {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-                    ListAdapter adapter = new SimpleAdapter(
-                            getActivity(), exercisesList,
-                            R.layout.fragment_balltraining_list_items, new String[]{TAG_ID, PARENT_ID, TAG_NAME, TAG_THUMB}, new int[]{
-                            R.id.exercise_id, R.id.category_id, R.id.name, R.id.thumb_image});
-                    // updating listview
+
+                    adapter = new ListAdapter(getActivity(), result);
                     setListAdapter(adapter);
+
                 }
-            });
+           });
 
         }
+    }
+    public class ListAdapter extends BaseAdapter {
+        Context context;
+        private List<BallTrainingModel> ballTrainingModelList;
+
+        public ListAdapter(Context context,List<BallTrainingModel> ballTrainingModelList){
+            this.context = context;
+            this.ballTrainingModelList = ballTrainingModelList;
+        }
+
+        class ViewHolder {
+            // Include Number of reqd views.
+            private TextView ids;
+            private TextView id;
+            private TextView name;
+            private ImageView thumb;
+
+
+        }
+
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return ballTrainingModelList.size();
+        }
+
+        @Override
+        public Object getItem(int pos) {
+            // TODO Auto-generated method stub
+            return ballTrainingModelList.get(pos);
+        }
+
+        @Override
+        public long getItemId(int pos) {
+            // TODO Auto-generated method stub
+            return pos;
+        }
+
+
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+            // TODO Auto-generated method stub
+            ViewHolder mViewHolder = null;
+            if(view == null){
+                mViewHolder = new ViewHolder();
+                LayoutInflater inflater = (LayoutInflater)context.getSystemService
+                        (Activity.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.fragment_balltraining_list_items, parent, false);
+                mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
+                mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
+                mViewHolder.name = (TextView)view.findViewById(R.id.name);
+                mViewHolder.thumb=(ImageView)view.findViewById(R.id.thumb_image);
+                view.setTag(mViewHolder);
+            }
+            else {
+                mViewHolder = (ViewHolder) view.getTag();
+            }
+            // Then later, when you want to display image
+            ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
+
+            mViewHolder.name.setText(ballTrainingModelList.get(position).getName());
+            mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
+            mViewHolder.id.setText(ballTrainingModelList.get(position).getId());
+
+            return view;
+        }
+
     }
 }

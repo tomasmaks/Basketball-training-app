@@ -11,10 +11,25 @@ import java.util.List;
  * Created by Tomas on 12/08/2016.
  */
 public class BallTrainingModel {
-    private String thumbnail;
     private String category;
-    @SerializedName("cast")
-    private List<Cast> castList;
+    private String ids;
+    private String count;
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
+    }
 
     public String getCategory() {
         return category;
@@ -22,33 +37,61 @@ public class BallTrainingModel {
 
     public void setCategory(String category) {
         this.category = category;
-    }
+   }
 
-    public List<Cast> getCastList() {
-        return castList;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public void setCastList(List<Cast> castList) {
-        this.castList = castList;
-    }
-
-    public static class Cast {
         private String name;
+        private String thumb;
+        private String description;
+        private String video;
+        private String body;
+        private String id;
 
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+        public String getThumb() {
+            return thumb;
+        }
+
+        public void setThumb(String thumb) {
+            this.thumb = thumb;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getVideo() {
+            return video;
+        }
+
+        public void setVideo(String video) {
+            this.video = video;
+        }
+
+        public String getBody() {
+            return body;
+        }
+
+        public void setBody(String body) {
+            this.body = body;
+        }
+
 }
