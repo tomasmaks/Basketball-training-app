@@ -45,12 +45,12 @@ public class BallTrainingFragment extends ListFragment {
     // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
 
-    List<BallTrainingModel> ballTrainingCategoriesModelList;
+    List<BallTrainingModel> ballTrainingModelList;
     // albums JSONArray
     JSONArray categories = null;
 
     // albums JSON url
-    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/561055b8be24ee3f458d904f23d8e67a83e97bf3/ListOfExercises.json";
+    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/cb4bdf47979f7e7fbbdba9135a328b03b987d9ff/ListOfExercises.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "ids";
@@ -70,16 +70,19 @@ public class BallTrainingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
+        new LoadCategories().execute();
+
         return mRootView;
+
+
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        new LoadCategories().execute();
-
-
         gridview = (GridView) mRootView.findViewById(R.id.list);
+
+
 
         gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
             @Override
@@ -96,6 +99,9 @@ public class BallTrainingFragment extends ListFragment {
                 ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
             }
         });
+
+
+
     }
 
 
@@ -137,23 +143,24 @@ public class BallTrainingFragment extends ListFragment {
 
             try {
 
-                List<BallTrainingModel> ballTrainingCategoriesModelList = new ArrayList<>();
+                List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
                 Gson gson = new Gson();
                 categories = json.getJSONArray(TABLE_EVENT);
                 //categories = new JSONArray(json);
-                BallTrainingModel ballTrainingCategoriesModel = gson.fromJson(json.toString(), BallTrainingModel.class);
+
 
                     // looping through All albums
                     for (int i = 0; i < categories.length(); i++) {
                         JSONObject c = categories.getJSONObject(i);
-
-                        ballTrainingCategoriesModel.setId(c.getString(TAG_ID));
-                        ballTrainingCategoriesModel.setName(c.getString(TAG_NAME));
+                        BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
+                        ballTrainingModel.setIds(c.getString(TAG_ID));
+                        ballTrainingModel.setCategory(c.getString(TAG_NAME));
                         //ballTrainingCategoriesModel.setCount(c.getString(TAG_COUNT));
+                        ballTrainingModelList.add(ballTrainingModel);
 
-                        ballTrainingCategoriesModelList.add(ballTrainingCategoriesModel);
+
                 }
-                return ballTrainingCategoriesModelList;
+                return ballTrainingModelList;
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -169,19 +176,8 @@ public class BallTrainingFragment extends ListFragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    /**
-                     * Updating parsed JSON data into ListView
-                     * */
-//                    ListAdapter adapter = new SimpleAdapter(
-//                            getActivity(), categoryList,
-//                            R.layout.fragment_balltraining_content, new String[]{TAG_ID,
-//                            TAG_NAME, TAG_COUNT}, new int[]{
-//                            R.id.category_id, R.id.category_name, R.id.count});
-//
-//                    gridview.setAdapter(adapter);
-
-                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_list_items, result);
-                    setListAdapter(adapter);
+                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
+                    gridview.setAdapter(adapter);
 
 
                 }
@@ -196,12 +192,12 @@ public class BallTrainingFragment extends ListFragment {
     public class ListAdapter extends BaseAdapter {
         private LayoutInflater inflater;
         Context context;
-        private List<BallTrainingModel> ballTraininCategoriesModelList;
+        private List<BallTrainingModel> ballTrainingModelList;
         int resource;
-    public ListAdapter(Context context, int resource, List<BallTrainingModel> ballTraininCategoriesgModelList) {
+    public ListAdapter(Context context, int resource, List<BallTrainingModel> ballTrainingModelList) {
         this.context = context;
         this.resource = resource;
-        this.ballTraininCategoriesModelList = ballTraininCategoriesgModelList;
+        this.ballTrainingModelList = ballTrainingModelList;
         inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -217,13 +213,13 @@ public class BallTrainingFragment extends ListFragment {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return ballTraininCategoriesModelList.size();
+        return ballTrainingModelList.size();
     }
 
     @Override
     public Object getItem(int pos) {
         // TODO Auto-generated method stub
-        return ballTraininCategoriesModelList.get(pos);
+        return ballTrainingModelList.get(pos);
     }
 
     @Override
@@ -241,7 +237,7 @@ public class BallTrainingFragment extends ListFragment {
             mViewHolder = new ViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService
                     (Activity.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.fragment_balltraining_list_items, parent, false);
+            view = inflater.inflate(R.layout.fragment_balltraining_content, parent, false);
             mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
             mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
             //mViewHolder.count = (TextView) view.findViewById(R.id.count);
@@ -252,8 +248,9 @@ public class BallTrainingFragment extends ListFragment {
         // Then later, when you want to display image
         //ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
 
-        mViewHolder.category.setText(ballTraininCategoriesModelList.get(position).getCategory());
-        mViewHolder.ids.setText(ballTraininCategoriesModelList.get(position).getIds());
+        mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
+        mViewHolder.category.setText(ballTrainingModelList.get(position).getCategory());
+
         //mViewHolder.count.setText(ballTraininCategoriesModelList.get(position).getCount());
 
         return view;
