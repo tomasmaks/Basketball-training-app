@@ -1,0 +1,244 @@
+{ "Basketball": [
+
+  {
+    "ids": 1,
+    "category": "Shooting",
+    "exercises": [
+ 
+     {
+        "id": 1,
+       
+ "name": "Shooting drills",
+       
+ "thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+       
+ "description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+       
+ "video": "https://archive.org/download/Popeye_forPresident/Popeye_forPresident_512kb.mp4",
+       
+ "body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+    
+  },
+ 
+      {
+        "id": 2,
+       
+ "name": "Shooting drills 2",
+        
+"thumb": "https://kycapitalliving.files.wordpress.com/2014/02/basketball-thumbnail.jpg",
+       
+ "description": "Today I wanted to go over my favorite three point basketball shooting drills. These are perfect to work on shooting off of reactions and locating your target quickly. These type of drills are extremely important because in an actual game you very rarely get a regular catch and shoot shot. So by modifying our drills we can simulate that re-targeting and reactions that is so critical to being a great in-game shooter! Ever wonder how NBA shooters like Stephen Curry, Ray Allen, Kyrie Irving, and Kevin Durant have such smooth three point shots? These drills will help you develop a lights-out range just like them!",
+        
+"video": "https://www.youtube.com/watch?v=JnbsF1FhTf8",
+        
+"body": "Today I wanted to go over my favorite three point basketball shooting drills. These are perfect to work on shooting off of reactions and locating your target quickly. These type of drills are extremely important because in an actual game you very rarely get a regular catch and shoot shot. So by modifying our drills we can simulate that re-targeting and reactions that is so critical to being a great in-game shooter! Ever wonder how NBA shooters like Stephen Curry, Ray Allen, Kyrie Irving, and Kevin Durant have such smooth three point shots? These drills will help you develop a lights-out range just like them!"
+     
+ },
+ 
+     {
+        "id": 3,
+        
+"name": "Shooting drills 3",
+       
+ "thumb": "http://newsletter.newington.nsw.edu.au/wyvern/files/2013/09/basketball-thumbnail.jpg",
+       
+ "description": "If every basketball player worked as hard as me. I would get out of my job.",
+        
+"video": "https://www.youtube.com/watch?v=u4nkgCi0UHU",
+        
+"body": "If every basketball player worked as hard as me. I would get out of my job."
+      }
+   
+ ]
+  
+},
+ 
+ {
+    "ids": 2,
+    
+"category": "Ball Handling",
+   
+ "exercises": [
+     
+{
+        "id": 1,
+       
+ "name": "Shooting drills",
+       
+ "thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+        
+"description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+        
+"video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+        "body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+      }
+    
+]
+ 
+ },
+   
+{
+    "ids": 3,
+   
+ "category": "Post Moves",
+   
+ "exercises": [
+     
+ {
+        
+"id": 1,
+        
+"name": "Shooting drills",
+       
+ "thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+       
+ "description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+       
+ "video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+        
+"body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+     
+ }
+   
+ ]
+  
+},
+   {
+    "ids": 4,
+    
+"category": "Face To Face Moves",
+    
+"exercises": [
+     
+ {
+        "id": 1,
+       
+ "name": "Shooting drills",
+       
+ "thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+        
+"description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+        
+"video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+        
+"body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+    
+  }
+   
+ ]
+ 
+ },
+  
+ {
+    "ids": 5,
+   
+ "category": "Rebound",
+   
+ "exercises": [
+   
+  {
+        "id": 1,
+       
+ "name": "Shooting drills",
+       
+ "thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+        
+"description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+       
+ "video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+        
+"body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+     
+ }
+   
+ ]
+  
+},
+   
+{
+    
+"ids": 6,
+   
+ "category": "Defense",
+   
+ "exercises": [
+     {
+      
+ "id": 1,
+       
+ "name": "Shooting drills",
+       
+ "thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+        
+"description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+       
+ "video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+        
+"body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+     
+ }
+   
+ ]
+  
+},
+   
+{
+    
+"ids": 7,
+    
+"category": "Passing",
+    
+"exercises": [
+     
+ {
+        "id": 1,
+        
+"name": "Shooting drills",
+        
+"thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+        
+"description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+        
+"video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+        
+"body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+      }
+   
+ ]
+  
+},
+   
+{
+    "ids": 8,
+   
+ "category": "Other",
+    
+"exercises": [
+   
+{
+        "id": 1,
+        
+"name": "Shooting drills",
+        
+"thumb": "http://app.akharinkhabar.ir/AndroidOnlineNewsImage.aspx?id=7531955",
+      
+  "description": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax",
+        
+"video": "https://www.youtube.com/watch?v=AyiBqi0MhU0",
+       
+ "body": "good clips of Steph Curry's real summer workout.. ball handling using ropes, floaters,resistance bands, 2 balls drills, vertimax"
+      
+    
+  }
+    
+]
+ 
+ }
+]
+}
