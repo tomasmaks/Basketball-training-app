@@ -10,19 +10,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.widget.TextView;
 
+import com.devbrackets.android.exomedia.listener.OnPreparedListener;
+import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.google.gson.Gson;
 
-public class BallTrainingThirdActivity extends Activity {
+public class BallTrainingThirdActivity extends Activity implements OnPreparedListener {
 
     // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
@@ -34,11 +34,12 @@ public class BallTrainingThirdActivity extends Activity {
     String exercise_id = null;
 
     String exercise_description, exercise_name, exercise_body;
+    String exercise_video;
 
     // single song JSON url
     // GET parameters album, song
-    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/561055b8be24ee3f458d904f23d8e67a83e97bf3/ListOfExercises.json";
-
+    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/e536d4bf271221d99c28f322231195536c90e83f/ListOfExercises.json";
+    com.devbrackets.android.exomedia.ui.widget.EMVideoView emVideoView;
     // ALL JSON node names
     private static final String PARENT_ID = "ids";
     private static final String TABLE_EVENT = "Basketball";
@@ -47,6 +48,7 @@ public class BallTrainingThirdActivity extends Activity {
     private static final String TAG_NAME = "name";
     private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_BODY = "body";
+    private static final String TAG_VIDEO = "video";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,10 +119,14 @@ public class BallTrainingThirdActivity extends Activity {
                                 exercise_description = nzn.getString(TAG_DESCRIPTION);
                                 ballTrainingModel.setBody(exercise_body);
                                 exercise_body = nzn.getString(TAG_BODY);
+                                ballTrainingModel.setVideoURI(exercise_video);
+                                exercise_video = nzn.getString(TAG_VIDEO);
+
+
+
                                 ballTrainingModel.setIds(categoryId);
                                 ballTrainingModel.setId(exerciseId);
 
-                               // ballTrainingModelList.add(ballTrainingModel);
                             }
 
                         }
@@ -129,7 +135,6 @@ public class BallTrainingThirdActivity extends Activity {
 
                 }
 
-                //return ballTrainingModelList;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -146,9 +151,6 @@ public class BallTrainingThirdActivity extends Activity {
             runOnUiThread(new Runnable() {
                 public void run() {
 
-                   // balltraining_title = (TextView) findViewById(R.id.exercise_title);
-                   // balltraining_title.setText(ballTrainingModel.getName());
-
                     TextView txt_exer_name = (TextView) findViewById(R.id.exercise_title);
                     txt_exer_name.setText(exercise_name);
                     TextView txt_exer_description = (TextView) findViewById(R.id.exercise_description);
@@ -157,12 +159,30 @@ public class BallTrainingThirdActivity extends Activity {
                     txt_exer_body.setText(exercise_body);
 
 
+                    setupVideoView();
 
+                    emVideoView = (com.devbrackets.android.exomedia.ui.widget.EMVideoView) findViewById(R.id.video_view);
+                    emVideoView.setVideoURI(Uri.parse(exercise_video));
 
+                    onPrepared();
                 }
             });
 
         }
 
+    }
+    private void setupVideoView() {
+        emVideoView = (EMVideoView)findViewById(R.id.video_view);
+        emVideoView.setOnPreparedListener(this);
+
+        //For now we just picked an arbitrary item to play.  More can be found at
+        //https://archive.org/details/more_animation
+        emVideoView.setVideoURI(Uri.parse(exercise_video));
+    }
+
+    @Override
+    public void onPrepared() {
+        //Starts the video playback as soon as it is ready
+        emVideoView.start();
     }
 }

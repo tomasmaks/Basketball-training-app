@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:EMVideoView="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#ffffff" >
+    android:background="#ffffff">
 
     <TextView android:id="@+id/exercise_title"
         android:layout_width="fill_parent"
@@ -28,5 +29,12 @@
         android:padding="10dip"
         android:textColor="#444444"
         android:textStyle="bold"/>
+
+    <com.devbrackets.android.exomedia.ui.widget.EMVideoView
+        android:id="@+id/video_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        EMVideoView:useDefaultControls="true"/>
+
 
 </LinearLayout>

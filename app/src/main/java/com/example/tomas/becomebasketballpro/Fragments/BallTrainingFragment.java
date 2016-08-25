@@ -19,10 +19,8 @@ import org.apache.http.NameValuePair;
 
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.MainActivity;
-import com.example.tomas.becomebasketballpro.Model.BallTrainingCategoriesModel;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
-import com.example.tomas.becomebasketballpro.Model.JSONParserString;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
 

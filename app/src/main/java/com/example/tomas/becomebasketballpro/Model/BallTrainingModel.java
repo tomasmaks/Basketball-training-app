@@ -1,5 +1,6 @@
 package com.example.tomas.becomebasketballpro.Model;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.annotations.SerializedName;
@@ -78,11 +79,11 @@ public class BallTrainingModel {
             this.description = description;
         }
 
-        public String getVideo() {
+        public String getVideoURI() {
             return video;
         }
 
-        public void setVideo(String video) {
+        public void setVideoURI(String video) {
             this.video = video;
         }
 

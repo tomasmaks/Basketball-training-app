@@ -1,19 +1,26 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="false"
-    android:layout_margin="@dimen/material_component_cards_space_between_cards"
+
     android:focusable="false"
     android:descendantFocusability="blocksDescendants"
     android:focusableInTouchMode="false"
     android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/material_indigo_500">
 
     <RelativeLayout
         android:id="@+id/btn_lay"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:background="@drawable/kk2">
 
         <TextView
@@ -34,18 +41,18 @@
     <RelativeLayout
         android:id="@+id/btn_lay2"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@drawable/kk2"
+        android:layout_height="200dp"
+        android:background="@drawable/kevin_durant"
         android:layout_marginTop="15dp">
 
         <TextView
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:text="Stories"
+            android:text="Basketball Training"
             android:textColor="#bfbfbf"
             android:textSize="30dp"
             android:maxLines="1"
@@ -56,7 +63,7 @@
     <RelativeLayout
         android:id="@+id/btn_lay3"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
         android:background="@drawable/kk2"
         android:layout_marginTop="15dp">
 
@@ -76,3 +83,4 @@
     </RelativeLayout>
 
 </LinearLayout>
+</ScrollView>
