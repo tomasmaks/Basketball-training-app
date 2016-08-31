@@ -74,7 +74,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
     ArticleDbHandler dbHandler;
-    List<ArticleModel> result;
+    List<ArticleModel> result = null;
 
 
     public static ArticleListFragment newInstance(int sectionNumber) {
@@ -138,11 +138,13 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     public void onStart() {
         super.onStart();
         dbHandler = new ArticleDbHandler(getActivity());
+
         NetworkUtils utils = new NetworkUtils(getActivity());
         if(utils.isConnectingToInternet()) {
             new FetchTask().execute(URL_TO_HIT);
 
         }else {
+
             result = dbHandler.getAllArticle();
             adapter = new ArticleAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
             mListView.setAdapter(adapter);
@@ -229,6 +231,9 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                 List<ArticleModel> articleModelList = new ArrayList<>();
 
                 Gson gson = new Gson();
+
+                dbHandler.deleteTable();
+
                 for(int i=0; i<parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
                     /**
@@ -241,9 +246,12 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     articleModel.setImage(finalObject.getString("photo"));
                     articleModel.setData(finalObject.getString("published_date"));
 
-                  //dbHandler.addArticle(articleModel);
+
                     articleModelList.add(articleModel);
+                    dbHandler.addArticle(articleModel);
                 }
+
+
                 return articleModelList;
 
             } catch (MalformedURLException e) {
@@ -288,7 +296,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
                     }
                 });
-            } else {
             }
         }
     }

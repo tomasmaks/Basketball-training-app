@@ -27,7 +27,7 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
     private static final String KEY_THUMB = "_thumb";
     private static final String KEY_PHOTO = "_photo";
     private static final String KEY_PUBLISHED_DATE = "_published_date";
-
+    private SQLiteDatabase db;
     String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_TITLE+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT,"+KEY_PUBLISHED_DATE+" TEXT)";
     String DROP_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
 
@@ -46,8 +46,15 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
         onCreate(db);
     }
 
+    public void deleteTable() {
+        if (db == null || !db.isOpen())
+            db = getWritableDatabase();
+        db.delete(TABLE_NAME, null, null);;
+    }
+
     @Override
     public void addArticle(ArticleModel articleModel) {
+        List<ArticleModel> articleModelList = null;
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             ContentValues values = new ContentValues();
@@ -63,10 +70,13 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
         }
     }
 
+
     @Override
     public List<ArticleModel> getAllArticle() {
         SQLiteDatabase db = this.getReadableDatabase();
+
         List<ArticleModel> articleModelList = null;
+
         try{
             articleModelList = new ArrayList<ArticleModel>();
             String QUERY = "SELECT * FROM "+TABLE_NAME;
@@ -84,7 +94,7 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
 
                 }
                 cursor.close();
-                db.close();
+
             }
 
         }catch (Exception e){
