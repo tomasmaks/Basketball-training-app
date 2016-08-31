@@ -14,15 +14,23 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
+import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
+import com.thefinestartist.ytpa.YouTubePlayerActivity;
+import com.thefinestartist.ytpa.enums.Orientation;
+import com.thefinestartist.ytpa.enums.Quality;
+import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
+import com.squareup.picasso.Picasso;
 
-public class BallTrainingThirdActivity extends Activity implements OnPreparedListener {
+
+public class BallTrainingThirdActivity extends Activity {
 
     // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
@@ -36,10 +44,22 @@ public class BallTrainingThirdActivity extends Activity implements OnPreparedLis
     String exercise_description, exercise_name, exercise_body;
     String exercise_video;
 
+    YouTubePlayer.PlayerStyle playerStyle;
+    Orientation orientation;
+    private static String VIDEO_ID = "iS1g8G_njx8";
+    boolean showAudioUi;
+    boolean showFadeAnim;
+    private boolean advertised = false;
+    ImageButton play;
+    ImageView thumbnail;
+
+
+
+
     // single song JSON url
     // GET parameters album, song
-    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/e536d4bf271221d99c28f322231195536c90e83f/ListOfExercises.json";
-    com.devbrackets.android.exomedia.ui.widget.EMVideoView emVideoView;
+    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/80756e6f5b9794b45c9746df495e2d19327e3eb5/ListOfExercises.json";
+
     // ALL JSON node names
     private static final String PARENT_ID = "ids";
     private static final String TABLE_EVENT = "Basketball";
@@ -161,10 +181,10 @@ public class BallTrainingThirdActivity extends Activity implements OnPreparedLis
 
                     setupVideoView();
 
-                    emVideoView = (com.devbrackets.android.exomedia.ui.widget.EMVideoView) findViewById(R.id.video_view);
-                    emVideoView.setVideoURI(Uri.parse(exercise_video));
+//                    emVideoView = (com.devbrackets.android.exomedia.ui.widget.EMVideoView) findViewById(R.id.video_view);
+//                    emVideoView.setVideoURI(Uri.parse("http://www.youtube.com/v/VNv3EZEUgok?autohide=1&version=3"));
 
-                    onPrepared();
+
                 }
             });
 
@@ -172,17 +192,47 @@ public class BallTrainingThirdActivity extends Activity implements OnPreparedLis
 
     }
     private void setupVideoView() {
-        emVideoView = (EMVideoView)findViewById(R.id.video_view);
-        emVideoView.setOnPreparedListener(this);
+//        youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
+//
+//        // Initializing video player with developer key
+//        youTubeView.initialize(Config.DEVELOPER_KEY, this);
+        playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
+        orientation = Orientation.AUTO;
+        showAudioUi = true;
+        showFadeAnim = true;
 
-        //For now we just picked an arbitrary item to play.  More can be found at
-        //https://archive.org/details/more_animation
-        emVideoView.setVideoURI(Uri.parse(exercise_video));
+        play = (ImageButton) findViewById(R.id.play_bt);
+        thumbnail = (ImageView) findViewById(R.id.thumbnail);
+
+        Picasso.with(this)
+                .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                .fit()
+                .centerCrop()
+                .into(thumbnail);
+
+
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BallTrainingThirdActivity.this, YouTubePlayerActivity.class);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+//                if (showFadeAnim) {
+//                    intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_ENTER, R.anim.fade_in);
+//                    intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_EXIT, R.anim.fade_out);
+//                } else {
+//                    intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_ENTER, R.anim.modal_close_enter);
+//                    intent.putExtra(YouTubePlayerActivity.EXTRA_ANIM_EXIT, R.anim.modal_close_exit);
+//                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent, 1);
+            }
+        });
+
     }
 
-    @Override
-    public void onPrepared() {
-        //Starts the video playback as soon as it is ready
-        emVideoView.start();
-    }
 }

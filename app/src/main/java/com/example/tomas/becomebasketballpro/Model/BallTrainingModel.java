@@ -14,14 +14,14 @@ import java.util.List;
 public class BallTrainingModel {
     private String category;
     private String ids;
-    private String count;
+    private String tagThumb;
 
-    public String getCount() {
-        return count;
+    public String getCatThumb() {
+        return tagThumb;
     }
 
-    public void setCount(String count) {
-        this.count = count;
+    public void setCatThumb(String tagThumb) {
+        this.tagThumb = tagThumb;
     }
 
     public String getIds() {

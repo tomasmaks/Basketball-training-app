@@ -28,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -71,6 +73,8 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     private ProgressDialog dialog;
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
+    ArticleDbHandler dbHandler;
+    List<ArticleModel> result;
 
 
     public static ArticleListFragment newInstance(int sectionNumber) {
@@ -118,6 +122,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 
+
         refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
         refreshLayout.setOnRefreshListener(this);
@@ -132,7 +137,25 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onStart() {
         super.onStart();
-        new FetchTask().execute(URL_TO_HIT);
+        dbHandler = new ArticleDbHandler(getActivity());
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(utils.isConnectingToInternet()) {
+            new FetchTask().execute(URL_TO_HIT);
+
+        }else {
+            result = dbHandler.getAllArticle();
+            adapter = new ArticleAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                        ArticleModel articleModel = result.get(position2);
+                        Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
+                        intent.putExtra("articleModel", new Gson().toJson(articleModel));
+                        getActivity().startActivity(intent);
+                    }
+                });
+        }
     }
 
     @Override
@@ -146,7 +169,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     e.printStackTrace();
                 }
 
-                handler.sendEmptyMessage(0);
+               handler.sendEmptyMessage(0);
             }
         }).start();
 
@@ -160,7 +183,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             switch (msg.what) {
                 case 0:
                     new FetchTask().execute(URL_TO_HIT);
-                    Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
                 default:
@@ -192,7 +215,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder buffer = new StringBuilder();
-                String line ="";
+                String line = "";
                 while ((line = reader.readLine()) != null){
                     buffer.append(line);
                 }
@@ -201,6 +224,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("article");
+
 
                 List<ArticleModel> articleModelList = new ArrayList<>();
 
@@ -217,6 +241,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     articleModel.setImage(finalObject.getString("photo"));
                     articleModel.setData(finalObject.getString("published_date"));
 
+                  //dbHandler.addArticle(articleModel);
                     articleModelList.add(articleModel);
                 }
                 return articleModelList;
@@ -264,7 +289,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     }
                 });
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -279,6 +303,21 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             articleModelList = objects;
             this.resource = resource;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        @Override
+        public int getCount() {
+            return articleModelList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return articleModelList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
         }
 
         @Override
@@ -297,7 +336,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
 
             // Then later, when you want to display image
             ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);

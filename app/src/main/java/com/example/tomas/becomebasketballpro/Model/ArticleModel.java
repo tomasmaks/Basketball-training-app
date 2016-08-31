@@ -1,15 +1,41 @@
 package com.example.tomas.becomebasketballpro.Model;
 
+import java.io.Serializable;
+
 /**
  * Created by Tomas on 03/08/2016.
  */
-public class ArticleModel {
+public class ArticleModel implements Serializable {
     private String thumbnail;
     private String articleTitle;
     private String articleData;
     private String articleImage;
     private String articleBody;
+    private int id;
 
+    public ArticleModel() {
+    }
+
+    public ArticleModel(String articleTitle) {
+        this.articleTitle = articleTitle;
+        // this.thumbnail = thumbnail;
+        this.articleData = articleData;
+        this.articleImage = articleImage;
+        this.articleBody = articleBody;
+    }
+    public ArticleModel(int id, String articleTitle) {
+        this.id = id;
+        this.articleTitle = articleTitle;
+    }
+
+    public ArticleModel(int id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody) {
+        this.id = id;
+        this.articleTitle = articleTitle;
+        this.thumbnail = thumbnail;
+        this.articleData = articleData;
+        this.articleImage = articleImage;
+        this.articleBody = articleBody;
+    }
 
     public String getThumbnail() {
         return thumbnail;
@@ -49,6 +75,14 @@ public class ArticleModel {
 
     public void setBody(String articleBody) {
         this.articleBody = articleBody;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 

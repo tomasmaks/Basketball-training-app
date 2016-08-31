@@ -4,4 +4,8 @@
     <color name="gray">#4c4c4c</color>
     <color name="light_white">#bfbfbf</color>
     <color name="blue_50">#804a90e2</color>
+
+    <color name="shadow">#555555</color>
+    <color name="title">#777777</color>
+
 </resources>

@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
@@ -23,6 +24,9 @@ import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -48,17 +52,26 @@ public class BallTrainingFragment extends ListFragment {
     JSONArray categories = null;
 
     // albums JSON url
-    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/cb4bdf47979f7e7fbbdba9135a328b03b987d9ff/ListOfExercises.json";
+    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/7f339647a972d6ea323bda28ae5535b7863ff5f0/ListOfExercises.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "ids";
     private static final String TAG_NAME = "category";
-    //private static final String TAG_COUNT = "count";
+    private static final String TAG_CATTHUM = "catThumb";
     private static final String TABLE_EVENT = "Basketball";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+        ImageLoader.getInstance().init(config); // Do it on Application start
 
     }
 
@@ -153,6 +166,7 @@ public class BallTrainingFragment extends ListFragment {
                         BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
                         ballTrainingModel.setIds(c.getString(TAG_ID));
                         ballTrainingModel.setCategory(c.getString(TAG_NAME));
+                        ballTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
                         //ballTrainingCategoriesModel.setCount(c.getString(TAG_COUNT));
                         ballTrainingModelList.add(ballTrainingModel);
 
@@ -203,7 +217,7 @@ public class BallTrainingFragment extends ListFragment {
         // Include Number of reqd views.
         private TextView ids;
         private TextView category;
-       // private TextView count;
+        private ImageView tagThumb;
 
 
     }
@@ -238,13 +252,13 @@ public class BallTrainingFragment extends ListFragment {
             view = inflater.inflate(R.layout.fragment_balltraining_content, parent, false);
             mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
             mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
-            //mViewHolder.count = (TextView) view.findViewById(R.id.count);
+            mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
             view.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) view.getTag();
         }
         // Then later, when you want to display image
-        //ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
+        ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getCatThumb(), mViewHolder.tagThumb);
 
         mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
         mViewHolder.category.setText(ballTrainingModelList.get(position).getCategory());
