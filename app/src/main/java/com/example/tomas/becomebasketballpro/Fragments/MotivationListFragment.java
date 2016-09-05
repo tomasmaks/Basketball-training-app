@@ -19,8 +19,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
+import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
@@ -56,7 +61,8 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     private ProgressDialog dialog;
     MotivationAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
-
+    MotivationDbHandler dbHandler;
+    List<MotivationModel> result = null;
 
 
     public static MotivationListFragment newInstance(int sectionNumber) {
@@ -117,7 +123,27 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onStart() {
         super.onStart();
-        new FetchMotivationTask().execute(URL_TO_HIT);
+        dbHandler = new MotivationDbHandler(getActivity());
+
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(utils.isConnectingToInternet()) {
+            new FetchMotivationTask().execute(URL_TO_HIT);
+        } else {
+
+            result = dbHandler.getAllMotivation();
+            adapter = new MotivationAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                    MotivationModel motivationModel = result.get(position2);
+                    Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
+                    intent.putExtra("motivationModel", new Gson().toJson(motivationModel));
+                    getActivity().startActivity(intent);
+                }
+            });
+
+        }
     }
 
     @Override
@@ -145,7 +171,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
             switch (msg.what) {
                 case 0:
                     new FetchMotivationTask().execute(URL_TO_HIT);
-                    Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
                 default:
@@ -155,7 +181,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     }
 
 
-    public class FetchMotivationTask extends AsyncTask<String,String, List<ArticleModel>> {
+    public class FetchMotivationTask extends AsyncTask<String,String, List<MotivationModel>> {
 
         private final String LOG_TAG = FetchMotivationTask.class.getSimpleName();
 
@@ -166,7 +192,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
 
         @Override
-        protected List<ArticleModel> doInBackground(String... params) {
+        protected List<MotivationModel> doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
@@ -187,24 +213,28 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("Motivation");
 
-                List<ArticleModel> articleModelList = new ArrayList<>();
+                List<MotivationModel> motivationModelList = new ArrayList<>();
 
                 Gson gson = new Gson();
+
+                dbHandler.deleteTable();
+
                 for(int i=0; i<parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
                     /**
                      * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
                      */
-                    ArticleModel articleModel = gson.fromJson(finalObject.toString(), ArticleModel.class);
-                    articleModel.setThumbnail(finalObject.getString("thumb"));
-                    articleModel.setTitle(finalObject.getString("title"));
-                    articleModel.setBody(finalObject.getString("body"));
-                    articleModel.setImage(finalObject.getString("photo"));
-                    articleModel.setData(finalObject.getString("published_date"));
+                    MotivationModel motivationModel = gson.fromJson(finalObject.toString(), MotivationModel.class);
+                    motivationModel.setThumbnail(finalObject.getString("thumb"));
+                    motivationModel.setTitle(finalObject.getString("title"));
+                    motivationModel.setBody(finalObject.getString("body"));
+                    motivationModel.setImage(finalObject.getString("photo"));
+                    motivationModel.setData(finalObject.getString("published_date"));
 
-                    articleModelList.add(articleModel);
+                    motivationModelList.add(motivationModel);
+                    dbHandler.addMotivation(motivationModel);
                 }
-                return articleModelList;
+                return motivationModelList;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -229,7 +259,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
 
         @Override
-        protected void onPostExecute(final List<ArticleModel> result) {
+        protected void onPostExecute(final List<MotivationModel> result) {
             super.onPostExecute(result);
 
             dialog.dismiss();
@@ -241,9 +271,9 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ArticleModel articleModel = result.get(position);
+                        MotivationModel motivationModel = result.get(position);
                         Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
-                        intent.putExtra("articleModel", new Gson().toJson(articleModel));
+                        intent.putExtra("motivationModel", new Gson().toJson(motivationModel));
                         getActivity().startActivity(intent);
 
                     }
@@ -256,12 +286,12 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
     public class MotivationAdapter extends ArrayAdapter {
 
-        private List<ArticleModel> articleModelList;
+        private List<MotivationModel> motivationModelList;
         private int resource;
         private LayoutInflater inflater;
-        public MotivationAdapter(Context context, int resource, List<ArticleModel> objects) {
+        public MotivationAdapter(Context context, int resource, List<MotivationModel> objects) {
             super(context, resource, objects);
-            articleModelList = objects;
+            motivationModelList = objects;
             this.resource = resource;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -285,11 +315,11 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
 
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
+            ImageLoader.getInstance().displayImage(motivationModelList.get(position).getThumbnail(), holder.thumbnail);
             // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
 
-            holder.articleTitle.setText(articleModelList.get(position).getTitle());
-            holder.articleData.setText("Added on: " + articleModelList.get(position).getData());
+            holder.articleTitle.setText(motivationModelList.get(position).getTitle());
+            holder.articleData.setText("Added on: " + motivationModelList.get(position).getData());
 
             return convertView;
         }

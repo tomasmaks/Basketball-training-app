@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.SuccessModel;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -39,16 +40,16 @@ public class SuccessDetailsActivity extends ActionBarActivity {
         // recovering data from MainActivity, sent via intent
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-            String json = bundle.getString("articleModel");
-            ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
+            String json = bundle.getString("successModel");
+            SuccessModel successModel = new Gson().fromJson(json, SuccessModel.class);
 
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
+            ImageLoader.getInstance().displayImage(successModel.getImage(), article_image);
 
 
-            article_title.setText(articleModel.getTitle());
-            article_body.setText(articleModel.getBody());
-            articleData.setText("Added on: " + articleModel.getData());
+            article_title.setText(successModel.getTitle());
+            article_body.setText(successModel.getBody());
+            articleData.setText("Added on: " + successModel.getData());
 
 
         }

@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
-            android:text="Stories"
+            android:text="Fitness Training"
             android:textColor="#bfbfbf"
             android:textSize="30dp"
             android:maxLines="1"

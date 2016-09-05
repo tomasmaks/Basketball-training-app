@@ -149,14 +149,14 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             adapter = new ArticleAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-                        ArticleModel articleModel = result.get(position2);
-                        Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
-                        intent.putExtra("articleModel", new Gson().toJson(articleModel));
-                        getActivity().startActivity(intent);
-                    }
-                });
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                    ArticleModel articleModel = result.get(position2);
+                    Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
+                    intent.putExtra("articleModel", new Gson().toJson(articleModel));
+                    getActivity().startActivity(intent);
+                }
+            });
         }
     }
 

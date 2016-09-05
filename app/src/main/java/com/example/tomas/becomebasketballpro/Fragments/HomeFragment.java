@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                NewsFragment newsFragment = new NewsFragment();
+                FitnessTrainingFragment newsFragment = new FitnessTrainingFragment();
                 Bundle bundle = new Bundle();
                 newsFragment.setArguments(bundle);
                 ((MainActivity) getActivity()).switchFragment(newsFragment, false);

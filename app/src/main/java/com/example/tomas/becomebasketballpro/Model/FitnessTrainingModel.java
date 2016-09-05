@@ -1,17 +1,10 @@
 package com.example.tomas.becomebasketballpro.Model;
 
-import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
-
 /**
- * Created by Tomas on 12/08/2016.
+ * Created by Tomas on 05/09/2016.
  */
-public class BallTrainingModel {
+public class FitnessTrainingModel {
+
     private String category;
     private String ids;
     private String tagThumb;
@@ -94,5 +87,4 @@ public class BallTrainingModel {
     public void setBody(String body) {
         this.body = body;
     }
-
 }

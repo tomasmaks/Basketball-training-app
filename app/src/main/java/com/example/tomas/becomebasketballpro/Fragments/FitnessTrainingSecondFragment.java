@@ -1,6 +1,5 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
+import com.example.tomas.becomebasketballpro.FitnessTrainingThirdActivity;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
@@ -31,14 +31,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Tomas on 14/08/2016.
+ * Created by Tomas on 05/09/2016.
  */
-public class BallTrainingSecondFragment extends ListFragment {
+public class FitnessTrainingSecondFragment extends ListFragment {
     View mRootView;
     ListAdapter adapter;
     Context context;
@@ -91,7 +90,7 @@ public class BallTrainingSecondFragment extends ListFragment {
                                     long arg3) {
 
                 // On selecting single track get song information
-                Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
+                Intent i = new Intent(getActivity().getApplicationContext(), FitnessTrainingThirdActivity.class);
 
                 String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
                 String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
@@ -289,4 +288,6 @@ public class BallTrainingSecondFragment extends ListFragment {
         }
 
     }
+
+
 }

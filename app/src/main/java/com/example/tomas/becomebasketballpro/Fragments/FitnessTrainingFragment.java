@@ -1,22 +1,18 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.support.v4.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.apache.http.NameValuePair;
 
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.MainActivity;
@@ -28,19 +24,19 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.NameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Tomas on 11/08/2016.
+ * Created by Tomas on 05/09/2016.
  */
-public class BallTrainingFragment extends ListFragment {
+public class FitnessTrainingFragment extends ListFragment {
+
     View mRootView;
     GridView gridview;
     ListAdapter adapter;
@@ -79,7 +75,7 @@ public class BallTrainingFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
 
         new LoadCategories().execute();
 
@@ -124,7 +120,7 @@ public class BallTrainingFragment extends ListFragment {
         return fragment;
     }
 
-    public BallTrainingFragment() {
+    public FitnessTrainingFragment() {
         // Required empty public constructor
     }
 
@@ -188,7 +184,7 @@ public class BallTrainingFragment extends ListFragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
+                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, result);
                     gridview.setAdapter(adapter);
 
 
@@ -249,7 +245,7 @@ public class BallTrainingFragment extends ListFragment {
                 mViewHolder = new ViewHolder();
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.fragment_balltraining_content, parent, false);
+                view = inflater.inflate(R.layout.fragment_fitnesstraining_content, parent, false);
                 mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
                 mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
                 mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
@@ -269,8 +265,10 @@ public class BallTrainingFragment extends ListFragment {
         }
     }
 
+
+
+
+
+
+
 }
-
-
-
-

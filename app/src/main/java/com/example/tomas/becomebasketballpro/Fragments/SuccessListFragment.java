@@ -19,8 +19,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
+import com.example.tomas.becomebasketballpro.DBHandler.SuccessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.MotivationModel;
+import com.example.tomas.becomebasketballpro.Model.SuccessModel;
+import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
 import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
@@ -56,7 +62,8 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
     private ProgressDialog dialog;
     SuccessAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
-
+    SuccessDbHandler dbHandler;
+    List<SuccessModel> result = null;
 
 
     public static SuccessListFragment newInstance(int sectionNumber) {
@@ -117,7 +124,26 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onStart() {
         super.onStart();
-        new FetchSuccessTask().execute(URL_TO_HIT);
+        dbHandler = new SuccessDbHandler(getActivity());
+
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(utils.isConnectingToInternet()) {
+            new FetchSuccessTask().execute(URL_TO_HIT);
+        } else {
+
+            result = dbHandler.getAllSuccess();
+            adapter = new SuccessAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
+            mListView.setAdapter(adapter);
+            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                    SuccessModel successModel = result.get(position2);
+                    Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
+                    intent.putExtra("successModel", new Gson().toJson(successModel));
+                    getActivity().startActivity(intent);
+                }
+            });
+        }
     }
 
     @Override
@@ -155,7 +181,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
-    public class FetchSuccessTask extends AsyncTask<String,String, List<ArticleModel>> {
+    public class FetchSuccessTask extends AsyncTask<String,String, List<SuccessModel>> {
 
         private final String LOG_TAG = FetchSuccessTask.class.getSimpleName();
 
@@ -166,7 +192,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
 
         @Override
-        protected List<ArticleModel> doInBackground(String... params) {
+        protected List<SuccessModel> doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
 
@@ -187,24 +213,28 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
                 JSONObject parentObject = new JSONObject(finalJson);
                 JSONArray parentArray = parentObject.getJSONArray("SuccessStories");
 
-                List<ArticleModel> articleModelList = new ArrayList<>();
+                List<SuccessModel> successModelList = new ArrayList<>();
 
                 Gson gson = new Gson();
+
+                dbHandler.deleteTable();
+
                 for(int i=0; i<parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
                     /**
                      * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
                      */
-                    ArticleModel articleModel = gson.fromJson(finalObject.toString(), ArticleModel.class);
-                    articleModel.setThumbnail(finalObject.getString("thumb"));
-                    articleModel.setTitle(finalObject.getString("title"));
-                    articleModel.setBody(finalObject.getString("body"));
-                    articleModel.setImage(finalObject.getString("photo"));
-                    articleModel.setData(finalObject.getString("published_date"));
+                    SuccessModel successModel = gson.fromJson(finalObject.toString(), SuccessModel.class);
+                    successModel.setThumbnail(finalObject.getString("thumb"));
+                    successModel.setTitle(finalObject.getString("title"));
+                    successModel.setBody(finalObject.getString("body"));
+                    successModel.setImage(finalObject.getString("photo"));
+                    successModel.setData(finalObject.getString("published_date"));
 
-                    articleModelList.add(articleModel);
+                    successModelList.add(successModel);
+                    dbHandler.addSuccess(successModel);
                 }
-                return articleModelList;
+                return successModelList;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -229,7 +259,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
 
         @Override
-        protected void onPostExecute(final List<ArticleModel> result) {
+        protected void onPostExecute(final List<SuccessModel> result) {
             super.onPostExecute(result);
 
             dialog.dismiss();
@@ -241,9 +271,9 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ArticleModel articleModel = result.get(position);
+                        SuccessModel successModel = result.get(position);
                         Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
-                        intent.putExtra("articleModel", new Gson().toJson(articleModel));
+                        intent.putExtra("successModel", new Gson().toJson(successModel));
                         getActivity().startActivity(intent);
 
                     }
@@ -256,12 +286,12 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
     public class SuccessAdapter extends ArrayAdapter {
 
-        private List<ArticleModel> articleModelList;
+        private List<SuccessModel> successModelList;
         private int resource;
         private LayoutInflater inflater;
-        public SuccessAdapter(Context context, int resource, List<ArticleModel> objects) {
+        public SuccessAdapter(Context context, int resource, List<SuccessModel> objects) {
             super(context, resource, objects);
-            articleModelList = objects;
+            successModelList = objects;
             this.resource = resource;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -285,11 +315,11 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
 
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
+            ImageLoader.getInstance().displayImage(successModelList.get(position).getThumbnail(), holder.thumbnail);
             // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
 
-            holder.articleTitle.setText(articleModelList.get(position).getTitle());
-            holder.articleData.setText("Added on: " + articleModelList.get(position).getData());
+            holder.articleTitle.setText(successModelList.get(position).getTitle());
+            holder.articleData.setText("Added on: " + successModelList.get(position).getData());
 
             return convertView;
         }

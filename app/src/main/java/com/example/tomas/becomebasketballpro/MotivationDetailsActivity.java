@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -38,16 +39,16 @@ public class MotivationDetailsActivity extends ActionBarActivity {
         // recovering data from MainActivity, sent via intent
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-            String json = bundle.getString("articleModel");
-            ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
+            String json = bundle.getString("motivationModel");
+            MotivationModel motivationModel = new Gson().fromJson(json, MotivationModel.class);
 
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
+            ImageLoader.getInstance().displayImage(motivationModel.getImage(), article_image);
 
 
-            article_title.setText(articleModel.getTitle());
-            article_body.setText(articleModel.getBody());
-            articleData.setText("Added on: " + articleModel.getData());
+            article_title.setText(motivationModel.getTitle());
+            article_body.setText(motivationModel.getBody());
+            articleData.setText("Added on: " + motivationModel.getData());
 
 
         }
