@@ -25,27 +25,27 @@ public class FitnessDbHandler extends SQLiteOpenHelper implements FitnessListene
     private static final String DB_NAME = "FitnessDatabase.db";
 
     private static final String TABLE_CATEGORY = "fitness_category";
-    private static final String TABLE_EXERCISE = "fitness_exercise";
-    private static final String TABLE_EXERCISE_CATEGORY = "fitness_exercise_category";
+   // private static final String TABLE_EXERCISE = "fitness_exercise";
+  //  private static final String TABLE_EXERCISE_CATEGORY = "fitness_exercise_category";
 
-    private static final String KEY_ID = "_id";
-    private static final String KEY_NAME = "_name";
-    private static final String KEY_BODY = "_body";
-    private static final String KEY_THUMB = "_thumb";
-    private static final String KEY_DESCRIPTION = "_description";
-    private static final String KEY_VIDEO = "_video";
-    private static final String CAT_ID = "_cat_id";
+  //  private static final String KEY_ID = "_id";
+   // private static final String KEY_NAME = "_name";
+  //  private static final String KEY_BODY = "_body";
+  //  private static final String KEY_THUMB = "_thumb";
+   // private static final String KEY_DESCRIPTION = "_description";
+   // private static final String KEY_VIDEO = "_video";
+  //  private static final String CAT_ID = "_cat_id";
 
     private static final String KEY_IDS = "_ids";
     private static final String KEY_CATEGORY = "_title";
     private static final String KEY_CATTHUMB = "catThumb";
 
-    private static final String KEY_CATEGORY_ID = "category_id";
-    private static final String KEY_EXERCISE_ID = "exercise_id";
+   // private static final String KEY_CATEGORY_ID = "category_id";
+   // private static final String KEY_EXERCISE_ID = "exercise_id";
 
     private SQLiteDatabase db;
-    String CREATE_TABLE_EXERCISE = "CREATE TABLE "+TABLE_EXERCISE+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_NAME+" TEXT,"+KEY_DESCRIPTION+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_VIDEO+" TEXT,"+CAT_ID+" TEXT)";
-    String DROP_TABLE_EXERCISE = "DROP TABLE IF EXISTS "+TABLE_EXERCISE;
+   // String CREATE_TABLE_EXERCISE = "CREATE TABLE "+TABLE_EXERCISE+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_NAME+" TEXT,"+KEY_DESCRIPTION+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_VIDEO+" TEXT,"+CAT_ID+" TEXT)";
+   // String DROP_TABLE_EXERCISE = "DROP TABLE IF EXISTS "+TABLE_EXERCISE;
 
     String CREATE_TABLE_CATEGORY = "CREATE TABLE "+TABLE_CATEGORY+" ("+KEY_IDS+" INTEGER PRIMARY KEY,"+KEY_CATEGORY+" TEXT,"+KEY_CATTHUMB+" TEXT)";
     String DROP_TABLE_CATEGORY = "DROP TABLE IF EXISTS "+TABLE_CATEGORY;
@@ -56,13 +56,13 @@ public class FitnessDbHandler extends SQLiteOpenHelper implements FitnessListene
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_EXERCISE);
+        // db.execSQL(CREATE_TABLE_EXERCISE);
         db.execSQL(CREATE_TABLE_CATEGORY);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DROP_TABLE_EXERCISE);
+        // db.execSQL(DROP_TABLE_EXERCISE);
         db.execSQL(DROP_TABLE_CATEGORY);
         onCreate(db);
     }

@@ -15,9 +15,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
+import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
+import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
@@ -55,6 +60,9 @@ public class BallTrainingSecondFragment extends ListFragment {
     // Album id
     String category_ids;
 
+    BallTrainingDbHandler dbHandler;
+    List<BallTrainingModel> result = null;
+
     // tracks JSON url
     // id - should be posted as GET params to get track list (ex: id = 5)
     String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
@@ -74,41 +82,51 @@ public class BallTrainingSecondFragment extends ListFragment {
 
         // Hashmap for ListView
         //ballTrainingModelList = new ArrayList<HashMap<String, String>>();
+        dbHandler = new BallTrainingDbHandler(getActivity());
 
-        // Loading tracks in Background Thread
-        new LoadExercises().execute();
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if (utils.isConnectingToInternet()) {
 
-        // get listview
-        ListView lv = getListView();
+            new LoadExercises().execute();
 
-        /**
-         * Listview on item click listener
-         * SingleTrackActivity will be lauched by passing album id, song id
-         * */
-        lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                    long arg3) {
+            ListView lv = getListView();
 
-                // On selecting single track get song information
-                Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
+            /**
+             * Listview on item click listener
+             * SingleTrackActivity will be lauched by passing album id, song id
+             * */
+            lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+                                        long arg3) {
 
-                String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
+                    // On selecting single track get song information
+                    Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
 
-                // to get song information
-                // both album id and song is needed
-                i.putExtra("category_id", category_id);
-                i.putExtra("exercise_id", exercise_id);
+                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
 
-                view.getContext().startActivity(i);
-            }
-        });
+                    // to get song information
+                    // both album id and song is needed
+                    i.putExtra("category_id", category_id);
+                    i.putExtra("exercise_id", exercise_id);
+
+                    view.getContext().startActivity(i);
+                }
+            });
+
+        }else {
+
+
+            Toast.makeText(getActivity().getApplicationContext(), "Please connect to internet to see ball training list", Toast.LENGTH_LONG).show();
+
+
+
+
+        }
+
 
     }
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

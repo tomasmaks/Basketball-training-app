@@ -21,6 +21,7 @@ import org.apache.http.NameValuePair;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
+import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
@@ -58,6 +59,8 @@ public class BallTrainingFragment extends ListFragment {
     // albums JSONArray
     JSONArray categories = null;
 
+    BallTrainingDbHandler dbHandler;
+    List<BallTrainingModel> result = null;
     // albums JSON url
     private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/7f339647a972d6ea323bda28ae5535b7863ff5f0/ListOfExercises.json";
 
@@ -88,9 +91,6 @@ public class BallTrainingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
-
-            new LoadCategories().execute();
-
         return mRootView;
 
 
@@ -101,23 +101,47 @@ public class BallTrainingFragment extends ListFragment {
 
         gridview = (GridView) mRootView.findViewById(R.id.list);
 
+        dbHandler = new BallTrainingDbHandler(getActivity());
 
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(utils.isConnectingToInternet()) {
 
-        gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                    long arg3) {
+            new LoadCategories().execute();
 
-                BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
-                Bundle bundle = new Bundle();
+            gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+                                        long arg3) {
 
-                String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                bundle.putString("category_id", category_id);
+                    BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
+                    Bundle bundle = new Bundle();
 
-                ballTrainingSecondFragment.setArguments(bundle);
-                ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
-            }
-        });
+                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                    bundle.putString("category_id", category_id);
+
+                    ballTrainingSecondFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
+                }
+            });
+        } else {
+            result = dbHandler.getAllCategories();
+            adapter = new ListAdapter(getActivity().getApplicationContext(),R.layout.fragment_balltraining_content, result);
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+
+                    BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
+
+                    Bundle bundle = new Bundle();
+                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+
+                    bundle.putString("category_id", category_id);
+                    ballTrainingSecondFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
+                }
+            });
+        }
     }
 
 
@@ -164,7 +188,7 @@ public class BallTrainingFragment extends ListFragment {
                 categories = json.getJSONArray(TABLE_EVENT);
                 //categories = new JSONArray(json);
 
-
+                dbHandler.deleteCategoryTable();
                 // looping through All albums
                 for (int i = 0; i < categories.length(); i++) {
                     JSONObject c = categories.getJSONObject(i);
@@ -174,7 +198,7 @@ public class BallTrainingFragment extends ListFragment {
                     ballTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
                     //ballTrainingCategoriesModel.setCount(c.getString(TAG_COUNT));
                     ballTrainingModelList.add(ballTrainingModel);
-
+                    dbHandler.addCategory(ballTrainingModel);
 
                 }
                 return ballTrainingModelList;
