@@ -3,6 +3,7 @@ package com.example.tomas.becomebasketballpro.Fragments;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,9 +19,15 @@ import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
+import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
+import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
@@ -81,7 +88,8 @@ public class BallTrainingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
-        new LoadCategories().execute();
+
+            new LoadCategories().execute();
 
         return mRootView;
 
@@ -110,9 +118,6 @@ public class BallTrainingFragment extends ListFragment {
                 ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
             }
         });
-
-
-
     }
 
 

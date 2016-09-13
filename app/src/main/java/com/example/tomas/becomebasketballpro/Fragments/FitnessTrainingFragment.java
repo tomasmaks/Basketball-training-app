@@ -2,6 +2,7 @@ package com.example.tomas.becomebasketballpro.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -14,9 +15,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
-import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
@@ -43,18 +48,21 @@ public class FitnessTrainingFragment extends ListFragment {
     // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
 
-    List<BallTrainingModel> ballTrainingModelList;
+    List<FitnessTrainingModel> fitnessTrainingModelList;
     // albums JSONArray
     JSONArray categories = null;
 
+    FitnessDbHandler dbHandler;
+    List<FitnessTrainingModel> result = null;
+
     // albums JSON url
-    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/7f339647a972d6ea323bda28ae5535b7863ff5f0/ListOfExercises.json";
+    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/f25c7d373134ac85649afb8b4ee4839d/raw/01aaaa18fb0e79df64b8b9f3304ef41cf40e5f8f/ListOfFitnessExercises.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "ids";
     private static final String TAG_NAME = "category";
     private static final String TAG_CATTHUM = "catThumb";
-    private static final String TABLE_EVENT = "Basketball";
+    private static final String TABLE_EVENT = "Fitness";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,8 +85,6 @@ public class FitnessTrainingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
 
-        new LoadCategories().execute();
-
         return mRootView;
 
 
@@ -89,31 +95,58 @@ public class FitnessTrainingFragment extends ListFragment {
 
         gridview = (GridView) mRootView.findViewById(R.id.list);
 
+        dbHandler = new FitnessDbHandler(getActivity());
+
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(utils.isConnectingToInternet()) {
+
+            new LoadCategories().execute();
+            gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+                                        long arg3) {
+
+                    FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
+                    Bundle bundle = new Bundle();
+
+                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                    bundle.putString("category_id", category_id);
+
+                    fitnessTrainingSecondFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
+                }
+            });
 
 
-        gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                    long arg3) {
 
-                BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
-                Bundle bundle = new Bundle();
+        } else {
+            result = dbHandler.getAllCategories();
+            adapter = new ListAdapter(getActivity().getApplicationContext(),R.layout.fragment_fitnesstraining_content, result);
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
 
-                String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                bundle.putString("category_id", category_id);
+                    FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
 
-                ballTrainingSecondFragment.setArguments(bundle);
-                ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
-            }
-        });
+                    Bundle bundle = new Bundle();
+                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+
+                    bundle.putString("category_id", category_id);
+                    fitnessTrainingSecondFragment.setArguments(bundle);
+                    ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
+                }
+            });
+
+        }
 
 
 
     }
 
 
-    public static BallTrainingFragment newInstance(int sectionNumber) {
-        BallTrainingFragment fragment = new BallTrainingFragment();
+    public static FitnessTrainingFragment newInstance(int sectionNumber) {
+        FitnessTrainingFragment fragment = new FitnessTrainingFragment();
         Bundle args = new Bundle();
         args.putInt(Constants.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -127,7 +160,7 @@ public class FitnessTrainingFragment extends ListFragment {
     /**
      * Background Async Task to Load all Albums by making http request
      */
-    class LoadCategories extends AsyncTask<String, String, List<BallTrainingModel>> {
+    class LoadCategories extends AsyncTask<String, String, List<FitnessTrainingModel>> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -140,7 +173,7 @@ public class FitnessTrainingFragment extends ListFragment {
         /**
          * getting Albums JSON
          */
-        protected List<BallTrainingModel> doInBackground(String... args) {
+        protected List<FitnessTrainingModel> doInBackground(String... args) {
             // Building Parameters
             List<NameValuePair> param = new ArrayList<NameValuePair>();
 
@@ -150,25 +183,25 @@ public class FitnessTrainingFragment extends ListFragment {
 
             try {
 
-                List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
+                List<FitnessTrainingModel> fitnessTrainingModelList = new ArrayList<>();
                 Gson gson = new Gson();
                 categories = json.getJSONArray(TABLE_EVENT);
                 //categories = new JSONArray(json);
 
-
+                dbHandler.deleteCategoryTable();
                 // looping through All albums
                 for (int i = 0; i < categories.length(); i++) {
                     JSONObject c = categories.getJSONObject(i);
-                    BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
-                    ballTrainingModel.setIds(c.getString(TAG_ID));
-                    ballTrainingModel.setCategory(c.getString(TAG_NAME));
-                    ballTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
+                    FitnessTrainingModel fitnessTrainingModel = gson.fromJson(json.toString(), FitnessTrainingModel.class);
+                    fitnessTrainingModel.setIds(c.getString(TAG_ID));
+                    fitnessTrainingModel.setCategory(c.getString(TAG_NAME));
+                    fitnessTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
                     //ballTrainingCategoriesModel.setCount(c.getString(TAG_COUNT));
-                    ballTrainingModelList.add(ballTrainingModel);
-
+                    fitnessTrainingModelList.add(fitnessTrainingModel);
+                    dbHandler.addCategory(fitnessTrainingModel);
 
                 }
-                return ballTrainingModelList;
+                return fitnessTrainingModelList;
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -180,7 +213,7 @@ public class FitnessTrainingFragment extends ListFragment {
         /**
          * After completing background task Dismiss the progress dialog
          **/
-        protected void onPostExecute(final List<BallTrainingModel> result) {
+        protected void onPostExecute(final List<FitnessTrainingModel> result) {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -200,12 +233,12 @@ public class FitnessTrainingFragment extends ListFragment {
     public class ListAdapter extends BaseAdapter {
         private LayoutInflater inflater;
         Context context;
-        private List<BallTrainingModel> ballTrainingModelList;
+        private List<FitnessTrainingModel> fitnessTrainingModelList;
         int resource;
-        public ListAdapter(Context context, int resource, List<BallTrainingModel> ballTrainingModelList) {
+        public ListAdapter(Context context, int resource, List<FitnessTrainingModel> fitnessTrainingModelList) {
             this.context = context;
             this.resource = resource;
-            this.ballTrainingModelList = ballTrainingModelList;
+            this.fitnessTrainingModelList = fitnessTrainingModelList;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
@@ -221,13 +254,13 @@ public class FitnessTrainingFragment extends ListFragment {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return ballTrainingModelList.size();
+            return fitnessTrainingModelList.size();
         }
 
         @Override
         public Object getItem(int pos) {
             // TODO Auto-generated method stub
-            return ballTrainingModelList.get(pos);
+            return fitnessTrainingModelList.get(pos);
         }
 
         @Override
@@ -254,21 +287,14 @@ public class FitnessTrainingFragment extends ListFragment {
                 mViewHolder = (ViewHolder) view.getTag();
             }
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getCatThumb(), mViewHolder.tagThumb);
+            ImageLoader.getInstance().displayImage(fitnessTrainingModelList.get(position).getCatThumb(), mViewHolder.tagThumb);
 
-            mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
-            mViewHolder.category.setText(ballTrainingModelList.get(position).getCategory());
+            mViewHolder.ids.setText(fitnessTrainingModelList.get(position).getIds());
+            mViewHolder.category.setText(fitnessTrainingModelList.get(position).getCategory());
 
             //mViewHolder.count.setText(ballTraininCategoriesModelList.get(position).getCount());
 
             return view;
         }
     }
-
-
-
-
-
-
-
 }

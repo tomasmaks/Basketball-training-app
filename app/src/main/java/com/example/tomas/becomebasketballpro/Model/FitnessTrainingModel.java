@@ -7,14 +7,14 @@ public class FitnessTrainingModel {
 
     private String category;
     private String ids;
-    private String tagThumb;
+    private String catThumb;
 
     public String getCatThumb() {
-        return tagThumb;
+        return catThumb;
     }
 
-    public void setCatThumb(String tagThumb) {
-        this.tagThumb = tagThumb;
+    public void setCatThumb(String catThumb) {
+        this.catThumb = catThumb;
     }
 
     public String getIds() {
@@ -39,6 +39,7 @@ public class FitnessTrainingModel {
     private String video;
     private String body;
     private String id;
+    private String cid;
 
     public String getName() {
         return name;
@@ -86,5 +87,13 @@ public class FitnessTrainingModel {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getCatId() {
+        return cid;
+    }
+
+    public void setCatId(String cid) {
+        this.cid = cid;
     }
 }

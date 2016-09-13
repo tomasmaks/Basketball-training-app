@@ -46,17 +46,18 @@
         android:layout_marginTop="15dp">
 
         <TextView
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:text="Basketball Training"
             android:textColor="#bfbfbf"
             android:textSize="30dp"
             android:maxLines="1"
             android:textStyle="bold"
+            android:background="#4C000000"
             />
     </RelativeLayout>
 
@@ -70,15 +71,16 @@
         <TextView
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:gravity="center"
             android:text="Fitness Training"
-            android:textColor="#bfbfbf"
+            android:textColor="#ffffff"
             android:textSize="30dp"
             android:maxLines="1"
             android:textStyle="bold"
+            android:background="#4C000000"
             />
     </RelativeLayout>
 

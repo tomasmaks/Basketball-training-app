@@ -14,10 +14,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.FitnessTrainingThirdActivity;
-import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
+import com.example.tomas.becomebasketballpro.MainActivity;
+import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
@@ -45,7 +48,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     JSONParser jsonParser = new JSONParser();
 
     //ArrayList<HashMap<String, String>> exercisesList;
-    List<BallTrainingModel> ballTrainingModelList;
+    List<FitnessTrainingModel> fitnessTrainingModelList;
 
     // tracks JSONArray
     JSONArray Categories = null;
@@ -54,15 +57,18 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     // Album id
     String category_ids;
 
+    FitnessDbHandler dbHandler;
+    List<FitnessTrainingModel> result = null;
+
     // tracks JSON url
     // id - should be posted as GET params to get track list (ex: id = 5)
-    String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
+    String url_details = "https://gist.githubusercontent.com/tomasmaks/f25c7d373134ac85649afb8b4ee4839d/raw/b618123aa87844e1921318940af6a67c4b425759/ListOfFitnessExercises.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_THUMB = "thumb";
-    private static final String TABLE_EVENT = "Basketball";
+    private static final String TABLE_EVENT = "Fitness";
     private static final String TAG_ARRAY = "exercises";
     private static final String PARENT_ID = "ids";
 
@@ -71,42 +77,68 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
         category_ids = getArguments().getString("category_id");
 
-        // Hashmap for ListView
-        //ballTrainingModelList = new ArrayList<HashMap<String, String>>();
+        dbHandler = new FitnessDbHandler(getActivity());
 
-        // Loading tracks in Background Thread
-        new LoadExercises().execute();
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(utils.isConnectingToInternet()) {
 
-        // get listview
-        ListView lv = getListView();
+            new LoadExercises().execute();
 
-        /**
-         * Listview on item click listener
-         * SingleTrackActivity will be lauched by passing album id, song id
-         * */
-        lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                    long arg3) {
+            ListView lv = getListView();
 
-                // On selecting single track get song information
-                Intent i = new Intent(getActivity().getApplicationContext(), FitnessTrainingThirdActivity.class);
+            lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+                                        long arg3) {
 
-                String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
+                    // On selecting single track get song information
+                    Intent i = new Intent(getActivity().getApplicationContext(), FitnessTrainingThirdActivity.class);
 
-                // to get song information
-                // both album id and song is needed
-                i.putExtra("category_id", category_id);
-                i.putExtra("exercise_id", exercise_id);
+                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
 
-                view.getContext().startActivity(i);
-            }
-        });
+                    // to get song information
+                    // both album id and song is needed
+                    i.putExtra("category_id", category_id);
+                    i.putExtra("exercise_id", exercise_id);
+
+                    view.getContext().startActivity(i);
+                }
+            });
+
+
+        } else {
+//            result = dbHandler.getAllExercisesById();
+//            adapter = new ListAdapter(getActivity(), result);
+//            ListView lv = getListView();
+//            lv.setAdapter(adapter);
+//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+//
+//                    // On selecting single track get song information
+//                    Intent i = new Intent(getActivity().getApplicationContext(), FitnessTrainingThirdActivity.class);
+//
+//                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+//                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
+//
+//                    // to get song information
+//                    // both album id and song is needed
+//                    i.putExtra("category_id", category_id);
+//                    i.putExtra("exercise_id", exercise_id);
+//
+//                    view.getContext().startActivity(i);
+//                }
+//            });
+
+
+            Toast.makeText(getActivity().getApplicationContext(), "Please connect to internet to see Fitness training list", Toast.LENGTH_LONG).show();
+
+
+
+        }
 
     }
-
-
 
 
     @Override
@@ -135,7 +167,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     /**
      * Background Async Task to Load all tracks under one album
      */
-    class LoadExercises extends AsyncTask<String, String, List<BallTrainingModel>> {
+    class LoadExercises extends AsyncTask<String, String, List<FitnessTrainingModel>> {
 
         /**
          * Before starting background thread Show Progress Dialog
@@ -148,7 +180,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         /**
          * getting tracks json and parsing
          */
-        protected List<BallTrainingModel> doInBackground(String... params) {
+        protected List<FitnessTrainingModel> doInBackground(String... params) {
             // Building Parameters
             List<NameValuePair> param = new ArrayList<NameValuePair>();
 
@@ -162,7 +194,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
             try {
 
-                List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
+                List<FitnessTrainingModel> fitnessTrainingModelList = new ArrayList<>();
                 Gson gson = new Gson();
 
                 Categories = json.getJSONArray(TABLE_EVENT);
@@ -178,23 +210,26 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                     if (category_Id.equals(category_ids)) {
 
                         Exercises = finalObject.getJSONArray(TAG_ARRAY);
-
+                        //dbHandler.deleteExerciseTable();
                         for (int j = 0; j < Exercises.length(); j++) {
+
 
                             JSONObject finalObject2 = Exercises.getJSONObject(j);
 
-                            BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
+                            FitnessTrainingModel fitnessTrainingModel = gson.fromJson(json.toString(), FitnessTrainingModel.class);
 
-                            ballTrainingModel.setId(finalObject2.getString(TAG_ID));
-                            ballTrainingModel.setName(finalObject2.getString(TAG_NAME));
-                            ballTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
-                            ballTrainingModel.setIds(category_Id);
-                            ballTrainingModelList.add(ballTrainingModel);
+                            fitnessTrainingModel.setId(finalObject2.getString(TAG_ID));
+                            fitnessTrainingModel.setName(finalObject2.getString(TAG_NAME));
+                            fitnessTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
+                            fitnessTrainingModel.setIds(category_Id);
+                            fitnessTrainingModelList.add(fitnessTrainingModel);
+
+                            //dbHandler.addExercise(fitnessTrainingModel);
                         }
 
                     }
                 }
-                return ballTrainingModelList;
+                return fitnessTrainingModelList;
 
             }  catch (JSONException e) {
                 e.printStackTrace();
@@ -208,7 +243,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         /**
          * After completing background task Dismiss the progress dialog
          **/
-        protected void onPostExecute(final List<BallTrainingModel> result) {
+        protected void onPostExecute(final List<FitnessTrainingModel> result) {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -223,11 +258,11 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     }
     public class ListAdapter extends BaseAdapter {
         Context context;
-        private List<BallTrainingModel> ballTrainingModelList;
+        private List<FitnessTrainingModel> fitnessTrainingModelList;
 
-        public ListAdapter(Context context,List<BallTrainingModel> ballTrainingModelList){
+        public ListAdapter(Context context,List<FitnessTrainingModel> fitnessTrainingModelList){
             this.context = context;
-            this.ballTrainingModelList = ballTrainingModelList;
+            this.fitnessTrainingModelList = fitnessTrainingModelList;
         }
 
         class ViewHolder {
@@ -243,13 +278,13 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return ballTrainingModelList.size();
+            return fitnessTrainingModelList.size();
         }
 
         @Override
         public Object getItem(int pos) {
             // TODO Auto-generated method stub
-            return ballTrainingModelList.get(pos);
+            return fitnessTrainingModelList.get(pos);
         }
 
         @Override
@@ -278,11 +313,11 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                 mViewHolder = (ViewHolder) view.getTag();
             }
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
+            ImageLoader.getInstance().displayImage(fitnessTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
 
-            mViewHolder.name.setText(ballTrainingModelList.get(position).getName());
-            mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
-            mViewHolder.id.setText(ballTrainingModelList.get(position).getId());
+            mViewHolder.name.setText(fitnessTrainingModelList.get(position).getName());
+            mViewHolder.ids.setText(fitnessTrainingModelList.get(position).getIds());
+            mViewHolder.id.setText(fitnessTrainingModelList.get(position).getId());
 
             return view;
         }

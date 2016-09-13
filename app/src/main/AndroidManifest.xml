@@ -35,6 +35,9 @@
         <activity
             android:name=".BallTrainingThirdActivity">
         </activity>
+        <activity
+            android:name=".FitnessTrainingThirdActivity">
+        </activity>
 
         <activity
             android:name="com.thefinestartist.ytpa.YouTubePlayerActivity"

@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
+import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
@@ -59,11 +59,11 @@ public class FitnessTrainingThirdActivity extends Activity {
 
     // single song JSON url
     // GET parameters album, song
-    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/80756e6f5b9794b45c9746df495e2d19327e3eb5/ListOfExercises.json";
+    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/f25c7d373134ac85649afb8b4ee4839d/raw/01aaaa18fb0e79df64b8b9f3304ef41cf40e5f8f/ListOfFitnessExercises.json";
 
     // ALL JSON node names
     private static final String PARENT_ID = "ids";
-    private static final String TABLE_EVENT = "Basketball";
+    private static final String TABLE_EVENT = "Fitness";
     private static final String TAG_ARRAY = "exercises";
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
@@ -128,25 +128,26 @@ public class FitnessTrainingThirdActivity extends Activity {
 
                         exercises = details.getJSONArray(TAG_ARRAY);
 
+
                         for (int j = 0; j < exercises.length(); j++) {
                             JSONObject nzn = exercises.getJSONObject(j);
                             String exerciseId = nzn.getString(TAG_ID);
                             if (exerciseId.equals(exercise_id)) {
-                                BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
+                                FitnessTrainingModel fitnessTrainingModel = gson.fromJson(json.toString(), FitnessTrainingModel.class);
 
-                                ballTrainingModel.setName(exercise_name);
+                                fitnessTrainingModel.setName(exercise_name);
                                 exercise_name = nzn.getString(TAG_NAME);
-                                ballTrainingModel.setDescription(exercise_description);
+                                fitnessTrainingModel.setDescription(exercise_description);
                                 exercise_description = nzn.getString(TAG_DESCRIPTION);
-                                ballTrainingModel.setBody(exercise_body);
+                                fitnessTrainingModel.setBody(exercise_body);
                                 exercise_body = nzn.getString(TAG_BODY);
-                                ballTrainingModel.setVideoURI(exercise_video);
+                                fitnessTrainingModel.setVideoURI(exercise_video);
                                 exercise_video = nzn.getString(TAG_VIDEO);
 
 
 
-                                ballTrainingModel.setIds(categoryId);
-                                ballTrainingModel.setId(exerciseId);
+                                fitnessTrainingModel.setIds(categoryId);
+                                fitnessTrainingModel.setId(exerciseId);
 
                             }
 
