@@ -16,5 +16,6 @@
         android:paddingRight="4dp"
         android:paddingTop="4dp"
         android:scrollbarStyle="outsideOverlay"
-        tools:ignore="PrivateResource" />
+        tools:ignore="PrivateResource"
+        />
 </android.support.v4.widget.SwipeRefreshLayout>

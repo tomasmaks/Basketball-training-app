@@ -17,9 +17,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class MotivationDetailsActivity extends ActionBarActivity {
 
     private ImageView article_image;
-    private TextView article_title;
-    private TextView article_body;
-    private TextView articleData;
+//    private TextView article_title;
+//    private TextView article_body;
+//    private TextView articleData;
     // private ProgressBar progressBar;
 
     @Override
@@ -46,9 +46,9 @@ public class MotivationDetailsActivity extends ActionBarActivity {
             ImageLoader.getInstance().displayImage(motivationModel.getImage(), article_image);
 
 
-            article_title.setText(motivationModel.getTitle());
-            article_body.setText(motivationModel.getBody());
-            articleData.setText("Added on: " + motivationModel.getData());
+//            article_title.setText(motivationModel.getTitle());
+//            article_body.setText(motivationModel.getBody());
+//            articleData.setText("Added on: " + motivationModel.getData());
 
 
         }
@@ -57,9 +57,9 @@ public class MotivationDetailsActivity extends ActionBarActivity {
 
     private void setUpUIViews() {
         article_image = (ImageView)findViewById(R.id.article_image);
-        article_title = (TextView)findViewById(R.id.article_title);
-        article_body = (TextView)findViewById(R.id.article_body);
-        articleData = (TextView)findViewById(R.id.article_data);
+//        article_title = (TextView)findViewById(R.id.article_title);
+//        article_body = (TextView)findViewById(R.id.article_body);
+//        articleData = (TextView)findViewById(R.id.article_data);
         // progressBar = (ProgressBar)findViewById(R.id.progressBar);
     }
 

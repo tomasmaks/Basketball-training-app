@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class MotivationListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     Context context;
-
+    private String motivationModel;
     View mRootView;
     ListView mListView;
     private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/0fab012624a771afbe1ecc792f920086/raw/d69694e2a9dc31a79ef38bae98b38e3a85751a4b/Motivation.json";
@@ -63,7 +63,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     private SwipeRefreshLayout refreshLayout = null;
     MotivationDbHandler dbHandler;
     List<MotivationModel> result = null;
-
+    public static final String EXTRA_MOTIVATION = "EXTRA_MOTIVATION";
 
     public static MotivationListFragment newInstance(int sectionNumber) {
         MotivationListFragment fragment = new MotivationListFragment();
@@ -77,34 +77,22 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     public MotivationListFragment() {
         // Required empty public constructor
     }
+    public void LoadMotivation() {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        dialog = new ProgressDialog(getActivity());
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-        dialog.setMessage("Loading. Please wait...");
-//        // Create default options which will be used for every
-//        //  displayImage(...) call if no options will be passed to this method
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
-
+        new FetchMotivationTask().execute(URL_TO_HIT);
     }
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+                if (savedInstanceState == null) {
+                    LoadMotivation();
+
+                }
+
+        dbHandler = new MotivationDbHandler(getActivity());
+
 
         mRootView  = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
@@ -114,24 +102,12 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
         refreshLayout.setOnRefreshListener(this);
 
-        return mRootView;
-
-
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        dbHandler = new MotivationDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(utils.isConnectingToInternet()) {
-            new FetchMotivationTask().execute(URL_TO_HIT);
-        } else {
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
 
             result = dbHandler.getAllMotivation();
-            adapter = new MotivationAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
+            adapter = new MotivationAdapter(getActivity().getApplicationContext(),R.layout.fragment_motivation_list_items, result);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -144,7 +120,40 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
             });
 
         }
+
+
+        return mRootView;
+
+
+
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        dialog = new ProgressDialog(getActivity());
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading. Please wait...");
+
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+        ImageLoader.getInstance().init(config); // Do it on Application start
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("motivationModel", motivationModel);
+    }
+
 
     @Override
     public void onRefresh() {
@@ -305,8 +314,8 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
                 holder = new ViewHolder();
                 convertView = inflater.inflate(resource, null);
                 holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
-                holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
-                holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
+                //holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
+                //holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
 
                 convertView.setTag(holder);
             } else {
@@ -318,8 +327,8 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
             ImageLoader.getInstance().displayImage(motivationModelList.get(position).getThumbnail(), holder.thumbnail);
             // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
 
-            holder.articleTitle.setText(motivationModelList.get(position).getTitle());
-            holder.articleData.setText("Added on: " + motivationModelList.get(position).getData());
+           // holder.articleTitle.setText(motivationModelList.get(position).getTitle());
+          //  holder.articleData.setText("Added on: " + motivationModelList.get(position).getData());
 
             return convertView;
         }
@@ -327,8 +336,12 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
         class ViewHolder{
             private DynamicHeightNetworkImageView thumbnail;
-            private TextView articleTitle;
-            private TextView articleData;
+            //private TextView articleTitle;
+            //private TextView articleData;
+        }
+
+        public List<MotivationModel> getMotivation() {
+            return motivationModelList;
         }
     }
 

@@ -15,7 +15,8 @@
     android:focusableInTouchMode="false"
     android:padding="10dp"
     android:orientation="vertical"
-    android:background="@color/material_indigo_500">
+    android:background="@drawable/bbl"
+    >
 
     <RelativeLayout
         android:id="@+id/btn_lay"
