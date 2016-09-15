@@ -59,7 +59,7 @@ public class FitnessTrainingThirdActivity extends Activity {
 
     // single song JSON url
     // GET parameters album, song
-    private static final String url_details = "https://gist.githubusercontent.com/tomasmaks/f25c7d373134ac85649afb8b4ee4839d/raw/01aaaa18fb0e79df64b8b9f3304ef41cf40e5f8f/ListOfFitnessExercises.json";
+    private static final String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfFitnessExercises.json";
 
     // ALL JSON node names
     private static final String PARENT_ID = "ids";

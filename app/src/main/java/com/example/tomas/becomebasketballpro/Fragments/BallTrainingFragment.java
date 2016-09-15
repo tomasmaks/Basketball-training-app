@@ -104,7 +104,7 @@ public class BallTrainingFragment extends ListFragment {
         dbHandler = new BallTrainingDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if (savedInstanceState == null) {
+        //if (savedInstanceState == null) {
             if (utils.isConnectingToInternet()) {
 
                 new LoadCategories().execute();
@@ -143,7 +143,7 @@ public class BallTrainingFragment extends ListFragment {
                     }
                 });
             }
-        }
+        //}
     }
 
 
