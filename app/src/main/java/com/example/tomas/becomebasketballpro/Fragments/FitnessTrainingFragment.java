@@ -98,49 +98,49 @@ public class FitnessTrainingFragment extends ListFragment {
         dbHandler = new FitnessDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(utils.isConnectingToInternet()) {
+        if (savedInstanceState == null) {
+            if (utils.isConnectingToInternet()) {
 
-            new LoadCategories().execute();
-            gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                        long arg3) {
+                new LoadCategories().execute();
+                gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+                                            long arg3) {
 
-                    FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
-                    Bundle bundle = new Bundle();
+                        FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
+                        Bundle bundle = new Bundle();
 
-                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                    bundle.putString("category_id", category_id);
+                        String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                        bundle.putString("category_id", category_id);
 
-                    fitnessTrainingSecondFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
-                }
-            });
+                        fitnessTrainingSecondFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
+                    }
+                });
 
 
+            } else {
+                result = dbHandler.getAllCategories();
+                adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, result);
+                gridview.setAdapter(adapter);
+                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
 
-        } else {
-            result = dbHandler.getAllCategories();
-            adapter = new ListAdapter(getActivity().getApplicationContext(),R.layout.fragment_fitnesstraining_content, result);
-            gridview.setAdapter(adapter);
-            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                        FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
 
-                    FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
+                        Bundle bundle = new Bundle();
+                        String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
 
-                    Bundle bundle = new Bundle();
-                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                        bundle.putString("category_id", category_id);
+                        fitnessTrainingSecondFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
+                    }
+                });
 
-                    bundle.putString("category_id", category_id);
-                    fitnessTrainingSecondFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
-                }
-            });
+            }
 
         }
-
-
 
     }
 

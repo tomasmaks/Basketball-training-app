@@ -104,43 +104,45 @@ public class BallTrainingFragment extends ListFragment {
         dbHandler = new BallTrainingDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(utils.isConnectingToInternet()) {
+        if (savedInstanceState == null) {
+            if (utils.isConnectingToInternet()) {
 
-            new LoadCategories().execute();
+                new LoadCategories().execute();
 
-            gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                        long arg3) {
+                gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+                                            long arg3) {
 
-                    BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
-                    Bundle bundle = new Bundle();
+                        BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
+                        Bundle bundle = new Bundle();
 
-                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                    bundle.putString("category_id", category_id);
+                        String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                        bundle.putString("category_id", category_id);
 
-                    ballTrainingSecondFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
-                }
-            });
-        } else {
-            result = dbHandler.getAllCategories();
-            adapter = new ListAdapter(getActivity().getApplicationContext(),R.layout.fragment_balltraining_content, result);
-            gridview.setAdapter(adapter);
-            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                        ballTrainingSecondFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
+                    }
+                });
+            } else {
+                result = dbHandler.getAllCategories();
+                adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
+                gridview.setAdapter(adapter);
+                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
 
-                    BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
+                        BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
 
-                    Bundle bundle = new Bundle();
-                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+                        Bundle bundle = new Bundle();
+                        String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
 
-                    bundle.putString("category_id", category_id);
-                    ballTrainingSecondFragment.setArguments(bundle);
-                    ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
-                }
-            });
+                        bundle.putString("category_id", category_id);
+                        ballTrainingSecondFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
+                    }
+                });
+            }
         }
     }
 

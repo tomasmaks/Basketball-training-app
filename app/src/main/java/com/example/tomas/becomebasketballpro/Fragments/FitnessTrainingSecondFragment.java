@@ -80,7 +80,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         dbHandler = new FitnessDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(utils.isConnectingToInternet()) {
+        if(utils.isConnectingToInternet() && savedInstanceState == null) {
 
             new LoadExercises().execute();
 

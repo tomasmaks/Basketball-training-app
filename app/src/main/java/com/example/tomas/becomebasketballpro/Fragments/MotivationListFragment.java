@@ -91,7 +91,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
         }
 
-
+        dbHandler = new MotivationDbHandler(getActivity());
 
 
         mRootView  = inflater.inflate(R.layout.fragment_motivation_list, container, false);

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.SuccessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
@@ -115,7 +116,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
             LoadSuccess();
 
         }
-
+        dbHandler = new SuccessDbHandler(getActivity());
         mRootView  = inflater.inflate(R.layout.fragment_success_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);

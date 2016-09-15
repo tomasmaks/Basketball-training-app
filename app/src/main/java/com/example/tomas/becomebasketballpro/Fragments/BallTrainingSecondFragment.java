@@ -86,7 +86,7 @@ public class BallTrainingSecondFragment extends ListFragment {
         dbHandler = new BallTrainingDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if (utils.isConnectingToInternet()) {
+        if (utils.isConnectingToInternet() && savedInstanceState == null) {
 
             new LoadExercises().execute();
 

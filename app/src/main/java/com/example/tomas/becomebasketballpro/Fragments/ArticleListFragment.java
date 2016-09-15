@@ -125,7 +125,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             LoadArticle();
 
         }
-
+        dbHandler = new ArticleDbHandler(getActivity());
         mRootView  = inflater.inflate(R.layout.fragment_article_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
