@@ -62,7 +62,7 @@ public class BallTrainingFragment extends ListFragment {
     BallTrainingDbHandler dbHandler;
     List<BallTrainingModel> result = null;
     // albums JSON url
-    private static final String URL_CATEGORIES = "https://gist.githubusercontent.com/tomasmaks/bc2eddf95f05a6c93c57bc8d6886b061/raw/7f339647a972d6ea323bda28ae5535b7863ff5f0/ListOfExercises.json";
+    private static final String URL_CATEGORIES = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "ids";

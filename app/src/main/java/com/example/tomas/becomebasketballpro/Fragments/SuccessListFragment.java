@@ -58,7 +58,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/a5da9d85d0da4a1244a898f21f22365e/raw/fa5ea749ad14d3e2777cf931685f76d627440c9c/SuccessStories.json";
+    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/SuccessStories.json";
     private ProgressDialog dialog;
     SuccessAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;

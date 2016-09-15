@@ -57,7 +57,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     private String motivationModel;
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/0fab012624a771afbe1ecc792f920086/raw/d69694e2a9dc31a79ef38bae98b38e3a85751a4b/Motivation.json";
+    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/Motivation.json";
     private ProgressDialog dialog;
     MotivationAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
