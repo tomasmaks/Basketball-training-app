@@ -18,13 +18,15 @@
 
     <TextView
         android:id="@+id/category_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#bfbfbf"
+        android:background="#C8000000"
+        android:padding="3dp"
         android:textStyle="bold"
         android:textSize="20sp"
+        android:layout_marginTop="150dp"
         android:textAllCaps="true"
         />
 

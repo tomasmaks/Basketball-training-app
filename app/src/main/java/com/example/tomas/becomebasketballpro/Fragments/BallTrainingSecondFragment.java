@@ -71,6 +71,7 @@ public class BallTrainingSecondFragment extends ListFragment {
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_THUMB = "thumb";
+    private static final String TAG_DESCRIPTION = "description";
     private static final String TABLE_EVENT = "Basketball";
     private static final String TAG_ARRAY = "exercises";
     private static final String PARENT_ID = "ids";
@@ -206,6 +207,7 @@ public class BallTrainingSecondFragment extends ListFragment {
 
                             ballTrainingModel.setId(finalObject2.getString(TAG_ID));
                             ballTrainingModel.setName(finalObject2.getString(TAG_NAME));
+                            ballTrainingModel.setDescription(finalObject2.getString(TAG_DESCRIPTION));
                             ballTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
                             ballTrainingModel.setIds(category_Id);
                             ballTrainingModelList.add(ballTrainingModel);
@@ -254,6 +256,7 @@ public class BallTrainingSecondFragment extends ListFragment {
             private TextView ids;
             private TextView id;
             private TextView name;
+            private TextView description;
             private ImageView thumb;
 
 
@@ -290,6 +293,7 @@ public class BallTrainingSecondFragment extends ListFragment {
                 mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
                 mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
                 mViewHolder.name = (TextView)view.findViewById(R.id.name);
+                mViewHolder.description = (TextView)view.findViewById(R.id.description);
                 mViewHolder.thumb=(ImageView)view.findViewById(R.id.thumb_image);
                 view.setTag(mViewHolder);
             }
@@ -300,6 +304,7 @@ public class BallTrainingSecondFragment extends ListFragment {
             ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
 
             mViewHolder.name.setText(ballTrainingModelList.get(position).getName());
+            mViewHolder.description.setText(ballTrainingModelList.get(position).getDescription());
             mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
             mViewHolder.id.setText(ballTrainingModelList.get(position).getId());
 

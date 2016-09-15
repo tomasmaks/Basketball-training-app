@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,27 +15,25 @@
     android:focusableInTouchMode="false"
     android:padding="10dp"
     android:orientation="vertical"
-    android:background="@drawable/bbl"
     >
 
     <RelativeLayout
         android:id="@+id/btn_lay"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/kk2">
+        android:background="@drawable/front1">
 
         <TextView
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_width="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:gravity="center"
-            android:text="Stories"
+            android:text="Basketball Stories"
             android:textColor="#bfbfbf"
             android:textSize="30dp"
             android:maxLines="1"
             android:textStyle="bold"
+            android:background="#64000000"
             />
     </RelativeLayout>
 
@@ -43,22 +41,20 @@
         android:id="@+id/btn_lay2"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/kevin_durant"
+        android:background="@drawable/front3"
         android:layout_marginTop="15dp">
 
         <TextView
-            android:gravity="right"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
             android:text="Basketball Training"
             android:textColor="#bfbfbf"
             android:textSize="30dp"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textStyle="bold"
-            android:background="#4C000000"
+            android:background="#64000000"
             />
     </RelativeLayout>
 
@@ -66,22 +62,21 @@
         android:id="@+id/btn_lay3"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@drawable/kk2"
+        android:background="@drawable/front2"
         android:layout_marginTop="15dp">
 
         <TextView
+
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:gravity="center"
+            android:layout_marginTop="10dp"
             android:text="Fitness Training"
-            android:textColor="#ffffff"
+            android:textColor="#bfbfbf"
             android:textSize="30dp"
             android:maxLines="1"
             android:textStyle="bold"
-            android:background="#4C000000"
+            android:background="#64000000"
             />
     </RelativeLayout>
 

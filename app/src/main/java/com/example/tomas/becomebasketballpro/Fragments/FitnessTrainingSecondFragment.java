@@ -159,7 +159,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_fitnesstraining_list, container, false);
 
         return mRootView;
     }
@@ -302,7 +302,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                 mViewHolder = new ViewHolder();
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.fragment_balltraining_list_items, parent, false);
+                view = inflater.inflate(R.layout.fragment_fitnesstraining_list_items, parent, false);
                 mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
                 mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
                 mViewHolder.name = (TextView)view.findViewById(R.id.name);

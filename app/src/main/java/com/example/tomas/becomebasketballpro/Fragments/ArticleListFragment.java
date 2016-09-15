@@ -69,7 +69,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     Context context;
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://gist.githubusercontent.com/tomasmaks/c1bb4dc91ae7972bd93e73b3ee632052/raw/4af2e4b580f97847d69abae89a19d865875090a8/article.json";
+    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/article.json";
     private ProgressDialog dialog;
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
@@ -296,6 +296,8 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
                     }
                 });
+            }else {
+                Toast.makeText(getActivity().getApplicationContext(), "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
             }
         }
     }
