@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.SuccessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
@@ -100,12 +101,20 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
     }
 
+    public void LoadSuccess() {
 
+        new FetchSuccessTask().execute(URL_TO_HIT);
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if (savedInstanceState == null) {
+            LoadSuccess();
+
+        }
 
         mRootView  = inflater.inflate(R.layout.fragment_success_list, container, false);
 
@@ -115,22 +124,8 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
         refreshLayout.setOnRefreshListener(this);
 
-        return mRootView;
-
-
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        dbHandler = new SuccessDbHandler(getActivity());
-
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(utils.isConnectingToInternet()) {
-            new FetchSuccessTask().execute(URL_TO_HIT);
-        } else {
-
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
             result = dbHandler.getAllSuccess();
             adapter = new SuccessAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
             mListView.setAdapter(adapter);
@@ -143,7 +138,11 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
                     getActivity().startActivity(intent);
                 }
             });
+
+
         }
+
+        return mRootView;
     }
 
     @Override

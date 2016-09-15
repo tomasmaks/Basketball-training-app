@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
+import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
@@ -112,11 +113,18 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     }
 
 
+    public void LoadArticle() {
 
+        new FetchTask().execute(URL_TO_HIT);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            LoadArticle();
+
+        }
 
         mRootView  = inflater.inflate(R.layout.fragment_article_list, container, false);
 
@@ -127,23 +135,8 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
         refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
         refreshLayout.setOnRefreshListener(this);
 
-        return mRootView;
-
-
-
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        dbHandler = new ArticleDbHandler(getActivity());
-
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(utils.isConnectingToInternet()) {
-            new FetchTask().execute(URL_TO_HIT);
-
-        }else {
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
 
             result = dbHandler.getAllArticle();
             adapter = new ArticleAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
@@ -157,8 +150,12 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     getActivity().startActivity(intent);
                 }
             });
+
         }
+
+        return mRootView;
     }
+
 
     @Override
     public void onRefresh() {

@@ -86,12 +86,12 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-                if (savedInstanceState == null) {
-                    LoadMotivation();
+        if (savedInstanceState == null) {
+            LoadMotivation();
 
-                }
+        }
 
-        dbHandler = new MotivationDbHandler(getActivity());
+
 
 
         mRootView  = inflater.inflate(R.layout.fragment_motivation_list, container, false);

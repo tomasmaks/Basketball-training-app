@@ -62,7 +62,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
     // tracks JSON url
     // id - should be posted as GET params to get track list (ex: id = 5)
-    String url_details = "https://gist.githubusercontent.com/tomasmaks/f25c7d373134ac85649afb8b4ee4839d/raw/b618123aa87844e1921318940af6a67c4b425759/ListOfFitnessExercises.json";
+    String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfFitnessExercises.json";
 
     // ALL JSON node names
     private static final String TAG_ID = "id";
