@@ -277,9 +277,9 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void addItemsToDataList() {
-        dataList.add(new DrawerItem("Home", R.drawable.ic_action_social_group));
-        dataList.add(new DrawerItem("Stories", R.drawable.ic_action_image_photo_camera));
-        dataList.add(new DrawerItem("Ball Training", R.drawable.ic_action_action_shopping_cart));
-        dataList.add(new DrawerItem("Fitness Training", R.drawable.ic_action_social_group));
+        dataList.add(new DrawerItem("Home", R.drawable.home));
+        dataList.add(new DrawerItem("Stories", R.drawable.closed_book));
+        dataList.add(new DrawerItem("Ball Training", R.drawable.ball_of_basketball));
+        dataList.add(new DrawerItem("Fitness Training", R.drawable.runer_silhouette_running_fast));
     }
 }

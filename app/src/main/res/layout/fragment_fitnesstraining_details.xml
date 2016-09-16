@@ -32,15 +32,7 @@
     <TextView android:id="@+id/exercise_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="25dp"
-        android:padding="10dip"
-        android:textColor="#444444"
-        android:textStyle="bold"/>
-
-    <TextView android:id="@+id/exercise_description"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="10dp"
+        android:textSize="30dp"
         android:padding="10dip"
         android:textColor="#444444"
         android:textStyle="bold"/>
@@ -48,10 +40,10 @@
     <TextView android:id="@+id/exercise_body"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="10dp"
+        android:textSize="15dp"
         android:padding="10dip"
         android:textColor="#444444"
-        android:textStyle="bold"/>
+        android:minLines="15"/>
 
 
 

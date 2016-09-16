@@ -14,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
@@ -53,7 +54,7 @@ public class FitnessTrainingFragment extends ListFragment {
     JSONArray categories = null;
 
     FitnessDbHandler dbHandler;
-    List<FitnessTrainingModel> result = null;
+    List<FitnessTrainingModel> result;
 
     // albums JSON url
     private static final String URL_CATEGORIES = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfFitnessExercises.json";
@@ -77,12 +78,14 @@ public class FitnessTrainingFragment extends ListFragment {
                 .build();
         ImageLoader.getInstance().init(config); // Do it on Application start
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
 
         return mRootView;
@@ -141,6 +144,9 @@ public class FitnessTrainingFragment extends ListFragment {
             }
 
         }
+
+
+
 
     }
 
@@ -217,10 +223,9 @@ public class FitnessTrainingFragment extends ListFragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, result);
-                    gridview.setAdapter(adapter);
 
-
+                        adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, result);
+                        gridview.setAdapter(adapter);
                 }
             });
 

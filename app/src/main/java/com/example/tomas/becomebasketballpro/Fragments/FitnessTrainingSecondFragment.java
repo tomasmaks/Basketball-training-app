@@ -68,6 +68,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_THUMB = "thumb";
+    private static final String TAG_DESCRIPTION = "description";
     private static final String TABLE_EVENT = "Fitness";
     private static final String TAG_ARRAY = "exercises";
     private static final String PARENT_ID = "ids";
@@ -220,6 +221,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
                             fitnessTrainingModel.setId(finalObject2.getString(TAG_ID));
                             fitnessTrainingModel.setName(finalObject2.getString(TAG_NAME));
+                            fitnessTrainingModel.setDescription(finalObject2.getString(TAG_DESCRIPTION));
                             fitnessTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
                             fitnessTrainingModel.setIds(category_Id);
                             fitnessTrainingModelList.add(fitnessTrainingModel);
@@ -270,6 +272,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
             private TextView ids;
             private TextView id;
             private TextView name;
+            private TextView description;
             private ImageView thumb;
 
 
@@ -306,6 +309,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                 mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
                 mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
                 mViewHolder.name = (TextView)view.findViewById(R.id.name);
+                mViewHolder.description = (TextView)view.findViewById(R.id.description);
                 mViewHolder.thumb=(ImageView)view.findViewById(R.id.thumb_image);
                 view.setTag(mViewHolder);
             }
@@ -316,6 +320,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
             ImageLoader.getInstance().displayImage(fitnessTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
 
             mViewHolder.name.setText(fitnessTrainingModelList.get(position).getName());
+            mViewHolder.description.setText(fitnessTrainingModelList.get(position).getDescription());
             mViewHolder.ids.setText(fitnessTrainingModelList.get(position).getIds());
             mViewHolder.id.setText(fitnessTrainingModelList.get(position).getId());
 

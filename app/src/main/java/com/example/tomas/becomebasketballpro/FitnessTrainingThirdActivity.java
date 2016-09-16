@@ -67,7 +67,6 @@ public class FitnessTrainingThirdActivity extends Activity {
     private static final String TAG_ARRAY = "exercises";
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
-    private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_BODY = "body";
     private static final String TAG_VIDEO = "video";
 
@@ -137,8 +136,6 @@ public class FitnessTrainingThirdActivity extends Activity {
 
                                 fitnessTrainingModel.setName(exercise_name);
                                 exercise_name = nzn.getString(TAG_NAME);
-                                fitnessTrainingModel.setDescription(exercise_description);
-                                exercise_description = nzn.getString(TAG_DESCRIPTION);
                                 fitnessTrainingModel.setBody(exercise_body);
                                 exercise_body = nzn.getString(TAG_BODY);
                                 fitnessTrainingModel.setVideoURI(exercise_video);
@@ -175,8 +172,6 @@ public class FitnessTrainingThirdActivity extends Activity {
 
                     TextView txt_exer_name = (TextView) findViewById(R.id.exercise_title);
                     txt_exer_name.setText(exercise_name);
-                    TextView txt_exer_description = (TextView) findViewById(R.id.exercise_description);
-                    txt_exer_description.setText(exercise_description);
                     TextView txt_exer_body = (TextView) findViewById(R.id.exercise_body);
                     txt_exer_body.setText(exercise_body);
 

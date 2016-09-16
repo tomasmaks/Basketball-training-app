@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 
@@ -88,6 +89,7 @@ public class BallTrainingFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
@@ -104,11 +106,11 @@ public class BallTrainingFragment extends ListFragment {
         dbHandler = new BallTrainingDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        //if (savedInstanceState == null) {
+
             if (utils.isConnectingToInternet()) {
-
-                new LoadCategories().execute();
-
+                if (savedInstanceState == null) {
+                    new LoadCategories().execute();
+                }
                 gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View view, int arg2,
@@ -143,7 +145,7 @@ public class BallTrainingFragment extends ListFragment {
                     }
                 });
             }
-        //}
+
     }
 
 
@@ -217,17 +219,13 @@ public class BallTrainingFragment extends ListFragment {
          **/
         protected void onPostExecute(final List<BallTrainingModel> result) {
             // updating UI from Background Thread
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
-                    gridview.setAdapter(adapter);
-
-
-                }
-            });
-
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
+                        gridview.setAdapter(adapter);
+                    }
+                });
         }
-
     }
 
 

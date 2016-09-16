@@ -147,6 +147,9 @@ public class BallTrainingSecondFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
 
         return mRootView;
