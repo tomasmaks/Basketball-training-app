@@ -10,25 +10,26 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
-import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
-import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
+
 import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -52,7 +53,7 @@ import java.util.List;
 /**
  * Created by Tomas on 09/08/2016.
  */
-public class MotivationListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MotivationListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
     Context context;
     private String motivationModel;
     View mRootView;
@@ -77,6 +78,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     public MotivationListFragment() {
         // Required empty public constructor
     }
+
     public void LoadMotivation() {
 
         new FetchMotivationTask().execute(URL_TO_HIT);
@@ -94,7 +96,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
         dbHandler = new MotivationDbHandler(getActivity());
 
 
-        mRootView  = inflater.inflate(R.layout.fragment_motivation_list, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 
@@ -104,10 +106,10 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
 
             result = dbHandler.getAllMotivation();
-            adapter = new MotivationAdapter(getActivity().getApplicationContext(),R.layout.fragment_motivation_list_items, result);
+            adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, result);
             mListView.setAdapter(adapter);
             mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -123,7 +125,6 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
 
         return mRootView;
-
 
 
     }
@@ -174,13 +175,14 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     }
 
     private MyHandler handler = new MyHandler();
+
     class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
                     new FetchMotivationTask().execute(URL_TO_HIT);
-                   // Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
                 default:
@@ -190,7 +192,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     }
 
 
-    public class FetchMotivationTask extends AsyncTask<String,String, List<MotivationModel>> {
+    public class FetchMotivationTask extends AsyncTask<String, String, List<MotivationModel>> {
 
         private final String LOG_TAG = FetchMotivationTask.class.getSimpleName();
 
@@ -212,8 +214,8 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder buffer = new StringBuilder();
-                String line ="";
-                while ((line = reader.readLine()) != null){
+                String line = "";
+                while ((line = reader.readLine()) != null) {
                     buffer.append(line);
                 }
 
@@ -228,7 +230,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
                 dbHandler.deleteTable();
 
-                for(int i=0; i<parentArray.length(); i++) {
+                for (int i = 0; i < parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
                     /**
                      * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
@@ -252,18 +254,18 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
             } catch (JSONException e) {
                 e.printStackTrace();
             } finally {
-                if(connection != null) {
+                if (connection != null) {
                     connection.disconnect();
                 }
                 try {
-                    if(reader != null) {
+                    if (reader != null) {
                         reader.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            return  null;
+            return null;
         }
 
 
@@ -274,7 +276,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
             dialog.dismiss();
 
 
-            if(result != null) {
+            if (result != null) {
                 adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, result);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -298,6 +300,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
         private List<MotivationModel> motivationModelList;
         private int resource;
         private LayoutInflater inflater;
+
         public MotivationAdapter(Context context, int resource, List<MotivationModel> objects) {
             super(context, resource, objects);
             motivationModelList = objects;
@@ -310,10 +313,10 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
             ViewHolder holder = null;
 
-            if(convertView == null){
+            if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = inflater.inflate(resource, null);
-                holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
+                holder.thumbnail = (DynamicHeightNetworkImageView) convertView.findViewById(R.id.thumbnail);
                 //holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
                 //holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
 
@@ -327,14 +330,14 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
             ImageLoader.getInstance().displayImage(motivationModelList.get(position).getThumbnail(), holder.thumbnail);
             // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
 
-           // holder.articleTitle.setText(motivationModelList.get(position).getTitle());
-          //  holder.articleData.setText("Added on: " + motivationModelList.get(position).getData());
+            // holder.articleTitle.setText(motivationModelList.get(position).getTitle());
+            //  holder.articleData.setText("Added on: " + motivationModelList.get(position).getData());
 
             return convertView;
         }
 
 
-        class ViewHolder{
+        class ViewHolder {
             private DynamicHeightNetworkImageView thumbnail;
             //private TextView articleTitle;
             //private TextView articleData;
@@ -345,19 +348,31 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
         }
     }
 
+    int currentFirstVisibleItem;
+    int currentVisibleItemCount;
+    int currentScrollState;
+    boolean isLoading;
 
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        this.currentFirstVisibleItem = firstVisibleItem;
+        this.currentVisibleItemCount = visibleItemCount;
+    }
 
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        this.currentScrollState = scrollState;
+        this.isScrollCompleted();
+    }
 
-
-
-
-
-
-
-
-
-
-
+    private void isScrollCompleted() {
+        if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
+            /*** In this way I detect if there's been a scroll which has completed ***/
+            /*** do the work for load more date! ***/
+            if(!isLoading){
+                isLoading = true;
+                LoadMotivation();
+            }
+        }
+    }
 
 
 
