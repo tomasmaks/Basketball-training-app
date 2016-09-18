@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
@@ -38,6 +39,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private TextView article_title;
     private TextView article_body;
     private TextView article_data;
+    private RelativeLayout video;
 
     YouTubePlayer.PlayerStyle playerStyle;
     Orientation orientation;
@@ -49,6 +51,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     ImageView thumbnail;
 
     String exercise_video;
+
 
     // private ProgressBar progressBar;
     List<ArticleModel> articleModelList;
@@ -109,6 +112,16 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
 
+                if (articleModel.getTitle().isEmpty()) {
+                    article_image.setVisibility(View.GONE);
+                }
+
+                if (exercise_video.isEmpty()) {
+                    play.setVisibility(View.GONE);
+                    thumbnail.setVisibility(View.GONE);
+                    video.setVisibility(View.GONE);
+                }
+
             } else {
 
                 ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
@@ -139,11 +152,21 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                     }
                 });
 
+
                 article_title.setText(articleModel.getTitle());
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
 
+                if (exercise_video.isEmpty()) {
+                    play.setVisibility(View.GONE);
+                    thumbnail.setVisibility(View.GONE);
+                    video.setVisibility(View.GONE);
 
+                }
+
+                if (articleModel.getTitle().isEmpty()) {
+                    article_image.setVisibility(View.GONE);
+                }
             }
             // Then later, when you want to display image
 
@@ -156,6 +179,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         article_title = (TextView)findViewById(R.id.article_title);
         article_body = (TextView)findViewById(R.id.article_body);
         article_data = (TextView)findViewById(R.id.article_data);
+        video = (RelativeLayout)findViewById(R.id.video);
 
         playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
         orientation = Orientation.AUTO;
