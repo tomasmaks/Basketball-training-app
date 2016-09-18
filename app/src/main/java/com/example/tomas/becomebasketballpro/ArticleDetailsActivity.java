@@ -79,7 +79,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         if(bundle != null) {
 
             String json = bundle.getString("articleModel");
-            if (utils.isConnectingToInternet()) {
+  //          if (utils.isConnectingToInternet()) {
 
                 ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
                 ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
@@ -121,54 +121,6 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                     thumbnail.setVisibility(View.GONE);
                     video.setVisibility(View.GONE);
                 }
-
-            } else {
-
-                ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
-
-                ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
-
-                exercise_video = articleModel.getVideoURI();
-
-                Picasso.with(this)
-                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                        .fit()
-                        .centerCrop()
-                        .into(thumbnail);
-
-
-                play.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivityForResult(intent, 1);
-                    }
-                });
-
-
-                article_title.setText(articleModel.getTitle());
-                article_body.setText(articleModel.getBody());
-                article_data.setText("Added on: " + articleModel.getData());
-
-                if (exercise_video.isEmpty()) {
-                    play.setVisibility(View.GONE);
-                    thumbnail.setVisibility(View.GONE);
-                    video.setVisibility(View.GONE);
-
-                }
-
-                if (articleModel.getTitle().isEmpty()) {
-                    article_image.setVisibility(View.GONE);
-                }
-            }
-            // Then later, when you want to display image
 
         }
     }

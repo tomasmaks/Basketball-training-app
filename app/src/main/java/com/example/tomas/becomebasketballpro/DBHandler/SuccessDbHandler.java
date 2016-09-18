@@ -26,9 +26,10 @@ public class SuccessDbHandler extends SQLiteOpenHelper implements SuccessListene
     private static final String KEY_BODY = "_body";
     private static final String KEY_THUMB = "_thumb";
     private static final String KEY_PHOTO = "_photo";
+    private static final String KEY_VIDEO = "_video";
     private static final String KEY_PUBLISHED_DATE = "_published_date";
     private SQLiteDatabase db;
-    String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_TITLE+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT,"+KEY_PUBLISHED_DATE+" TEXT)";
+    String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_TITLE+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT,"+KEY_VIDEO+" TEXT,"+KEY_PUBLISHED_DATE+" TEXT)";
     String DROP_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
 
     public SuccessDbHandler(Context context) {
@@ -62,6 +63,7 @@ public class SuccessDbHandler extends SQLiteOpenHelper implements SuccessListene
             values.put(KEY_BODY, successModel.getBody());
             values.put(KEY_THUMB, successModel.getThumbnail());
             values.put(KEY_PHOTO, successModel.getImage());
+            values.put(KEY_VIDEO, successModel.getVideoURI());
             values.put(KEY_PUBLISHED_DATE, successModel.getData());
             db.insert(TABLE_NAME, null, values);
             db.close();
@@ -89,7 +91,8 @@ public class SuccessDbHandler extends SQLiteOpenHelper implements SuccessListene
                     successModel.setBody(cursor.getString(2));
                     successModel.setThumbnail(cursor.getString(3));
                     successModel.setImage(cursor.getString(4));
-                    successModel.setData(cursor.getString(5));
+                    successModel.setVideoURI(cursor.getString(5));
+                    successModel.setData(cursor.getString(6));
                     successModelList.add(successModel);
 
                 }

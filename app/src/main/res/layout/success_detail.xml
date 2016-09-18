@@ -18,7 +18,34 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_drawer"
             android:contentDescription="@string/title_section0"
+            android:visibility="visible"
             />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:id="@+id/video"
+            android:visibility="visible"
+            >
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                />
+
+            <ImageButton
+                android:id="@+id/play_bt"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_play"
+                android:visibility="visible"
+                />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/article_title"

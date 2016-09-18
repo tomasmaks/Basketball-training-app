@@ -13,6 +13,7 @@ public class SuccessModel implements Serializable {
     private String articleImage;
     private String articleBody;
     private int id;
+    private String video;
 
     public SuccessModel() {
     }
@@ -29,13 +30,14 @@ public class SuccessModel implements Serializable {
         this.articleTitle = articleTitle;
     }
 
-    public SuccessModel(int id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody) {
+    public SuccessModel(int id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody, String video) {
         this.id = id;
         this.articleTitle = articleTitle;
         this.thumbnail = thumbnail;
         this.articleData = articleData;
         this.articleImage = articleImage;
         this.articleBody = articleBody;
+        this.video = video;
     }
 
     public String getThumbnail() {
@@ -84,6 +86,14 @@ public class SuccessModel implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getVideoURI() {
+        return video;
+    }
+
+    public void setVideoURI(String video) {
+        this.video = video;
     }
 
 
