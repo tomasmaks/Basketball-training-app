@@ -47,11 +47,12 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private boolean advertised = false;
     ImageButton play;
     ImageView thumbnail;
+
     String exercise_video;
 
-   String articleTitle;
     // private ProgressBar progressBar;
     List<ArticleModel> articleModelList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,26 +73,72 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
         // recovering data from MainActivity, sent via intent
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
+        if(bundle != null) {
 
             String json = bundle.getString("articleModel");
-            if(utils.isConnectingToInternet()) {
+            if (utils.isConnectingToInternet()) {
 
                 ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
                 ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
 
-                setupVideo();
+                exercise_video = articleModel.getVideoURI();
+
+                Picasso.with(this)
+                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                        .fit()
+                        .centerCrop()
+                        .into(thumbnail);
+
+
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivityForResult(intent, 1);
+                    }
+                });
 
                 article_title.setText(articleModel.getTitle());
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
 
-            }else{
+            } else {
 
                 ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
 
                 ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
-                setupVideo();
+
+                exercise_video = articleModel.getVideoURI();
+
+                Picasso.with(this)
+                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                        .fit()
+                        .centerCrop()
+                        .into(thumbnail);
+
+
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivityForResult(intent, 1);
+                    }
+                });
+
                 article_title.setText(articleModel.getTitle());
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
@@ -100,40 +147,9 @@ public class ArticleDetailsActivity extends ActionBarActivity {
             }
             // Then later, when you want to display image
 
-
-
         }
-
     }
-    private void setupVideo() {
 
-
-
-        Picasso.with(this)
-                .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                .fit()
-                .centerCrop()
-                .into(thumbnail);
-
-
-
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent, 1);
-            }
-        });
-
-
-    }
 
     private void setUpUIViews() {
         article_image = (ImageView)findViewById(R.id.article_image);
