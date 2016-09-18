@@ -20,6 +20,25 @@
             android:contentDescription="@string/title_section0"
             />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/play_bt"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_play" />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/article_title"
             android:layout_width="wrap_content"

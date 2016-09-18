@@ -1,10 +1,12 @@
 package com.example.tomas.becomebasketballpro;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -13,10 +15,16 @@ import android.widget.TextView;
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.squareup.picasso.Picasso;
+import com.thefinestartist.ytpa.YouTubePlayerActivity;
+import com.thefinestartist.ytpa.enums.Orientation;
+import com.thefinestartist.ytpa.enums.Quality;
+import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +38,16 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private TextView article_title;
     private TextView article_body;
     private TextView article_data;
+
+    YouTubePlayer.PlayerStyle playerStyle;
+    Orientation orientation;
+    private static String VIDEO_ID = "iS1g8G_njx8";
+    boolean showAudioUi;
+    boolean showFadeAnim;
+    private boolean advertised = false;
+    ImageButton play;
+    ImageView thumbnail;
+    String exercise_video;
 
    String articleTitle;
     // private ProgressBar progressBar;
@@ -62,6 +80,8 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
                 ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
 
+                setupVideo();
+
                 article_title.setText(articleModel.getTitle());
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
@@ -71,7 +91,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
 
                 ImageLoader.getInstance().displayImage(articleModel.getImage(), article_image);
-
+                setupVideo();
                 article_title.setText(articleModel.getTitle());
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
@@ -85,13 +105,51 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         }
 
     }
+    private void setupVideo() {
+
+
+
+        Picasso.with(this)
+                .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                .fit()
+                .centerCrop()
+                .into(thumbnail);
+
+
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+
+    }
 
     private void setUpUIViews() {
         article_image = (ImageView)findViewById(R.id.article_image);
         article_title = (TextView)findViewById(R.id.article_title);
         article_body = (TextView)findViewById(R.id.article_body);
         article_data = (TextView)findViewById(R.id.article_data);
+
+        playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
+        orientation = Orientation.AUTO;
+        showAudioUi = true;
+        showFadeAnim = true;
+
+        play = (ImageButton) findViewById(R.id.play_bt);
+        thumbnail = (ImageView) findViewById(R.id.thumbnail);
         // progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
     }
 
     @Override

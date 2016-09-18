@@ -242,6 +242,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                     articleModel.setBody(finalObject.getString("body"));
                     articleModel.setImage(finalObject.getString("photo"));
                     articleModel.setData(finalObject.getString("published_date"));
+                    articleModel.setVideoURI(finalObject.getString("video"));
 
 
                     articleModelList.add(articleModel);

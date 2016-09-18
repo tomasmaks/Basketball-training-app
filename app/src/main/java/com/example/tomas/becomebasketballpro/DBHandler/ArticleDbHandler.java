@@ -26,9 +26,10 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
     private static final String KEY_BODY = "_body";
     private static final String KEY_THUMB = "_thumb";
     private static final String KEY_PHOTO = "_photo";
+    private static final String KEY_VIDEO = "_video";
     private static final String KEY_PUBLISHED_DATE = "_published_date";
     private SQLiteDatabase db;
-    String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_TITLE+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT,"+KEY_PUBLISHED_DATE+" TEXT)";
+    String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_TITLE+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT,"+KEY_VIDEO+" TEXT,"+KEY_PUBLISHED_DATE+" TEXT)";
     String DROP_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
 
     public ArticleDbHandler(Context context) {
@@ -62,6 +63,7 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
             values.put(KEY_BODY, articleModel.getBody());
             values.put(KEY_THUMB, articleModel.getThumbnail());
             values.put(KEY_PHOTO, articleModel.getImage());
+            values.put(KEY_VIDEO, articleModel.getVideoURI());
             values.put(KEY_PUBLISHED_DATE, articleModel.getData());
             db.insert(TABLE_NAME, null, values);
             db.close();
@@ -89,7 +91,8 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
                     articleModel.setBody(cursor.getString(2));
                     articleModel.setThumbnail(cursor.getString(3));
                     articleModel.setImage(cursor.getString(4));
-                    articleModel.setData(cursor.getString(5));
+                    articleModel.setVideoURI(cursor.getString(5));
+                    articleModel.setData(cursor.getString(6));
                     articleModelList.add(articleModel);
 
                 }
