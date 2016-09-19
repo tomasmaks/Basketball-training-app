@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -17,15 +20,29 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 public class MotivationDetailsActivity extends ActionBarActivity {
 
     private ImageView article_image;
-//    private TextView article_title;
-//    private TextView article_body;
-//    private TextView articleData;
-    // private ProgressBar progressBar;
+
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.motivation_detail);
+
+        mInterstitialAd = new InterstitialAd(this);
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
 
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
@@ -76,4 +93,11 @@ public class MotivationDetailsActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
+
 }

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,6 +17,10 @@ import android.widget.TextView;
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -52,6 +57,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
     String exercise_video;
 
+    private InterstitialAd mInterstitialAd;
 
     // private ProgressBar progressBar;
     List<ArticleModel> articleModelList;
@@ -60,6 +66,24 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_detail);
+
+
+        mInterstitialAd = new InterstitialAd(this);
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
+
 
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
@@ -112,7 +136,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 article_body.setText(articleModel.getBody());
                 article_data.setText("Added on: " + articleModel.getData());
 
-                if (articleModel.getTitle().isEmpty()) {
+                if (articleModel.getImage().isEmpty()) {
                     article_image.setVisibility(View.GONE);
                 }
 
@@ -156,6 +180,12 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
     }
 
 }

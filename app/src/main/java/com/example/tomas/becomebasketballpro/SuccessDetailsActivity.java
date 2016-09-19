@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.SuccessModel;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -44,11 +47,28 @@ public class SuccessDetailsActivity extends ActionBarActivity {
 
     String exercise_video;
     // private ProgressBar progressBar;
-
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.success_detail);
+
+        mInterstitialAd = new InterstitialAd(this);
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
+
 
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
@@ -97,7 +117,7 @@ public class SuccessDetailsActivity extends ActionBarActivity {
             article_body.setText(successModel.getBody());
             articleData.setText("Added on: " + successModel.getData());
 
-            if (successModel.getTitle().isEmpty()) {
+            if (successModel.getImage().isEmpty()) {
                 article_image.setVisibility(View.GONE);
             }
 
@@ -143,6 +163,10 @@ public class SuccessDetailsActivity extends ActionBarActivity {
     }
 
 
-
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
 
 }

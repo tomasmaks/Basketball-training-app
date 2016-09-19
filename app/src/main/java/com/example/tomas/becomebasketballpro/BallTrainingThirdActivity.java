@@ -21,6 +21,9 @@ import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
 import com.thefinestartist.ytpa.YouTubePlayerActivity;
@@ -53,7 +56,7 @@ public class BallTrainingThirdActivity extends Activity {
     ImageButton play;
     ImageView thumbnail;
 
-
+    private InterstitialAd mInterstitialAd;
 
 
     // single song JSON url
@@ -73,6 +76,22 @@ public class BallTrainingThirdActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_balltraining_details);
+
+        mInterstitialAd = new InterstitialAd(this);
+        // set the ad unit ID
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        // Load ads into Interstitial Ads
+        mInterstitialAd.loadAd(adRequest);
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            public void onAdLoaded() {
+                showInterstitial();
+            }
+        });
 
         // Get album id, song id
         Intent i = getIntent();
@@ -229,5 +248,9 @@ public class BallTrainingThirdActivity extends Activity {
         });
 
     }
-
+    private void showInterstitial() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+    }
 }

@@ -23,6 +23,9 @@ import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
+import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -56,6 +59,8 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
     // Album id
     String category_ids;
+
+    private AdView mAdView;
 
     FitnessDbHandler dbHandler;
     List<FitnessTrainingModel> result = null;
@@ -109,34 +114,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
 
         } else {
-//            result = dbHandler.getAllExercisesById();
-//            adapter = new ListAdapter(getActivity(), result);
-//            ListView lv = getListView();
-//            lv.setAdapter(adapter);
-//            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-//
-//                    // On selecting single track get song information
-//                    Intent i = new Intent(getActivity().getApplicationContext(), FitnessTrainingThirdActivity.class);
-//
-//                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-//                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
-//
-//                    // to get song information
-//                    // both album id and song is needed
-//                    i.putExtra("category_id", category_id);
-//                    i.putExtra("exercise_id", exercise_id);
-//
-//                    view.getContext().startActivity(i);
-//                }
-//            });
-
-
             Toast.makeText(getActivity().getApplicationContext(), "Please connect to internet to see Fitness training list", Toast.LENGTH_LONG).show();
-
-
-
         }
 
     }
@@ -161,6 +139,12 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining_list, container, false);
+
+        mAdView = (AdView) mRootView.findViewById(R.id.adView);
+        // Set the AdListener before building or loading the AdRequest.
+        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         return mRootView;
     }

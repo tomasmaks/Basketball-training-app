@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.R;
+import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 
 /**
@@ -24,6 +27,8 @@ public class NewsFragment extends Fragment {
     private ViewPager pager;
     private MyPagerAdapter adapter;
     private View root;
+
+    private AdView mAdView;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -48,12 +53,14 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-//                .getDisplayMetrics());
-//        pager.setPageMargin(pageMargin);
-
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_tab_list, container, false);
+
+        mAdView = (AdView) root.findViewById(R.id.adView);
+        // Set the AdListener before building or loading the AdRequest.
+        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Initialize the ViewPager and set an adapter
         pager = (ViewPager) root.findViewById(R.id.pager);

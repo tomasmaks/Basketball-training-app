@@ -25,6 +25,9 @@ import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
+import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -59,6 +62,8 @@ public class BallTrainingSecondFragment extends ListFragment {
 
     // Album id
     String category_ids;
+
+    private AdView mAdView;
 
     BallTrainingDbHandler dbHandler;
     List<BallTrainingModel> result = null;
@@ -117,13 +122,7 @@ public class BallTrainingSecondFragment extends ListFragment {
             });
 
         }else {
-
-
             Toast.makeText(getActivity().getApplicationContext(), "Please connect to internet to see ball training list", Toast.LENGTH_LONG).show();
-
-
-
-
         }
 
 
@@ -151,6 +150,12 @@ public class BallTrainingSecondFragment extends ListFragment {
 
 
         mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
+
+        mAdView = (AdView) mRootView.findViewById(R.id.adView);
+        // Set the AdListener before building or loading the AdRequest.
+        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         return mRootView;
     }

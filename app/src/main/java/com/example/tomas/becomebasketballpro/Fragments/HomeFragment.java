@@ -12,6 +12,9 @@ import android.widget.RelativeLayout;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.R;
+import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created by Tomas on 10/08/2016.
@@ -27,6 +30,8 @@ public class HomeFragment extends Fragment {
     private RelativeLayout btn_lay;
     private RelativeLayout btn_lay2;
     private RelativeLayout btn_lay3;
+
+    private AdView mAdView;
 
     public static HomeFragment newInstance(int sectionNumber) {
         HomeFragment fragment = new HomeFragment();
@@ -54,6 +59,12 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mRootView  = inflater.inflate(R.layout.fragment_home, container, false);
+
+        mAdView = (AdView) mRootView.findViewById(R.id.adView);
+        // Set the AdListener before building or loading the AdRequest.
+        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         btn_lay = (RelativeLayout) mRootView.findViewById(R.id.btn_lay);
 
