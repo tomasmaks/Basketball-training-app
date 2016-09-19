@@ -30,7 +30,7 @@ public class MotivationDbHandler extends SQLiteOpenHelper implements MotivationL
     private static final String KEY_PHOTO = "_photo";
     private static final String KEY_PUBLISHED_DATE = "_published_date";
     private SQLiteDatabase db;
-    String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_TITLE+" TEXT,"+KEY_BODY+" TEXT,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT,"+KEY_PUBLISHED_DATE+" TEXT)";
+    String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+" ("+KEY_ID+" INTEGER PRIMARY KEY,"+KEY_THUMB+" TEXT,"+KEY_PHOTO+" TEXT)";
     String DROP_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
 
     public MotivationDbHandler(Context context) {
@@ -60,11 +60,8 @@ public class MotivationDbHandler extends SQLiteOpenHelper implements MotivationL
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             ContentValues values = new ContentValues();
-            values.put(KEY_TITLE, motivationModel.getTitle());
-            values.put(KEY_BODY, motivationModel.getBody());
             values.put(KEY_THUMB, motivationModel.getThumbnail());
             values.put(KEY_PHOTO, motivationModel.getImage());
-            values.put(KEY_PUBLISHED_DATE, motivationModel.getData());
             db.insert(TABLE_NAME, null, values);
             db.close();
         }catch (Exception e){
@@ -87,11 +84,8 @@ public class MotivationDbHandler extends SQLiteOpenHelper implements MotivationL
                 while (cursor.moveToNext()) {
                     MotivationModel motivationModel = new MotivationModel();
                     motivationModel.setId(cursor.getInt(0));
-                    motivationModel.setTitle(cursor.getString(1));
-                    motivationModel.setBody(cursor.getString(2));
-                    motivationModel.setThumbnail(cursor.getString(3));
-                    motivationModel.setImage(cursor.getString(4));
-                    motivationModel.setData(cursor.getString(5));
+                    motivationModel.setThumbnail(cursor.getString(1));
+                    motivationModel.setImage(cursor.getString(2));
                     motivationModelList.add(motivationModel);
 
                 }

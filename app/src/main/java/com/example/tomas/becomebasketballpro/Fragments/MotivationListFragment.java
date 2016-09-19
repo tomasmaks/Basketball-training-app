@@ -237,10 +237,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
                      */
                     MotivationModel motivationModel = gson.fromJson(finalObject.toString(), MotivationModel.class);
                     motivationModel.setThumbnail(finalObject.getString("thumb"));
-                    motivationModel.setTitle(finalObject.getString("title"));
-                    motivationModel.setBody(finalObject.getString("body"));
                     motivationModel.setImage(finalObject.getString("photo"));
-                    motivationModel.setData(finalObject.getString("published_date"));
 
                     motivationModelList.add(motivationModel);
                     dbHandler.addMotivation(motivationModel);
