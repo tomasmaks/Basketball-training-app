@@ -17,7 +17,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_aspectRatio="178%"
+            android:maxHeight="300dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"/>
 
