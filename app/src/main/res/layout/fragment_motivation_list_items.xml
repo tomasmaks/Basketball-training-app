@@ -1,22 +1,25 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    >
-    <!--android:clickable="false"-->
-    <!--android:focusable="false"-->
-    <!--android:descendantFocusability="blocksDescendants"-->
-    <!--android:focusableInTouchMode="false"-->
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="false"
+    android:focusable="false"
+    android:descendantFocusability="blocksDescendants"
+    android:focusableInTouchMode="false">
+
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_aspectRatio="178%"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"/>
 
     </LinearLayout>
 

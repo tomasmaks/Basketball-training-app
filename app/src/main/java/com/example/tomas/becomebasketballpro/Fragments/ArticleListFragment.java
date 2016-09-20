@@ -335,7 +335,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             if(convertView == null){
                 holder = new ViewHolder();
                 convertView = inflater.inflate(resource, null);
-                holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
+                holder.thumbnail = (ImageView)convertView.findViewById(R.id.thumbnail);
                 holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
                 holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
 
@@ -356,7 +356,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
 
         class ViewHolder{
-            private DynamicHeightNetworkImageView thumbnail;
+            private ImageView thumbnail;
             private TextView articleTitle;
             private TextView articleData;
         }

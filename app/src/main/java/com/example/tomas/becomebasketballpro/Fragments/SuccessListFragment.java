@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -304,7 +305,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
             if(convertView == null){
                 holder = new ViewHolder();
                 convertView = inflater.inflate(resource, null);
-                holder.thumbnail = (DynamicHeightNetworkImageView)convertView.findViewById(R.id.thumbnail);
+                holder.thumbnail = (ImageView)convertView.findViewById(R.id.thumbnail);
                 holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
                 holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
 
@@ -326,7 +327,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
 
         class ViewHolder{
-            private DynamicHeightNetworkImageView thumbnail;
+            private ImageView thumbnail;
             private TextView articleTitle;
             private TextView articleData;
         }
