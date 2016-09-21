@@ -134,7 +134,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 });
 
                 article_title.setText(articleModel.getTitle());
-                article_body.setText(Html.fromHtml(articleModel.getBody()));
+                article_body.setText(Html.fromHtml(articleModel.getBody()).toString());
                 article_data.setText("Added on: " + articleModel.getData());
 
                 if (articleModel.getImage().isEmpty()) {
