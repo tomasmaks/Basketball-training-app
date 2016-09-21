@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * Created by Tomas on 09/08/2016.
  */
-public class MotivationListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, AbsListView.OnScrollListener {
+public class MotivationListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     Context context;
     private String motivationModel;
     View mRootView;
@@ -95,7 +95,6 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
         }
 
         dbHandler = new MotivationDbHandler(getActivity());
-
 
         mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
@@ -150,11 +149,11 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("motivationModel", motivationModel);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString("motivationModel", motivationModel);
+//    }
 
 
     @Override
@@ -346,31 +345,31 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
         }
     }
 
-    int currentFirstVisibleItem;
-    int currentVisibleItemCount;
-    int currentScrollState;
-    boolean isLoading;
-
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        this.currentFirstVisibleItem = firstVisibleItem;
-        this.currentVisibleItemCount = visibleItemCount;
-    }
-
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        this.currentScrollState = scrollState;
-        this.isScrollCompleted();
-    }
-
-    private void isScrollCompleted() {
-        if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
-            /*** In this way I detect if there's been a scroll which has completed ***/
-            /*** do the work for load more date! ***/
-            if(!isLoading){
-                isLoading = true;
-                LoadMotivation();
-            }
-        }
-    }
+//    int currentFirstVisibleItem;
+//    int currentVisibleItemCount;
+//    int currentScrollState;
+//    boolean isLoading;
+//
+//    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//        this.currentFirstVisibleItem = firstVisibleItem;
+//        this.currentVisibleItemCount = visibleItemCount;
+//    }
+//
+//    public void onScrollStateChanged(AbsListView view, int scrollState) {
+//        this.currentScrollState = scrollState;
+//        this.isScrollCompleted();
+//    }
+//
+//    private void isScrollCompleted() {
+//        if (this.currentVisibleItemCount > 0 && this.currentScrollState == SCROLL_STATE_IDLE) {
+//            /*** In this way I detect if there's been a scroll which has completed ***/
+//            /*** do the work for load more date! ***/
+//            if(!isLoading){
+//                isLoading = true;
+//                LoadMotivation();
+//            }
+//        }
+  //  }
 
 
 

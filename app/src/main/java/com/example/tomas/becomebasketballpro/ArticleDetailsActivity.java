@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -133,7 +134,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 });
 
                 article_title.setText(articleModel.getTitle());
-                article_body.setText(articleModel.getBody());
+                article_body.setText(Html.fromHtml(articleModel.getBody()));
                 article_data.setText("Added on: " + articleModel.getData());
 
                 if (articleModel.getImage().isEmpty()) {

@@ -18,7 +18,7 @@
             android:id="@+id/thumb_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:contentDescription="@string/title_section0"/>
