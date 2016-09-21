@@ -1,9 +1,7 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,39 +9,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
-
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
-import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
-import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
-import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,19 +39,18 @@ public class BallTrainingFragment extends ListFragment {
     View mRootView;
     GridView gridview;
     ListAdapter adapter;
-    // Creating JSON Parser object
+
     JSONParser jsonParser = new JSONParser();
 
     List<BallTrainingModel> ballTrainingModelList;
-    // albums JSONArray
+
     JSONArray categories = null;
 
     BallTrainingDbHandler dbHandler;
     List<BallTrainingModel> result = null;
-    // albums JSON url
-    private static final String URL_CATEGORIES = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
 
-    // ALL JSON node names
+    private static final String URL_CATEGORIES = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/ListOfExercises.json?alt=media&token=724f8517-db16-4ad7-afb5-e48e9bf6d228";
+
     private static final String TAG_ID = "ids";
     private static final String TAG_NAME = "category";
     private static final String TAG_CATTHUM = "catThumb";
@@ -74,15 +59,6 @@ public class BallTrainingFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
 
     }
 
@@ -161,27 +137,17 @@ public class BallTrainingFragment extends ListFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Background Async Task to Load all Albums by making http request
-     */
     class LoadCategories extends AsyncTask<String, String, List<BallTrainingModel>> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        /**
-         * getting Albums JSON
-         */
         protected List<BallTrainingModel> doInBackground(String... args) {
-            // Building Parameters
+
             List<NameValuePair> param = new ArrayList<NameValuePair>();
 
-            // getting JSON string from URL
             JSONObject json = jsonParser.makeHttpRequest(URL_CATEGORIES, "GET",
                     param);
 
@@ -190,17 +156,16 @@ public class BallTrainingFragment extends ListFragment {
                 List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
                 Gson gson = new Gson();
                 categories = json.getJSONArray(TABLE_EVENT);
-                //categories = new JSONArray(json);
 
                 dbHandler.deleteCategoryTable();
-                // looping through All albums
+
                 for (int i = 0; i < categories.length(); i++) {
                     JSONObject c = categories.getJSONObject(i);
                     BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
                     ballTrainingModel.setIds(c.getString(TAG_ID));
                     ballTrainingModel.setCategory(c.getString(TAG_NAME));
                     ballTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
-                    //ballTrainingCategoriesModel.setCount(c.getString(TAG_COUNT));
+
                     ballTrainingModelList.add(ballTrainingModel);
                     dbHandler.addCategory(ballTrainingModel);
 
@@ -214,11 +179,8 @@ public class BallTrainingFragment extends ListFragment {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(final List<BallTrainingModel> result) {
-            // updating UI from Background Thread
+
                 getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
@@ -227,8 +189,6 @@ public class BallTrainingFragment extends ListFragment {
                 });
         }
     }
-
-
 
     public class ListAdapter extends BaseAdapter {
         private LayoutInflater inflater;
@@ -243,12 +203,9 @@ public class BallTrainingFragment extends ListFragment {
         }
 
         class ViewHolder {
-            // Include Number of reqd views.
             private TextView ids;
             private TextView category;
             private ImageView tagThumb;
-
-
         }
 
         @Override
@@ -269,7 +226,6 @@ public class BallTrainingFragment extends ListFragment {
             return pos;
         }
 
-
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             // TODO Auto-generated method stub
@@ -286,18 +242,15 @@ public class BallTrainingFragment extends ListFragment {
             } else {
                 mViewHolder = (ViewHolder) view.getTag();
             }
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getCatThumb(), mViewHolder.tagThumb);
+
+            Picasso.with(getActivity()).load(ballTrainingModelList.get(position).getCatThumb()).into(mViewHolder.tagThumb);
 
             mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
             mViewHolder.category.setText(ballTrainingModelList.get(position).getCategory());
 
-            //mViewHolder.count.setText(ballTraininCategoriesModelList.get(position).getCount());
-
             return view;
         }
     }
-
 }
 
 

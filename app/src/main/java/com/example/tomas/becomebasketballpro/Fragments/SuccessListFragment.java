@@ -1,6 +1,5 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -20,23 +19,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
-import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
-import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.DBHandler.SuccessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
-import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.example.tomas.becomebasketballpro.Model.SuccessModel;
-import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
-import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,13 +46,10 @@ import java.util.List;
  * Created by Tomas on 09/08/2016.
  */
 public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    // @BindView(R.layout.fragment_article_list)
-    Context context;
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/SuccessStories.json";
-    private ProgressDialog dialog;
+    private String URL_TO_HIT = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/SuccessStories.json?alt=media&token=944e53e9-a17b-4474-ad32-f516b873d0e9";
     SuccessAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
     SuccessDbHandler dbHandler;
@@ -85,21 +72,6 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        dialog = new ProgressDialog(getActivity());
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-        dialog.setMessage("Loading. Please wait...");
-//        // Create default options which will be used for every
-//        //  displayImage(...) call if no options will be passed to this method
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
 
     }
 
@@ -172,7 +144,6 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
             switch (msg.what) {
                 case 0:
                     new FetchSuccessTask().execute(URL_TO_HIT);
-                    Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
                 default:
@@ -183,8 +154,6 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
 
     public class FetchSuccessTask extends AsyncTask<String,String, List<SuccessModel>> {
-
-        private final String LOG_TAG = FetchSuccessTask.class.getSimpleName();
 
         @Override
         protected void onPreExecute() {
@@ -263,9 +232,6 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
         protected void onPostExecute(final List<SuccessModel> result) {
             super.onPostExecute(result);
 
-            dialog.dismiss();
-
-
             if(result != null) {
                 adapter = new SuccessAdapter(getActivity().getApplicationContext(), R.layout.fragment_success_list_items, result);
                 mListView.setAdapter(adapter);
@@ -276,7 +242,6 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
                         Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
                         intent.putExtra("successModel", new Gson().toJson(successModel));
                         getActivity().startActivity(intent);
-
                     }
                 });
             } else {
@@ -314,10 +279,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
                 holder = (ViewHolder) convertView.getTag();
             }
 
-
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(successModelList.get(position).getThumbnail(), holder.thumbnail);
-            // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
+            Picasso.with(getActivity()).load(successModelList.get(position).getThumbnail()).into(holder.thumbnail);
 
             holder.articleTitle.setText(successModelList.get(position).getTitle());
             holder.articleData.setText("Added on: " + successModelList.get(position).getData());

@@ -19,10 +19,6 @@ public class ArticleModel implements Serializable {
 
     public ArticleModel(String articleTitle) {
         this.articleTitle = articleTitle;
-        // this.thumbnail = thumbnail;
-        this.articleData = articleData;
-        this.articleImage = articleImage;
-        this.articleBody = articleBody;
     }
     public ArticleModel(int id, String articleTitle) {
         this.id = id;

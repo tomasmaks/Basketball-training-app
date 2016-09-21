@@ -1,11 +1,8 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +10,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,17 +22,12 @@ import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
-import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-import com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
-import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.R;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,23 +43,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ArticleListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-
-
-    // @BindView(R.layout.fragment_article_list)
-    Context context;
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/article.json";
-    private ProgressDialog dialog;
+    private String URL_TO_HIT = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/article.json?alt=media&token=21471e3d-e54e-45cb-b3fd-d03bd97c81ba";
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
     ArticleDbHandler dbHandler;
@@ -94,21 +71,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        dialog = new ProgressDialog(getActivity());
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-        dialog.setMessage("Loading. Please wait...");
-//        // Create default options which will be used for every
-//        //  displayImage(...) call if no options will be passed to this method
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
 
     }
 
@@ -182,7 +144,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             switch (msg.what) {
                 case 0:
                     new FetchTask().execute(URL_TO_HIT);
-                   // Toast.makeText(getActivity().getApplicationContext(), "Refresh success", Toast.LENGTH_SHORT).show();
                     refreshLayout.setRefreshing(false);
                     break;
                 default:
@@ -193,8 +154,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
 
     public class FetchTask extends AsyncTask<String,String, List<ArticleModel>> {
-
-        private final String LOG_TAG = FetchTask.class.getSimpleName();
 
         @Override
         protected void onPreExecute() {
@@ -278,7 +237,6 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
         protected void onPostExecute(final List<ArticleModel> result) {
             super.onPostExecute(result);
 
-            dialog.dismiss();
 
 
             if(result != null) {
@@ -343,10 +301,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(articleModelList.get(position).getThumbnail(), holder.thumbnail);
-            // ImageLoader.getInstance().displayImage(articleModelList.get(position).getPhoto(), holder.Photo);
+            Picasso.with(getActivity()).load(articleModelList.get(position).getThumbnail()).into(holder.thumbnail);
 
             holder.articleTitle.setText(articleModelList.get(position).getTitle());
             holder.articleData.setText("Added on: " + articleModelList.get(position).getData());

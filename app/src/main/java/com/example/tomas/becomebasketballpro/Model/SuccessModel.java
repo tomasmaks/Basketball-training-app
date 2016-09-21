@@ -18,27 +18,6 @@ public class SuccessModel implements Serializable {
     public SuccessModel() {
     }
 
-    public SuccessModel(String articleTitle) {
-        this.articleTitle = articleTitle;
-        // this.thumbnail = thumbnail;
-        this.articleData = articleData;
-        this.articleImage = articleImage;
-        this.articleBody = articleBody;
-    }
-    public SuccessModel(int id, String articleTitle) {
-        this.id = id;
-        this.articleTitle = articleTitle;
-    }
-
-    public SuccessModel(int id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody, String video) {
-        this.id = id;
-        this.articleTitle = articleTitle;
-        this.thumbnail = thumbnail;
-        this.articleData = articleData;
-        this.articleImage = articleImage;
-        this.articleBody = articleBody;
-        this.video = video;
-    }
 
     public String getThumbnail() {
         return thumbnail;

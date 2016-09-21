@@ -88,13 +88,14 @@
             />
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        />
+
 </LinearLayout>
-
-
 </ScrollView>
-
-
-
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
@@ -103,5 +104,4 @@
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
-
 </RelativeLayout>

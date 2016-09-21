@@ -18,10 +18,5 @@
         android:scrollbarStyle="outsideOverlay"
         tools:ignore="PrivateResource" />
 
-    <TextView
-        android:id="@+id/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:visibility="invisible"
-        />
+
 </android.support.v4.widget.SwipeRefreshLayout>

@@ -122,19 +122,4 @@ public class SuccessDbHandler extends SQLiteOpenHelper implements SuccessListene
         return 0;
     }
 
-    public SuccessModel getSuccess(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME, new String[] {KEY_ID, KEY_TITLE }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
-
-        SuccessModel successModel = null;
-        if ((cursor != null) && cursor.moveToFirst()) {
-
-            successModel = new SuccessModel(Integer.parseInt(cursor.getString(0)), cursor.getString(1));
-            // return contact
-        }
-        return successModel;
-    }
-
 }

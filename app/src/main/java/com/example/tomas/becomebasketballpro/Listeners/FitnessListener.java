@@ -13,7 +13,4 @@ public interface FitnessListener {
 
     public List<FitnessTrainingModel> getAllCategories();
 
-//    public void addExercise(FitnessTrainingModel fitnessTrainingModel);
-//
-//    public List<FitnessTrainingModel> getAllExercisesById();
 }

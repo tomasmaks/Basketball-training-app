@@ -1,4 +1,4 @@
-package com.example.tomas.becomebasketballpro.ui;
+package com.example.tomas.becomebasketballpro.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -26,8 +26,4 @@ public class DynamicHeightNetworkImageView extends ImageView {
         setMeasuredDimension(measuredWidth, (int) (measuredWidth / mAspectRatio));
     }
 
-    public void setAspectRatio(float aspectRatio) {
-        mAspectRatio = aspectRatio;
-        requestLayout();
-    }
 }

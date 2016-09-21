@@ -15,6 +15,4 @@ public interface MotivationListener {
     public List<MotivationModel> getAllMotivation();
 
     public int getMotivationCount();
-
-
 }

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.R;
-import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 

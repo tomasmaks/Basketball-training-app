@@ -55,7 +55,6 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
 
     @Override
     public void addArticle(ArticleModel articleModel) {
-        List<ArticleModel> articleModelList = null;
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             ContentValues values = new ContentValues();
@@ -120,21 +119,6 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
             Log.e("error",e+"");
         }
         return 0;
-    }
-
-    public ArticleModel getArticle(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME, new String[] {KEY_ID, KEY_TITLE }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
-
-        ArticleModel articleModel = null;
-        if ((cursor != null) && cursor.moveToFirst()) {
-
-            articleModel = new ArticleModel(Integer.parseInt(cursor.getString(0)), cursor.getString(1));
-            // return contact
-        }
-        return articleModel;
     }
 
 }

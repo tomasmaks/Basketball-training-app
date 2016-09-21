@@ -3,6 +3,7 @@ package com.example.tomas.becomebasketballpro;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,14 +11,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.SuccessModel;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 import com.thefinestartist.ytpa.YouTubePlayerActivity;
 import com.thefinestartist.ytpa.enums.Orientation;
@@ -38,16 +37,13 @@ public class SuccessDetailsActivity extends ActionBarActivity {
 
     YouTubePlayer.PlayerStyle playerStyle;
     Orientation orientation;
-    private static String VIDEO_ID = "iS1g8G_njx8";
     boolean showAudioUi;
     boolean showFadeAnim;
-    private boolean advertised = false;
     ImageButton play;
     ImageView thumbnail;
-
     String exercise_video;
-    // private ProgressBar progressBar;
     private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,18 +99,16 @@ public class SuccessDetailsActivity extends ActionBarActivity {
                     intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
                     intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
                     intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivityForResult(intent, 1);
                 }
             });
 
             // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(successModel.getImage(), article_image);
-
+            Picasso.with(this).load(successModel.getImage()).into(article_image);
 
             article_title.setText(successModel.getTitle());
-            article_body.setText(successModel.getBody());
+            article_body.setText(Html.fromHtml(successModel.getBody()).toString());
             articleData.setText("Added on: " + successModel.getData());
 
             if (successModel.getImage().isEmpty()) {
@@ -145,7 +139,6 @@ public class SuccessDetailsActivity extends ActionBarActivity {
 
         play = (ImageButton) findViewById(R.id.play_bt);
         thumbnail = (ImageView) findViewById(R.id.thumbnail);
-        // progressBar = (ProgressBar)findViewById(R.id.progressBar);
     }
 
     @Override

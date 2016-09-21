@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <com.example.tomas.becomebasketballpro.ui.DynamicHeightNetworkImageView
+        <com.example.tomas.becomebasketballpro.utils.DynamicHeightNetworkImageView
             android:id="@+id/thumb_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

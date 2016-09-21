@@ -114,19 +114,4 @@ public class MotivationDbHandler extends SQLiteOpenHelper implements MotivationL
         }
         return 0;
     }
-
-//    public MotivationModel getMotivation(int id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        Cursor cursor = db.query(TABLE_NAME, new String[] {KEY_ID, KEY_THUMB, KEY_PHOTO}, KEY_ID + "=?",
-//                new String[] { String.valueOf(id) }, null, null, null, null);
-//
-//        MotivationModel motivationModel = null;
-//        if ((cursor != null) && cursor.moveToFirst()) {
-//
-//            motivationModel = new MotivationModel(Integer.parseInt(cursor.getString(0)), cursor.getString(1));
-//            // return contact
-//        }
-//        return motivationModel;
-//    }
 }

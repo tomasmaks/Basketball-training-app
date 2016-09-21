@@ -19,19 +19,15 @@ import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
-import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
-import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
-import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -50,13 +46,10 @@ public class BallTrainingSecondFragment extends ListFragment {
     View mRootView;
     ListAdapter adapter;
     Context context;
-    // Creating JSON Parser object
-    JSONParser jsonParser = new JSONParser();
 
-    //ArrayList<HashMap<String, String>> exercisesList;
+    JSONParser jsonParser = new JSONParser();
     List<BallTrainingModel> ballTrainingModelList;
 
-    // tracks JSONArray
     JSONArray Categories = null;
     JSONArray Exercises = null;
 
@@ -68,11 +61,8 @@ public class BallTrainingSecondFragment extends ListFragment {
     BallTrainingDbHandler dbHandler;
     List<BallTrainingModel> result = null;
 
-    // tracks JSON url
-    // id - should be posted as GET params to get track list (ex: id = 5)
-    String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
+    String url_details = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/ListOfExercises.json?alt=media&token=724f8517-db16-4ad7-afb5-e48e9bf6d228";
 
-    // ALL JSON node names
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";
     private static final String TAG_THUMB = "thumb";
@@ -86,8 +76,6 @@ public class BallTrainingSecondFragment extends ListFragment {
 
         category_ids = getArguments().getString("category_id");
 
-        // Hashmap for ListView
-        //ballTrainingModelList = new ArrayList<HashMap<String, String>>();
         dbHandler = new BallTrainingDbHandler(getActivity());
 
         NetworkUtils utils = new NetworkUtils(getActivity());
@@ -97,23 +85,16 @@ public class BallTrainingSecondFragment extends ListFragment {
 
             ListView lv = getListView();
 
-            /**
-             * Listview on item click listener
-             * SingleTrackActivity will be lauched by passing album id, song id
-             * */
             lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View view, int arg2,
                                         long arg3) {
 
-                    // On selecting single track get song information
                     Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
 
                     String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
                     String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
 
-                    // to get song information
-                    // both album id and song is needed
                     i.putExtra("category_id", category_id);
                     i.putExtra("exercise_id", exercise_id);
 
@@ -124,22 +105,12 @@ public class BallTrainingSecondFragment extends ListFragment {
         }else {
             Toast.makeText(getActivity().getApplicationContext(), "Please connect to internet to see ball training list", Toast.LENGTH_LONG).show();
         }
-
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
     }
 
     @Override
@@ -152,7 +123,7 @@ public class BallTrainingSecondFragment extends ListFragment {
         mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
 
         mAdView = (AdView) mRootView.findViewById(R.id.adView);
-        // Set the AdListener before building or loading the AdRequest.
+
         mAdView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -160,31 +131,21 @@ public class BallTrainingSecondFragment extends ListFragment {
         return mRootView;
     }
 
-    /**
-     * Background Async Task to Load all tracks under one album
-     */
     class LoadExercises extends AsyncTask<String, String, List<BallTrainingModel>> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        /**
-         * getting tracks json and parsing
-         */
+
         protected List<BallTrainingModel> doInBackground(String... params) {
-            // Building Parameters
+
             List<NameValuePair> param = new ArrayList<NameValuePair>();
 
-//
-//           post album id as GET parameter
+
             param.add(new BasicNameValuePair(PARENT_ID, category_ids));
-//
-//            // getting JSON string from URL
+
             JSONObject json = jsonParser.makeHttpRequest(url_details,
                     "GET", param);
 
@@ -197,9 +158,7 @@ public class BallTrainingSecondFragment extends ListFragment {
 
                 for(int i=0; i < Categories.length(); i++) {
                     JSONObject finalObject = Categories.getJSONObject(i);
-                    /**
-                     * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
-                     */
+
                     String category_Id = finalObject.getString(PARENT_ID);
 
 
@@ -234,11 +193,9 @@ public class BallTrainingSecondFragment extends ListFragment {
         }
 
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
+
         protected void onPostExecute(final List<BallTrainingModel> result) {
-            // updating UI from Background Thread
+
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
@@ -260,7 +217,7 @@ public class BallTrainingSecondFragment extends ListFragment {
         }
 
         class ViewHolder {
-            // Include Number of reqd views.
+
             private TextView ids;
             private TextView id;
             private TextView name;
@@ -308,8 +265,8 @@ public class BallTrainingSecondFragment extends ListFragment {
             else {
                 mViewHolder = (ViewHolder) view.getTag();
             }
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(ballTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
+
+            Picasso.with(getActivity()).load(ballTrainingModelList.get(position).getThumb()).into(mViewHolder.thumb);
 
             mViewHolder.name.setText(ballTrainingModelList.get(position).getName());
             mViewHolder.description.setText(ballTrainingModelList.get(position).getDescription());

@@ -40,8 +40,6 @@
                 android:paddingRight="@dimen/material_component_cards_left_and_right_padding"
                 android:paddingTop="@dimen/material_component_cards_top_and_bottom_padding" />
 
-            <!--android:maxLines="2"-->
-
             <TextView
                 android:id="@+id/article_data"
                 style="@style/TextAppearance.AppCompat.Small"

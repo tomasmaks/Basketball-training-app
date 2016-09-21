@@ -39,7 +39,6 @@ public class FitnessTrainingModel {
     private String video;
     private String body;
     private String id;
-    private String cid;
 
     public String getName() {
         return name;
@@ -87,13 +86,5 @@ public class FitnessTrainingModel {
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    public String getCatId() {
-        return cid;
-    }
-
-    public void setCatId(String cid) {
-        this.cid = cid;
     }
 }

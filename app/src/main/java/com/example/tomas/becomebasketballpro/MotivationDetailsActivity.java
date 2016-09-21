@@ -4,15 +4,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Tomas on 09/08/2016.
@@ -59,25 +57,13 @@ public class MotivationDetailsActivity extends ActionBarActivity {
             String json = bundle.getString("motivationModel");
             MotivationModel motivationModel = new Gson().fromJson(json, MotivationModel.class);
 
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(motivationModel.getImage(), article_image);
-
-
-//            article_title.setText(motivationModel.getTitle());
-//            article_body.setText(motivationModel.getBody());
-//            articleData.setText("Added on: " + motivationModel.getData());
-
-
+            Picasso.with(this).load(motivationModel.getImage()).into(article_image);
         }
 
     }
 
     private void setUpUIViews() {
         article_image = (ImageView)findViewById(R.id.article_image);
-//        article_title = (TextView)findViewById(R.id.article_title);
-//        article_body = (TextView)findViewById(R.id.article_body);
-//        articleData = (TextView)findViewById(R.id.article_data);
-        // progressBar = (ProgressBar)findViewById(R.id.progressBar);
     }
 
     @Override

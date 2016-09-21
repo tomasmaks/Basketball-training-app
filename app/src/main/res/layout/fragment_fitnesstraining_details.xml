@@ -45,7 +45,5 @@
         android:textColor="#444444"
         android:minLines="15"/>
 
-
-
 </LinearLayout>
    </ScrollView>

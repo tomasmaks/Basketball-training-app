@@ -19,17 +19,14 @@ import android.widget.Toast;
 import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.FitnessTrainingThirdActivity;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
-import com.example.tomas.becomebasketballpro.ui.ToastAdListener;
+import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -47,17 +44,13 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     View mRootView;
     ListAdapter adapter;
     Context context;
-    // Creating JSON Parser object
     JSONParser jsonParser = new JSONParser();
 
-    //ArrayList<HashMap<String, String>> exercisesList;
     List<FitnessTrainingModel> fitnessTrainingModelList;
 
-    // tracks JSONArray
     JSONArray Categories = null;
     JSONArray Exercises = null;
 
-    // Album id
     String category_ids;
 
     private AdView mAdView;
@@ -65,8 +58,6 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     FitnessDbHandler dbHandler;
     List<FitnessTrainingModel> result = null;
 
-    // tracks JSON url
-    // id - should be posted as GET params to get track list (ex: id = 5)
     String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfFitnessExercises.json";
 
     // ALL JSON node names
@@ -97,14 +88,11 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                 public void onItemClick(AdapterView<?> arg0, View view, int arg2,
                                         long arg3) {
 
-                    // On selecting single track get song information
                     Intent i = new Intent(getActivity().getApplicationContext(), FitnessTrainingThirdActivity.class);
 
                     String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
                     String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
 
-                    // to get song information
-                    // both album id and song is needed
                     i.putExtra("category_id", category_id);
                     i.putExtra("exercise_id", exercise_id);
 
@@ -123,15 +111,6 @@ public class FitnessTrainingSecondFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
     }
 
     @Override
@@ -141,7 +120,6 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining_list, container, false);
 
         mAdView = (AdView) mRootView.findViewById(R.id.adView);
-        // Set the AdListener before building or loading the AdRequest.
         mAdView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
@@ -149,31 +127,19 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         return mRootView;
     }
 
-    /**
-     * Background Async Task to Load all tracks under one album
-     */
     class LoadExercises extends AsyncTask<String, String, List<FitnessTrainingModel>> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        /**
-         * getting tracks json and parsing
-         */
         protected List<FitnessTrainingModel> doInBackground(String... params) {
-            // Building Parameters
+
             List<NameValuePair> param = new ArrayList<NameValuePair>();
 
-//
-//           post album id as GET parameter
             param.add(new BasicNameValuePair(PARENT_ID, category_ids));
-//
-//            // getting JSON string from URL
+
             JSONObject json = jsonParser.makeHttpRequest(url_details,
                     "GET", param);
 
@@ -186,33 +152,25 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
                 for(int i=0; i < Categories.length(); i++) {
                     JSONObject finalObject = Categories.getJSONObject(i);
-                    /**
-                     * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
-                     */
+
                     String category_Id = finalObject.getString(PARENT_ID);
 
 
                     if (category_Id.equals(category_ids)) {
 
                         Exercises = finalObject.getJSONArray(TAG_ARRAY);
-                        //dbHandler.deleteExerciseTable();
                         for (int j = 0; j < Exercises.length(); j++) {
-
 
                             JSONObject finalObject2 = Exercises.getJSONObject(j);
 
                             FitnessTrainingModel fitnessTrainingModel = gson.fromJson(json.toString(), FitnessTrainingModel.class);
-
                             fitnessTrainingModel.setId(finalObject2.getString(TAG_ID));
                             fitnessTrainingModel.setName(finalObject2.getString(TAG_NAME));
                             fitnessTrainingModel.setDescription(finalObject2.getString(TAG_DESCRIPTION));
                             fitnessTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
                             fitnessTrainingModel.setIds(category_Id);
                             fitnessTrainingModelList.add(fitnessTrainingModel);
-
-                            //dbHandler.addExercise(fitnessTrainingModel);
                         }
-
                     }
                 }
                 return fitnessTrainingModelList;
@@ -222,15 +180,9 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
             }
             return  null;
-
         }
 
-
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(final List<FitnessTrainingModel> result) {
-            // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
@@ -252,14 +204,11 @@ public class FitnessTrainingSecondFragment extends ListFragment {
         }
 
         class ViewHolder {
-            // Include Number of reqd views.
             private TextView ids;
             private TextView id;
             private TextView name;
             private TextView description;
             private ImageView thumb;
-
-
         }
 
         @Override
@@ -300,8 +249,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
             else {
                 mViewHolder = (ViewHolder) view.getTag();
             }
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(fitnessTrainingModelList.get(position).getThumb(), mViewHolder.thumb);
+            Picasso.with(getActivity()).load(fitnessTrainingModelList.get(position).getThumb()).into(mViewHolder.thumb);
 
             mViewHolder.name.setText(fitnessTrainingModelList.get(position).getName());
             mViewHolder.description.setText(fitnessTrainingModelList.get(position).getDescription());
@@ -310,8 +258,5 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
             return view;
         }
-
     }
-
-
 }

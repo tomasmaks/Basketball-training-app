@@ -2,7 +2,6 @@ package com.example.tomas.becomebasketballpro.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -14,21 +13,16 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.FitnessDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
-import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -46,20 +40,18 @@ public class FitnessTrainingFragment extends ListFragment {
     View mRootView;
     GridView gridview;
     ListAdapter adapter;
-    // Creating JSON Parser object
+
     JSONParser jsonParser = new JSONParser();
 
     List<FitnessTrainingModel> fitnessTrainingModelList;
-    // albums JSONArray
+
     JSONArray categories = null;
 
     FitnessDbHandler dbHandler;
     List<FitnessTrainingModel> result;
 
-    // albums JSON url
     private static final String URL_CATEGORIES = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfFitnessExercises.json";
 
-    // ALL JSON node names
     private static final String TAG_ID = "ids";
     private static final String TAG_NAME = "category";
     private static final String TAG_CATTHUM = "catThumb";
@@ -68,17 +60,6 @@ public class FitnessTrainingFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity().getApplicationContext())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config); // Do it on Application start
-
-
     }
 
     @Override
@@ -89,8 +70,6 @@ public class FitnessTrainingFragment extends ListFragment {
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
 
         return mRootView;
-
-
     }
 
     @Override
@@ -140,16 +119,9 @@ public class FitnessTrainingFragment extends ListFragment {
                         ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
                     }
                 });
-
             }
-
         }
-
-
-
-
     }
-
 
     public static FitnessTrainingFragment newInstance(int sectionNumber) {
         FitnessTrainingFragment fragment = new FitnessTrainingFragment();
@@ -163,27 +135,17 @@ public class FitnessTrainingFragment extends ListFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Background Async Task to Load all Albums by making http request
-     */
     class LoadCategories extends AsyncTask<String, String, List<FitnessTrainingModel>> {
 
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
 
-        /**
-         * getting Albums JSON
-         */
         protected List<FitnessTrainingModel> doInBackground(String... args) {
-            // Building Parameters
+
             List<NameValuePair> param = new ArrayList<NameValuePair>();
 
-            // getting JSON string from URL
             JSONObject json = jsonParser.makeHttpRequest(URL_CATEGORIES, "GET",
                     param);
 
@@ -192,17 +154,14 @@ public class FitnessTrainingFragment extends ListFragment {
                 List<FitnessTrainingModel> fitnessTrainingModelList = new ArrayList<>();
                 Gson gson = new Gson();
                 categories = json.getJSONArray(TABLE_EVENT);
-                //categories = new JSONArray(json);
-
                 dbHandler.deleteCategoryTable();
-                // looping through All albums
+
                 for (int i = 0; i < categories.length(); i++) {
                     JSONObject c = categories.getJSONObject(i);
                     FitnessTrainingModel fitnessTrainingModel = gson.fromJson(json.toString(), FitnessTrainingModel.class);
                     fitnessTrainingModel.setIds(c.getString(TAG_ID));
                     fitnessTrainingModel.setCategory(c.getString(TAG_NAME));
                     fitnessTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
-                    //ballTrainingCategoriesModel.setCount(c.getString(TAG_COUNT));
                     fitnessTrainingModelList.add(fitnessTrainingModel);
                     dbHandler.addCategory(fitnessTrainingModel);
 
@@ -216,16 +175,13 @@ public class FitnessTrainingFragment extends ListFragment {
             return null;
         }
 
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
         protected void onPostExecute(final List<FitnessTrainingModel> result) {
-            // updating UI from Background Thread
+
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
-                        adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, result);
-                        gridview.setAdapter(adapter);
+                    adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, result);
+                    gridview.setAdapter(adapter);
                 }
             });
 
@@ -248,12 +204,9 @@ public class FitnessTrainingFragment extends ListFragment {
         }
 
         class ViewHolder {
-            // Include Number of reqd views.
             private TextView ids;
             private TextView category;
             private ImageView tagThumb;
-
-
         }
 
         @Override
@@ -291,13 +244,11 @@ public class FitnessTrainingFragment extends ListFragment {
             } else {
                 mViewHolder = (ViewHolder) view.getTag();
             }
-            // Then later, when you want to display image
-            ImageLoader.getInstance().displayImage(fitnessTrainingModelList.get(position).getCatThumb(), mViewHolder.tagThumb);
+
+            Picasso.with(getActivity()).load(fitnessTrainingModelList.get(position).getCatThumb()).into(mViewHolder.tagThumb);
 
             mViewHolder.ids.setText(fitnessTrainingModelList.get(position).getIds());
             mViewHolder.category.setText(fitnessTrainingModelList.get(position).getCategory());
-
-            //mViewHolder.count.setText(ballTraininCategoriesModelList.get(position).getCount());
 
             return view;
         }

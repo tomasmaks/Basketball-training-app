@@ -1,7 +1,6 @@
-package com.example.tomas.becomebasketballpro.ui;
+package com.example.tomas.becomebasketballpro.utils;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -21,8 +20,6 @@ public class ToastAdListener extends AdListener {
     @Override
     public void onAdClosed() {
         super.onAdClosed();
-
-        //Toast.makeText(mContext, "onAdClosed() is called", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -44,33 +41,21 @@ public class ToastAdListener extends AdListener {
                 mErrorReason = "No fill";
                 break;
         }
-//        Toast.makeText(mContext,
-//                "onAdFailedToLoad() is called.\nReason: " + getErrorReason(),
-//                Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onAdLeftApplication() {
         super.onAdLeftApplication();
-
-      //  Toast.makeText(mContext, "onAdLeftApplication() is called", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onAdOpened() {
         super.onAdOpened();
-
-        //Toast.makeText(mContext, "onAdOpened() is called", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onAdLoaded() {
         super.onAdLoaded();
-
-        //Toast.makeText(mContext, "onAdLoaded() is called", Toast.LENGTH_SHORT).show();
     }
 
-    public String getErrorReason() {
-        return mErrorReason == null ? "" : mErrorReason;
-    }
 }
