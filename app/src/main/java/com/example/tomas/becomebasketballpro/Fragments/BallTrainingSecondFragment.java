@@ -61,7 +61,7 @@ public class BallTrainingSecondFragment extends ListFragment {
     BallTrainingDbHandler dbHandler;
     List<BallTrainingModel> result = null;
 
-    String url_details = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/ListOfExercises.json?alt=media&token=724f8517-db16-4ad7-afb5-e48e9bf6d228";
+    String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
 
     private static final String TAG_ID = "id";
     private static final String TAG_NAME = "name";

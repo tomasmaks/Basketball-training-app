@@ -53,7 +53,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/Motivation.json?alt=media&token=c16f048f-6e20-47ed-b4e5-7e4aa9f7802c";
+    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/Motivation.json";
     MotivationAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
     MotivationDbHandler dbHandler;

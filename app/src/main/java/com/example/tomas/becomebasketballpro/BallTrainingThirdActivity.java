@@ -56,7 +56,7 @@ public class BallTrainingThirdActivity extends Activity {
 
     private InterstitialAd mInterstitialAd;
 
-    private static final String url_details = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/ListOfExercises.json?alt=media&token=724f8517-db16-4ad7-afb5-e48e9bf6d228";
+    private static final String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
 
     private static final String PARENT_ID = "ids";
     private static final String TABLE_EVENT = "Basketball";

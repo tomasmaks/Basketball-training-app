@@ -49,7 +49,7 @@ public class SuccessListFragment extends Fragment implements SwipeRefreshLayout.
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/SuccessStories.json?alt=media&token=944e53e9-a17b-4474-ad32-f516b873d0e9";
+    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/SuccessStories.json";
     SuccessAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
     SuccessDbHandler dbHandler;

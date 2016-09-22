@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,11 @@ import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
+import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -49,7 +52,7 @@ public class BallTrainingFragment extends ListFragment {
     BallTrainingDbHandler dbHandler;
     List<BallTrainingModel> result = null;
 
-    private static final String URL_CATEGORIES = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/ListOfExercises.json?alt=media&token=724f8517-db16-4ad7-afb5-e48e9bf6d228";
+    private static final String URL_CATEGORIES = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
 
     private static final String TAG_ID = "ids";
     private static final String TAG_NAME = "category";
@@ -59,6 +62,7 @@ public class BallTrainingFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -157,11 +161,16 @@ public class BallTrainingFragment extends ListFragment {
                 Gson gson = new Gson();
                 categories = json.getJSONArray(TABLE_EVENT);
 
+                Log.d(TABLE_EVENT, json.toString());
+
                 dbHandler.deleteCategoryTable();
 
                 for (int i = 0; i < categories.length(); i++) {
                     JSONObject c = categories.getJSONObject(i);
                     BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
+
+
+
                     ballTrainingModel.setIds(c.getString(TAG_ID));
                     ballTrainingModel.setCategory(c.getString(TAG_NAME));
                     ballTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
@@ -211,7 +220,7 @@ public class BallTrainingFragment extends ListFragment {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-            return ballTrainingModelList.size();
+           return ballTrainingModelList.size();
         }
 
         @Override

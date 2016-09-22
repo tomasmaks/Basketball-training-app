@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
+import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
@@ -48,7 +49,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/article.json?alt=media&token=21471e3d-e54e-45cb-b3fd-d03bd97c81ba";
+    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/article.json";
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
     ArticleDbHandler dbHandler;
@@ -71,7 +72,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Firebase.setAndroidContext(getActivity());
     }
 
 
@@ -189,6 +190,7 @@ public class ArticleListFragment extends Fragment implements SwipeRefreshLayout.
                 Gson gson = new Gson();
 
                 dbHandler.deleteTable();
+
 
                 for(int i=0; i<parentArray.length(); i++) {
                     JSONObject finalObject = parentArray.getJSONObject(i);
