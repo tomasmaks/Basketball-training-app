@@ -85,7 +85,7 @@ public class ArticleDbHandler extends SQLiteOpenHelper implements ArticleListene
             if(!cursor.isLast()) {
                 while (cursor.moveToNext()) {
                     ArticleModel articleModel = new ArticleModel();
-                    articleModel.setId(cursor.getInt(0));
+                    articleModel.setId(cursor.getString(0));
                     articleModel.setTitle(cursor.getString(1));
                     articleModel.setBody(cursor.getString(2));
                     articleModel.setThumbnail(cursor.getString(3));

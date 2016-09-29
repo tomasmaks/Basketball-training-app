@@ -1,4 +1,4 @@
-{ "Basketball": [
+[
   {
     "ids": 1,
     "category": "Shooting",
@@ -275,4 +275,3 @@
     ]
   }
 ]
-}

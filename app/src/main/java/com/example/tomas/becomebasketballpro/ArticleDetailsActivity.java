@@ -28,6 +28,8 @@ import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
  */
 public class ArticleDetailsActivity extends ActionBarActivity {
 
+
+
     private ImageView article_image;
     private TextView article_title;
     private TextView article_body;
@@ -42,6 +44,9 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     ImageView thumbnail;
     String exercise_video;
     private InterstitialAd mInterstitialAd;
+
+    public static final String EXTRA_POST_KEY = "post_key";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

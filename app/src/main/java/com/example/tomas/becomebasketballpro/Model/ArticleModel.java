@@ -5,13 +5,13 @@ import java.io.Serializable;
 /**
  * Created by Tomas on 03/08/2016.
  */
-public class ArticleModel implements Serializable {
+public class ArticleModel {
     private String thumbnail;
     private String articleTitle;
     private String articleData;
     private String articleImage;
     private String articleBody;
-    private int id;
+    private String id;
     private String video;
 
     public ArticleModel() {
@@ -20,12 +20,12 @@ public class ArticleModel implements Serializable {
     public ArticleModel(String articleTitle) {
         this.articleTitle = articleTitle;
     }
-    public ArticleModel(int id, String articleTitle) {
+    public ArticleModel(String id, String articleTitle) {
         this.id = id;
         this.articleTitle = articleTitle;
     }
 
-    public ArticleModel(int id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody, String video) {
+    public ArticleModel(String id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody, String video) {
         this.id = id;
         this.articleTitle = articleTitle;
         this.thumbnail = thumbnail;
@@ -75,11 +75,11 @@ public class ArticleModel implements Serializable {
         this.articleBody = articleBody;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

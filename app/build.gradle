@@ -5,7 +5,6 @@ android {
     buildToolsVersion "23.0.3"
 
 
-
     defaultConfig {
         applicationId "com.example.tomas.becomebasketballpro"
         minSdkVersion 15
@@ -20,7 +19,11 @@ android {
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+        }
     }
+
 }
 
 repositories {
@@ -52,21 +55,14 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
-
-
-
     compile 'com.thefinestartist:ytpa:1.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.google.android.gms:play-services-ads:9.4.0'
 
-    compile 'com.android.support:percent:23.4.0'
+    compile 'com.google.firebase:firebase-core:9.4.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
+    compile 'com.firebase:firebase-client-android:2.3.1'
 
-    /* Firebase SDK */
-    compile 'com.firebase:firebase-client-android:2.4.0'
-
-    /* Firebase UI */
-    compile 'com.firebaseui:firebase-ui:0.2.2'
 }
-
+apply plugin: 'com.google.gms.google-services'
