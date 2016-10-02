@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,6 +17,11 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.thefinestartist.ytpa.YouTubePlayerActivity;
@@ -27,8 +33,6 @@ import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
  * Created by Tomas on 06/08/2016.
  */
 public class ArticleDetailsActivity extends ActionBarActivity {
-
-
 
     private ImageView article_image;
     private TextView article_title;
@@ -46,8 +50,9 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private InterstitialAd mInterstitialAd;
 
     public static final String EXTRA_POST_KEY = "post_key";
-
-
+    private String mPostKey;
+    DatabaseReference mReference;
+    private ValueEventListener mArticleListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,52 +76,70 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         });
 
 
+        mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
+        if (mPostKey == null) {
+            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+        }
+
+      // Initialize Database
+        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article");
+
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        // setting up text views and stuff
-        setUpUIViews();
+//        // setting up text views and stuff
+     setUpUIViews();
+//
+//
+//        // recovering data from MainActivity, sent via intent
+//        Bundle bundle = getIntent().getExtras();
+//        if(bundle != null) {
+//
+//            String json = bundle.getString("articleModel");
+//
+//                ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
 
+//
 
-        // recovering data from MainActivity, sent via intent
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
+//
+//
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
 
-            String json = bundle.getString("articleModel");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent, 1);
+            }
+        });
 
-                ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
-            Picasso.with(this).load(articleModel.getImage()).into(article_image);
+        // Add value event listener to the post
+        // [START post_value_event_listener]
+        ValueEventListener articleListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                ArticleModel articleModel = dataSnapshot.getValue(ArticleModel.class);
+                // [START_EXCLUDE]
+                article_title.setText(articleModel.getTitle());
+                article_body.setText(Html.fromHtml(articleModel.getBody()).toString());
+                article_data.setText("Added on: " + articleModel.getData());
 
                 exercise_video = articleModel.getVideoURI();
 
-                Picasso.with(this)
+                Picasso.with(getBaseContext())
                         .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
                         .fit()
                         .centerCrop()
                         .into(thumbnail);
-
-
-                play.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivityForResult(intent, 1);
-                    }
-                });
-
-                article_title.setText(articleModel.getTitle());
-                article_body.setText(Html.fromHtml(articleModel.getBody()).toString());
-                article_data.setText("Added on: " + articleModel.getData());
 
                 if (articleModel.getImage().isEmpty()) {
                     article_image.setVisibility(View.GONE);
@@ -128,7 +151,26 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                     video.setVisibility(View.GONE);
                 }
 
-        }
+
+
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+
+            }
+        };
+        mReference.addValueEventListener(articleListener);
+        // [END post_value_event_listener]
+
+        // Keep copy of post listener so we can remove it when app stops
+        mArticleListener = articleListener;
+
+
+
+
     }
 
 
@@ -169,4 +211,21 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Remove post value event listener
+        if (mArticleListener != null) {
+            mReference.removeEventListener(mArticleListener);
+        }
+
+    }
 }

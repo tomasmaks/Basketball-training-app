@@ -124,7 +124,8 @@ public class ArticleListFragment extends Fragment {
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                        final DatabaseReference articleRef = mDatabase.getRef(position);
                         Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
                         final String postKey = mReference.getKey();
                         intent.putExtra(ArticleDetailsActivity.EXTRA_POST_KEY, postKey);
