@@ -43,7 +43,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private TextView article_title;
     private TextView article_body;
     private TextView article_data;
-    private RelativeLayout video;
+    private RelativeLayout rel_video;
 
     YouTubePlayer.PlayerStyle playerStyle;
     Orientation orientation;
@@ -53,11 +53,9 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     ImageView thumbnail;
     String exercise_video;
     private InterstitialAd mInterstitialAd;
-    ArticleModel articleModel;
 
     String mPostKey;
     DatabaseReference mReference;
-    private ValueEventListener mArticleListener;
 
     public static final String EXTRA_POST_KEY = "post_key";
 
@@ -128,7 +126,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         article_title = (TextView)findViewById(R.id.article_title);
         article_body = (TextView)findViewById(R.id.article_body);
         article_data = (TextView)findViewById(R.id.article_data);
-        video = (RelativeLayout)findViewById(R.id.video);
+        rel_video = (RelativeLayout)findViewById(R.id.video);
 
         playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
         orientation = Orientation.AUTO;
@@ -167,38 +165,57 @@ public class ArticleDetailsActivity extends ActionBarActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArticleModel articleModel = dataSnapshot.getValue(ArticleModel.class);
-                 String title = (String) dataSnapshot.child("title").getValue();
+                String title = (String) dataSnapshot.child("title").getValue();
 
                 article_title.setText(title);
-               // article_title.setText((String) dataSnapshot.child("title").getValue());
 
-//                String body = (String) dataSnapshot.child("body").getValue();
-//
-//                article_title.setText(body);
+                String body = (String) dataSnapshot.child("body").getValue();
+
+                article_body.setText(Html.fromHtml(body).toString());
+
+                String data = (String) dataSnapshot.child("published_date").getValue();
+
+                article_data.setText("Added on: " + data);
+
+                String video = (String) dataSnapshot.child("video").getValue();
+
+                exercise_video = video;
+
+                Picasso.with(getBaseContext())
+                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                        .fit()
+                        .centerCrop()
+                        .into(thumbnail);
+
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivityForResult(intent, 1);
+                    }
+                });
+
+                String image = (String) dataSnapshot.child("photo").getValue();
+
+                // Then later, when you want to display image
+                Picasso.with(getBaseContext()).load(image).into(article_image);
 
 
-//
-//                article_title.setText(articleModel.getTitle());
-//                article_body.setText(Html.fromHtml(articleModel.getBody()).toString());
-//                article_data.setText("Added on: " + articleModel.getData());
-//
-//                exercise_video = articleModel.getVideoURI();
-//
-//                Picasso.with(getBaseContext())
-//                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-//                        .fit()
-//                        .centerCrop()
-//                        .into(thumbnail);
-//
-//                if (articleModel.getImage().isEmpty()) {
-//                    article_image.setVisibility(View.GONE);
-//                }
-//
-//                if (exercise_video.isEmpty()) {
-//                    play.setVisibility(View.GONE);
-//                    thumbnail.setVisibility(View.GONE);
-//                    video.setVisibility(View.GONE);
-//                }
+                if (image.isEmpty()) {
+                    article_image.setVisibility(View.GONE);
+                }
+
+                if (video.isEmpty()) {
+                    play.setVisibility(View.GONE);
+                    thumbnail.setVisibility(View.GONE);
+                    rel_video.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -216,10 +233,10 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     public void onStop() {
         super.onStop();
 
-        // Remove post value event listener
-        if (mArticleListener != null) {
-            mReference.removeEventListener(mArticleListener);
-        }
+//        // Remove post value event listener
+//        if (mArticleListener != null) {
+//            mReference.removeEventListener(mArticleListener);
+//        }
 
     }
 }

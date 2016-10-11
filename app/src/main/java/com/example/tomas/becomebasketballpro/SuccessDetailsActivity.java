@@ -88,8 +88,6 @@ public class SuccessDetailsActivity extends ActionBarActivity {
                     .fit()
                     .centerCrop()
                     .into(thumbnail);
-
-
             play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

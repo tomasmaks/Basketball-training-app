@@ -16,41 +16,41 @@
         android:orientation="vertical">
 
 
-        <!--<ImageView-->
-            <!--android:id="@+id/article_image"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="350dp"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:src="@drawable/ic_drawer"-->
-            <!--android:contentDescription="@string/title_section0"-->
-            <!--android:visibility="visible"-->
-            <!--/>-->
+        <ImageView
+            android:id="@+id/article_image"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_drawer"
+            android:contentDescription="@string/title_section0"
+            android:visibility="visible"
+            />
 
-        <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="350dp"-->
-            <!--android:id="@+id/video"-->
-            <!--android:visibility="visible"-->
-            <!--&gt;-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:id="@+id/video"
+            android:visibility="visible"
+            >
 
-            <!--<ImageView-->
-                <!--android:id="@+id/thumbnail"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:visibility="visible"-->
-                <!--/>-->
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                />
 
-            <!--<ImageButton-->
-                <!--android:id="@+id/play_bt"-->
-                <!--android:layout_width="100dp"-->
-                <!--android:layout_height="100dp"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:background="@android:color/transparent"-->
-                <!--android:src="@drawable/ic_play"-->
-                <!--android:visibility="visible"-->
-                <!--/>-->
-        <!--</RelativeLayout>-->
+            <ImageButton
+                android:id="@+id/play_bt"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_play"
+                android:visibility="visible"
+                />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/article_title"
@@ -61,25 +61,25 @@
             android:padding="4dp"
             android:layout_marginTop="10dp"/>
 
-        <!--<TextView-->
-            <!--android:id="@+id/article_body"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Body"-->
-            <!--android:textColor="@color/material_light_black"-->
-            <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
-            <!--android:padding="4dp"-->
-            <!--android:layout_marginTop="5dp"/>-->
+        <TextView
+            android:id="@+id/article_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Body"
+            android:textColor="@color/material_light_black"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:padding="4dp"
+            android:layout_marginTop="5dp"/>
 
-        <!--<TextView-->
-            <!--android:id="@+id/article_data"-->
-            <!--style="@style/TextAppearance.AppCompat.Small"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:ellipsize="end"-->
-            <!--android:maxLines="1"-->
-            <!--android:textColor="@color/material_grey_400"-->
-            <!--android:padding="4dp"/>-->
+        <TextView
+            android:id="@+id/article_data"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/material_grey_400"
+            android:padding="4dp"/>
 
 
     </LinearLayout>
