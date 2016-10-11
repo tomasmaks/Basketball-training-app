@@ -38,9 +38,7 @@ public class ArticleListFragment extends Fragment {
 
     View mRootView;
     ArticleAdapter adapter;
-    private SwipeRefreshLayout refreshLayout = null;
-   // ArticleDbHandler dbHandler;
-   List<ArticleModel> articleModel = new ArrayList<>();
+    List<ArticleModel> articleModel = new ArrayList<>();
     FirebaseDatabase mDatabase;
     DatabaseReference mReference;
     ListView mListView;
@@ -65,34 +63,9 @@ public class ArticleListFragment extends Fragment {
 
         Firebase.setAndroidContext(getActivity());
 
-        // dbHandler = new ArticleDbHandler(getActivity());
         mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
-
-
-//        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-//        refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
-//        refreshLayout.setOnRefreshListener(this);
-
-//        NetworkUtils utils = new NetworkUtils(getActivity());
-//        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
-//
-//            result = dbHandler.getAllArticle();
-//            adapter = new ArticleAdapter(getActivity().getApplicationContext(),R.layout.fragment_article_list_items, result);
-//            mListView.setAdapter(adapter);
-//            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-//                    ArticleModel articleModel = result.get(position2);
-//                    Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
-//                    intent.putExtra("articleModel", new Gson().toJson(articleModel));
-//                    getActivity().startActivity(intent);
-//                }
-//            });
-//
-//        }
-
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -107,10 +80,6 @@ public class ArticleListFragment extends Fragment {
              */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //GenericTypeIndicator<List<ArticleModel>> type = new GenericTypeIndicator<List<ArticleModel>>() {};
-
-
-
 
                 articleModel = new ArrayList<>();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
@@ -144,36 +113,11 @@ public class ArticleListFragment extends Fragment {
         return mRootView;
     }
 
-
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Firebase.setAndroidContext(getActivity());
-
     }
-
-
-
-
-//    @Override
-//    public void onRefresh() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//             //  handler.sendEmptyMessage(0);
-//            }
-//        }).start();
-//
-//
-//    }
-
 
     public class ArticleAdapter extends ArrayAdapter {
 

@@ -7,34 +7,34 @@ import java.io.Serializable;
  */
 public class MotivationModel implements Serializable {
 
-    private String thumbnail;
-    private String articleImage;
-    private int id;
+    private String thumb;
+    private String photo;
+    private String id;
 
     public MotivationModel() {
     }
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getThumb() {
+        return thumb;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
     }
 
-    public String getImage() {
-        return articleImage;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setImage(String articleImage) {
-        this.articleImage = articleImage;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

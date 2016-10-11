@@ -1,16 +1,29 @@
 package com.example.tomas.becomebasketballpro;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.thefinestartist.ytpa.YouTubePlayerActivity;
+import com.thefinestartist.ytpa.enums.Quality;
+import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
 
 /**
  * Created by Tomas on 09/08/2016.
@@ -20,6 +33,11 @@ public class MotivationDetailsActivity extends ActionBarActivity {
     private ImageView article_image;
 
     private InterstitialAd mInterstitialAd;
+
+    String mPostKey;
+    DatabaseReference mReference;
+
+    public static final String EXTRA_POST_KEY = "post_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +60,14 @@ public class MotivationDetailsActivity extends ActionBarActivity {
             }
         });
 
+        mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
+        if (mPostKey == null) {
+            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+        }
+
+        // Initialize Database
+        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/motivation/");
+
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,14 +77,6 @@ public class MotivationDetailsActivity extends ActionBarActivity {
         // setting up text views and stuff
         setUpUIViews();
 
-        // recovering data from MainActivity, sent via intent
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            String json = bundle.getString("motivationModel");
-            MotivationModel motivationModel = new Gson().fromJson(json, MotivationModel.class);
-
-            Picasso.with(this).load(motivationModel.getImage()).into(article_image);
-        }
 
     }
 
@@ -84,6 +102,36 @@ public class MotivationDetailsActivity extends ActionBarActivity {
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+
+                String image = (String) dataSnapshot.child("photo").getValue();
+
+                // Then later, when you want to display image
+                Picasso.with(getBaseContext()).load(image).into(article_image);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MotivationDetailsActivity.this, "Failed to load post.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
     }
 
 }

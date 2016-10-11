@@ -2,13 +2,8 @@ package com.example.tomas.becomebasketballpro.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,45 +14,33 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import android.widget.Toast;
-
-import com.example.tomas.becomebasketballpro.DBHandler.MotivationDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
-import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
 
-import com.google.gson.Gson;
+import com.firebase.client.Firebase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Tomas on 09/08/2016.
  */
-public class MotivationListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MotivationListFragment extends Fragment {
 
     View mRootView;
     ListView mListView;
-    private String URL_TO_HIT = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/Motivation.json";
     MotivationAdapter adapter;
-    private SwipeRefreshLayout refreshLayout = null;
-    MotivationDbHandler dbHandler;
-    List<MotivationModel> result = null;
+    List<MotivationModel> motivationModel = new ArrayList<>();
+    FirebaseDatabase mDatabase;
+    DatabaseReference mReference;
+
 
     public static MotivationListFragment newInstance(int sectionNumber) {
         MotivationListFragment fragment = new MotivationListFragment();
@@ -71,186 +54,72 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
     public MotivationListFragment() {
     }
 
-    public void LoadMotivation() {
 
-        new FetchMotivationTask().execute(URL_TO_HIT);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (savedInstanceState == null) {
-            LoadMotivation();
+        Firebase.setAndroidContext(getActivity());
 
-        }
-
-        dbHandler = new MotivationDbHandler(getActivity());
-
-        mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
+        // dbHandler = new ArticleDbHandler(getActivity());
+        mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 
-        refreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipe_refresh_layout);
-        refreshLayout.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.green));
-        refreshLayout.setOnRefreshListener(this);
 
 
-        NetworkUtils utils = new NetworkUtils(getActivity());
-        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
+        mDatabase = FirebaseDatabase.getInstance();
 
-            result = dbHandler.getAllMotivation();
-            adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, result);
-            mListView.setAdapter(adapter);
-            mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-                    MotivationModel motivationModel = result.get(position2);
-                    Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
-                    intent.putExtra("motivationModel", new Gson().toJson(motivationModel));
-                    getActivity().startActivity(intent);
-                }
-            });
+        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("motivation");
 
-        }
-        return mRootView;
-    }
+        mReference.addValueEventListener(new ValueEventListener() {
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-
-    @Override
-    public void onRefresh() {
-        new Thread(new Runnable() {
+            /*
+             * onDataChange method to read a static snapshot of the contents at given JSON object
+             * This method is triggered once when the listener is attached
+             * and again every time the data changes.
+             */
             @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                motivationModel = new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+                    motivationModel.add(postSnapshot.getValue(MotivationModel.class));
+
                 }
 
-                handler.sendEmptyMessage(0);
-            }
-        }).start();
+                adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, motivationModel);
 
-
-    }
-
-    private MyHandler handler = new MyHandler();
-
-    class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    new FetchMotivationTask().execute(URL_TO_HIT);
-                    refreshLayout.setRefreshing(false);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-
-    public class FetchMotivationTask extends AsyncTask<String, String, List<MotivationModel>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-
-        @Override
-        protected List<MotivationModel> doInBackground(String... params) {
-            HttpURLConnection connection = null;
-            BufferedReader reader = null;
-
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                InputStream stream = connection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(stream));
-                StringBuilder buffer = new StringBuilder();
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                String finalJson = buffer.toString();
-
-                JSONObject parentObject = new JSONObject(finalJson);
-                JSONArray parentArray = parentObject.getJSONArray("Motivation");
-
-                List<MotivationModel> motivationModelList = new ArrayList<>();
-
-                Gson gson = new Gson();
-
-                dbHandler.deleteTable();
-
-                for (int i = 0; i < parentArray.length(); i++) {
-                    JSONObject finalObject = parentArray.getJSONObject(i);
-                    /**
-                     * below single line of code from Gson saves you from writing the json parsing yourself which is commented below
-                     */
-                    MotivationModel motivationModel = gson.fromJson(finalObject.toString(), MotivationModel.class);
-                    motivationModel.setThumbnail(finalObject.getString("thumb"));
-                    motivationModel.setImage(finalObject.getString("photo"));
-
-                    motivationModelList.add(motivationModel);
-                    dbHandler.addMotivation(motivationModel);
-                }
-                return motivationModelList;
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(final List<MotivationModel> result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, result);
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        MotivationModel motivationModel = result.get(position);
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                         Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
-                        intent.putExtra("motivationModel", new Gson().toJson(motivationModel));
+                        String postKey = motivationModel.get(position).getId();
+                        intent.putExtra(MotivationDetailsActivity.EXTRA_POST_KEY, postKey);
                         getActivity().startActivity(intent);
 
                     }
                 });
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
             }
-        }
+
+            //this will called when error occur while getting data from firebase
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+
+
+        return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Firebase.setAndroidContext(getActivity());
     }
 
     public class MotivationAdapter extends ArrayAdapter {
@@ -281,7 +150,7 @@ public class MotivationListFragment extends Fragment implements SwipeRefreshLayo
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            Picasso.with(getActivity()).load(motivationModelList.get(position).getThumbnail()).into(holder.thumbnail);
+            Picasso.with(getActivity()).load(motivationModelList.get(position).getThumb()).into(holder.thumbnail);
 
             return convertView;
         }

@@ -87,7 +87,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
 
-      // Initialize Database
+        // Initialize Database
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article/");
 
         // Showing and Enabling clicks on the Home/Up button
@@ -96,28 +96,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-//        // setting up text views and stuff
         setUpUIViews();
-
-
-
-//        play.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-//                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-//                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-//                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-//                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-//                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-//
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivityForResult(intent, 1);
-//            }
-//        });
-        // Add value event listener to the post
-        // [START post_value_event_listener]
-
     }
 
 
@@ -232,11 +211,6 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     @Override
     public void onStop() {
         super.onStop();
-
-//        // Remove post value event listener
-//        if (mArticleListener != null) {
-//            mReference.removeEventListener(mArticleListener);
-//        }
 
     }
 }
