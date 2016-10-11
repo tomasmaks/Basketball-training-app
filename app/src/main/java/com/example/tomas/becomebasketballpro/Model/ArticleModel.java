@@ -1,78 +1,54 @@
 package com.example.tomas.becomebasketballpro.Model;
 
-import java.io.Serializable;
+import com.google.firebase.database.PropertyName;
 
 /**
  * Created by Tomas on 03/08/2016.
  */
 public class ArticleModel {
-    private String thumbnail;
-    private String articleTitle;
-    private String articleData;
-    private String articleImage;
-    private String articleBody;
+
+    @PropertyName("thumb")
+    private String thumb;
+
+    @PropertyName("title")
+    private String title;
+
+    @PropertyName("published_date")
+    private String published_date;
+
+    @PropertyName("photo")
+    private String photo;
+
+    @PropertyName("body")
+    private String body;
+
+    @PropertyName("id")
     private String id;
+
+    @PropertyName("video")
     private String video;
 
     public ArticleModel() {
     }
 
-    public ArticleModel(String articleTitle) {
-        this.articleTitle = articleTitle;
-    }
-    public ArticleModel(String id, String articleTitle) {
+    public ArticleModel(String id, String title, String thumb, String published_date, String photo, String body, String video) {
         this.id = id;
-        this.articleTitle = articleTitle;
-    }
-
-    public ArticleModel(String id, String articleTitle, String thumbnail, String articleData, String articleImage, String articleBody, String video) {
-        this.id = id;
-        this.articleTitle = articleTitle;
-        this.thumbnail = thumbnail;
-        this.articleData = articleData;
-        this.articleImage = articleImage;
-        this.articleBody = articleBody;
+        this.title = title;
+        this.thumb = thumb;
+        this.published_date = published_date;
+        this.photo = photo;
+        this.body = body;
         this.video = video;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    public String getTitle() {
-        return articleTitle;
-    }
-
-    public void setTitle(String articleTitle) {
-        this.articleTitle = articleTitle;
-    }
-
-    public String getData() {
-        return articleData;
-    }
-
-    public void setData(String articleData) {
-        this.articleData = articleData;
-    }
-
-    public String getImage() {
-        return articleImage;
-    }
-
-    public void setImage(String articleImage) {
-        this.articleImage = articleImage;
-    }
 
     public String getBody() {
-        return articleBody;
+        return body;
     }
 
-    public void setBody(String articleBody) {
-        this.articleBody = articleBody;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getId() {
@@ -81,6 +57,38 @@ public class ArticleModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPublished_date() {
+        return published_date;
+    }
+
+    public void setPublished_date(String published_date) {
+        this.published_date = published_date;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getVideoURI() {

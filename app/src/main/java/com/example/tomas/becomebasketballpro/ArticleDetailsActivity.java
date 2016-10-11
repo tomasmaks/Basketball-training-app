@@ -11,8 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
+import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -28,6 +30,9 @@ import com.thefinestartist.ytpa.YouTubePlayerActivity;
 import com.thefinestartist.ytpa.enums.Orientation;
 import com.thefinestartist.ytpa.enums.Quality;
 import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Tomas on 06/08/2016.
@@ -48,11 +53,14 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     ImageView thumbnail;
     String exercise_video;
     private InterstitialAd mInterstitialAd;
+    ArticleModel articleModel;
 
-    public static final String EXTRA_POST_KEY = "post_key";
-    private String mPostKey;
+    String mPostKey;
     DatabaseReference mReference;
     private ValueEventListener mArticleListener;
+
+    public static final String EXTRA_POST_KEY = "post_key";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +90,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         }
 
       // Initialize Database
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article");
+        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article/");
 
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
@@ -91,85 +99,26 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         }
 
 //        // setting up text views and stuff
-     setUpUIViews();
-//
-//
-//        // recovering data from MainActivity, sent via intent
-//        Bundle bundle = getIntent().getExtras();
-//        if(bundle != null) {
-//
-//            String json = bundle.getString("articleModel");
-//
-//                ArticleModel articleModel = new Gson().fromJson(json, ArticleModel.class);
+        setUpUIViews();
 
-//
 
-//
-//
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent, 1);
-            }
-        });
-
+//        play.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+//                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+//                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+//                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+//                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+//                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+//
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivityForResult(intent, 1);
+//            }
+//        });
         // Add value event listener to the post
         // [START post_value_event_listener]
-        ValueEventListener articleListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                ArticleModel articleModel = dataSnapshot.getValue(ArticleModel.class);
-                // [START_EXCLUDE]
-                article_title.setText(articleModel.getTitle());
-                article_body.setText(Html.fromHtml(articleModel.getBody()).toString());
-                article_data.setText("Added on: " + articleModel.getData());
-
-                exercise_video = articleModel.getVideoURI();
-
-                Picasso.with(getBaseContext())
-                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                        .fit()
-                        .centerCrop()
-                        .into(thumbnail);
-
-                if (articleModel.getImage().isEmpty()) {
-                    article_image.setVisibility(View.GONE);
-                }
-
-                if (exercise_video.isEmpty()) {
-                    play.setVisibility(View.GONE);
-                    thumbnail.setVisibility(View.GONE);
-                    video.setVisibility(View.GONE);
-                }
-
-
-
-                // [END_EXCLUDE]
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-
-            }
-        };
-        mReference.addValueEventListener(articleListener);
-        // [END post_value_event_listener]
-
-        // Keep copy of post listener so we can remove it when app stops
-        mArticleListener = articleListener;
-
-
-
 
     }
 
@@ -214,10 +163,55 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
+        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArticleModel articleModel = dataSnapshot.getValue(ArticleModel.class);
+                 String title = (String) dataSnapshot.child("title").getValue();
 
+                article_title.setText(title);
+               // article_title.setText((String) dataSnapshot.child("title").getValue());
+
+//                String body = (String) dataSnapshot.child("body").getValue();
+//
+//                article_title.setText(body);
+
+
+//
+//                article_title.setText(articleModel.getTitle());
+//                article_body.setText(Html.fromHtml(articleModel.getBody()).toString());
+//                article_data.setText("Added on: " + articleModel.getData());
+//
+//                exercise_video = articleModel.getVideoURI();
+//
+//                Picasso.with(getBaseContext())
+//                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+//                        .fit()
+//                        .centerCrop()
+//                        .into(thumbnail);
+//
+//                if (articleModel.getImage().isEmpty()) {
+//                    article_image.setVisibility(View.GONE);
+//                }
+//
+//                if (exercise_video.isEmpty()) {
+//                    play.setVisibility(View.GONE);
+//                    thumbnail.setVisibility(View.GONE);
+//                    video.setVisibility(View.GONE);
+//                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ArticleDetailsActivity.this, "Failed to load post.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
     }
+
+
     @Override
     public void onStop() {
         super.onStop();
@@ -229,3 +223,4 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
     }
 }
+

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +14,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
-import com.example.tomas.becomebasketballpro.DBHandler.ArticleDbHandler;
-
-
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
@@ -32,8 +29,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +40,7 @@ public class ArticleListFragment extends Fragment {
     ArticleAdapter adapter;
     private SwipeRefreshLayout refreshLayout = null;
    // ArticleDbHandler dbHandler;
-   List<ArticleModel> articleModel = null;
+   List<ArticleModel> articleModel = new ArrayList<>();
     FirebaseDatabase mDatabase;
     DatabaseReference mReference;
     ListView mListView;
@@ -101,9 +96,8 @@ public class ArticleListFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance();
 
-       // mReference = mDatabase.getReference().child("article");
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article");
-        //set value event listener for firebase reference
+        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("article");
+
         mReference.addValueEventListener(new ValueEventListener() {
 
             /*
@@ -113,11 +107,17 @@ public class ArticleListFragment extends Fragment {
              */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<List<ArticleModel>> type = new GenericTypeIndicator<List<ArticleModel>>() {
-                };
-                articleModel = dataSnapshot.getValue(type);
-               // adapter.notifyDataSetChanged();
+                //GenericTypeIndicator<List<ArticleModel>> type = new GenericTypeIndicator<List<ArticleModel>>() {};
 
+
+
+
+                articleModel = new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+                    articleModel.add(postSnapshot.getValue(ArticleModel.class));
+
+                }
 
                 adapter = new ArticleAdapter(getActivity().getApplicationContext(), R.layout.fragment_article_list_items, articleModel);
 
@@ -125,15 +125,13 @@ public class ArticleListFragment extends Fragment {
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                        final DatabaseReference articleRef = mDatabase.getRef(position);
                         Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
-                        final String postKey = mReference.getKey();
+                        String postKey = articleModel.get(position).getId();
                         intent.putExtra(ArticleDetailsActivity.EXTRA_POST_KEY, postKey);
                         getActivity().startActivity(intent);
 
                     }
                 });
-
             }
 
             //this will called when error occur while getting data from firebase
@@ -143,17 +141,9 @@ public class ArticleListFragment extends Fragment {
             }
         });
 
-
-
         return mRootView;
     }
 
-
-
-    public View getJsonString(ArticleModel model) {
-
-    return null;
-    }
 
 
     @Override
@@ -229,10 +219,12 @@ public class ArticleListFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            Picasso.with(getActivity()).load(articleModelList.get(position).getThumbnail()).into(holder.thumbnail);
+
+           // Picasso.with(getActivity()).load(articleModelList.get(position).getThumb()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.thumbnail);
+           Picasso.with(getActivity()).load(articleModelList.get(position).getThumb()).into(holder.thumbnail);
 
             holder.articleTitle.setText(articleModelList.get(position).getTitle());
-            holder.articleData.setText("Added on: " + articleModelList.get(position).getData());
+            holder.articleData.setText("Added on: " + articleModelList.get(position).getPublished_date());
 
             return convertView;
         }
