@@ -17,15 +17,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
+import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
+import com.firebase.client.Firebase;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -45,66 +53,37 @@ import java.util.List;
 public class BallTrainingSecondFragment extends ListFragment {
     View mRootView;
     ListAdapter adapter;
-    Context context;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mReference;
+    List<BallTrainingModel> ballTrainingModel = new ArrayList<>();
+    ListView mListView;
 
-    JSONParser jsonParser = new JSONParser();
-    List<BallTrainingModel> ballTrainingModelList;
-
-    JSONArray Categories = null;
-    JSONArray Exercises = null;
-
-    // Album id
-    String category_ids;
+    public static final String EXTRA_POST_KEY = "post_key";
 
     private AdView mAdView;
 
-    BallTrainingDbHandler dbHandler;
-    List<BallTrainingModel> result = null;
-
-    String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
-
-    private static final String TAG_ID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_THUMB = "thumb";
-    private static final String TAG_DESCRIPTION = "description";
-    private static final String TABLE_EVENT = "Basketball";
-    private static final String TAG_ARRAY = "exercises";
-    private static final String PARENT_ID = "ids";
-
     @Override
     public void onViewCreated (View view, Bundle savedInstanceState) {
+        Firebase.setAndroidContext(getActivity());
 
-        category_ids = getArguments().getString("category_id");
 
-        dbHandler = new BallTrainingDbHandler(getActivity());
 
-        NetworkUtils utils = new NetworkUtils(getActivity());
-        if (utils.isConnectingToInternet() && savedInstanceState == null) {
-
-            new LoadExercises().execute();
-
-            ListView lv = getListView();
-
-            lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                        long arg3) {
-
-                    Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
-
-                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
-
-                    i.putExtra("category_id", category_id);
-                    i.putExtra("exercise_id", exercise_id);
-
-                    view.getContext().startActivity(i);
-                }
-            });
-
-        }else {
-            Toast.makeText(getActivity().getApplicationContext(), "Please connect to internet to see ball training list", Toast.LENGTH_LONG).show();
-        }
+//            lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
+//                                        long arg3) {
+//
+//                    Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
+//
+//                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
+//                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
+//
+//                    i.putExtra("category_id", category_id);
+//                    i.putExtra("exercise_id", exercise_id);
+//
+//                    view.getContext().startActivity(i);
+//                }
+//            });
     }
 
     @Override
@@ -117,8 +96,7 @@ public class BallTrainingSecondFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        Firebase.setAndroidContext(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
 
@@ -128,85 +106,54 @@ public class BallTrainingSecondFragment extends ListFragment {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
+
+
+        mDatabase = FirebaseDatabase.getInstance();
+
+        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("basketball");
+
+        mReference.addValueEventListener(new ValueEventListener() {
+
+            /*
+             * onDataChange method to read a static snapshot of the contents at given JSON object
+             * This method is triggered once when the listener is attached
+             * and again every time the data changes.
+             */
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ballTrainingModel = new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+                    ballTrainingModel.add(postSnapshot.getValue(BallTrainingModel.class));
+
+                }
+
+                adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_list_items, ballTrainingModel);
+
+                mListView.setAdapter(adapter);
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                        Intent intent = new Intent(getActivity(), BallTrainingThirdActivity.class);
+                        String postKey = ballTrainingModel.get(position).getId();
+                        intent.putExtra(BallTrainingThirdActivity.EXTRA_DETAIL_KEY, postKey);
+                        getActivity().startActivity(intent);
+                    }
+                });
+            }
+
+            //this will called when error occur while getting data from firebase
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
+
         return mRootView;
     }
 
-    class LoadExercises extends AsyncTask<String, String, List<BallTrainingModel>> {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-
-        protected List<BallTrainingModel> doInBackground(String... params) {
-
-            List<NameValuePair> param = new ArrayList<NameValuePair>();
-
-
-            param.add(new BasicNameValuePair(PARENT_ID, category_ids));
-
-            JSONObject json = jsonParser.makeHttpRequest(url_details,
-                    "GET", param);
-
-            try {
-
-                List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
-                Gson gson = new Gson();
-
-                Categories = json.getJSONArray(TABLE_EVENT);
-
-                for(int i=0; i < Categories.length(); i++) {
-                    JSONObject finalObject = Categories.getJSONObject(i);
-
-                    String category_Id = finalObject.getString(PARENT_ID);
-
-
-                    if (category_Id.equals(category_ids)) {
-
-                        Exercises = finalObject.getJSONArray(TAG_ARRAY);
-
-                        for (int j = 0; j < Exercises.length(); j++) {
-
-                            JSONObject finalObject2 = Exercises.getJSONObject(j);
-
-                            BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
-
-                            ballTrainingModel.setId(finalObject2.getString(TAG_ID));
-                            ballTrainingModel.setName(finalObject2.getString(TAG_NAME));
-                            ballTrainingModel.setDescription(finalObject2.getString(TAG_DESCRIPTION));
-                            ballTrainingModel.setThumb(finalObject2.getString(TAG_THUMB));
-                            ballTrainingModel.setIds(category_Id);
-                            ballTrainingModelList.add(ballTrainingModel);
-                        }
-
-                    }
-                }
-                return ballTrainingModelList;
-
-            }  catch (JSONException e) {
-                e.printStackTrace();
-
-            }
-            return  null;
-
-        }
-
-
-
-        protected void onPostExecute(final List<BallTrainingModel> result) {
-
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-
-                    adapter = new ListAdapter(getActivity(), result);
-                    setListAdapter(adapter);
-
-                }
-            });
-
-        }
-    }
     public class ListAdapter extends BaseAdapter {
         Context context;
         private List<BallTrainingModel> ballTrainingModelList;

@@ -10,12 +10,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.SuccessModel;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.thefinestartist.ytpa.YouTubePlayerActivity;
@@ -32,17 +39,22 @@ public class SuccessDetailsActivity extends ActionBarActivity {
     private ImageView article_image;
     private TextView article_title;
     private TextView article_body;
-    private TextView articleData;
-    private RelativeLayout video;
+    private TextView article_data;
+    private RelativeLayout rel_video;
 
     YouTubePlayer.PlayerStyle playerStyle;
     Orientation orientation;
     boolean showAudioUi;
     boolean showFadeAnim;
     ImageButton play;
-    ImageView thumbnail;
+    ImageView thumbnail;;
     String exercise_video;
     private InterstitialAd mInterstitialAd;
+
+    String mPostKey;
+    DatabaseReference mReference;
+
+    public static final String EXTRA_SUCCESS_KEY = "success_key";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +77,13 @@ public class SuccessDetailsActivity extends ActionBarActivity {
             }
         });
 
+        mPostKey = getIntent().getStringExtra(EXTRA_SUCCESS_KEY);
+        if (mPostKey == null) {
+            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+        }
+
+        // Initialize Database
+        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/success/");
 
         // Showing and Enabling clicks on the Home/Up button
         if(getSupportActionBar() != null) {
@@ -73,52 +92,75 @@ public class SuccessDetailsActivity extends ActionBarActivity {
         }
 
         // setting up text views and stuff
+
         setUpUIViews();
 
-        // recovering data from MainActivity, sent via intent
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
-            String json = bundle.getString("successModel");
-            SuccessModel successModel = new Gson().fromJson(json, SuccessModel.class);
+        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String title = (String) dataSnapshot.child("title").getValue();
 
-            exercise_video = successModel.getVideoURI();
+                article_title.setText(title);
 
-            Picasso.with(this)
-                    .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                    .fit()
-                    .centerCrop()
-                    .into(thumbnail);
-            play.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(SuccessDetailsActivity.this, YouTubePlayerActivity.class);
-                    intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                    intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                    intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                    intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                    intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivityForResult(intent, 1);
+                String body = (String) dataSnapshot.child("body").getValue();
+
+                if (body.isEmpty()) {
+                    article_body.setVisibility(View.GONE);
+                } else {
+                    article_body.setText(Html.fromHtml(body).toString());
                 }
-            });
 
-            // Then later, when you want to display image
-            Picasso.with(this).load(successModel.getImage()).into(article_image);
+                String data = (String) dataSnapshot.child("published_date").getValue();
 
-            article_title.setText(successModel.getTitle());
-            article_body.setText(Html.fromHtml(successModel.getBody()).toString());
-            articleData.setText("Added on: " + successModel.getData());
+                article_data.setText("Added on: " + data);
 
-            if (successModel.getImage().isEmpty()) {
-                article_image.setVisibility(View.GONE);
+                String video = (String) dataSnapshot.child("video").getValue();
+
+                exercise_video = video;
+
+                String image = (String) dataSnapshot.child("photo").getValue();
+
+                Picasso.with(getBaseContext())
+                        .load(YouTubeThumbnail.getUrlFromVideoId(video, Quality.HIGH))
+                        .fit()
+                        .centerCrop()
+                        .into(thumbnail);
+
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(SuccessDetailsActivity.this, YouTubePlayerActivity.class);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivityForResult(intent, 1);
+                    }
+                });
+
+                if (image.isEmpty()) {
+                    article_image.setVisibility(View.GONE);
+                } else {
+                    Picasso.with(getBaseContext()).load(image).into(article_image);
+                }
+
+                if (exercise_video.isEmpty()) {
+                    play.setVisibility(View.GONE);
+                    thumbnail.setVisibility(View.GONE);
+                    rel_video.setVisibility(View.GONE);
+                }
+
             }
 
-            if (exercise_video.isEmpty()) {
-                play.setVisibility(View.GONE);
-                thumbnail.setVisibility(View.GONE);
-                video.setVisibility(View.GONE);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(SuccessDetailsActivity.this, "Failed to load post.",
+                        Toast.LENGTH_SHORT).show();
             }
-        }
+        });
+
 
     }
 
@@ -126,9 +168,9 @@ public class SuccessDetailsActivity extends ActionBarActivity {
         article_image = (ImageView)findViewById(R.id.article_image);
         article_title = (TextView)findViewById(R.id.article_title);
         article_body = (TextView)findViewById(R.id.article_body);
-        articleData = (TextView)findViewById(R.id.article_data);
+        article_data = (TextView)findViewById(R.id.article_data);
 
-        video = (RelativeLayout)findViewById(R.id.video);
+        rel_video = (RelativeLayout)findViewById(R.id.rel_video);
 
         playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
         orientation = Orientation.AUTO;
@@ -159,5 +201,4 @@ public class SuccessDetailsActivity extends ActionBarActivity {
             mInterstitialAd.show();
         }
     }
-
 }

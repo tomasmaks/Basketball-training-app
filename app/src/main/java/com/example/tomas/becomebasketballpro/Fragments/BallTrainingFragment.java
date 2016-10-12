@@ -2,6 +2,7 @@ package com.example.tomas.becomebasketballpro.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.ListFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
+
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
@@ -25,6 +28,11 @@ import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.firebase.client.Firebase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -40,24 +48,13 @@ import java.util.List;
  */
 public class BallTrainingFragment extends ListFragment {
     View mRootView;
-    GridView gridview;
+    GridView mGridview;
     ListAdapter adapter;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mReference;
+    List<BallTrainingModel> ballTrainingModel = new ArrayList<>();
 
-    JSONParser jsonParser = new JSONParser();
 
-    List<BallTrainingModel> ballTrainingModelList;
-
-    JSONArray categories = null;
-
-    BallTrainingDbHandler dbHandler;
-    List<BallTrainingModel> result = null;
-
-    private static final String URL_CATEGORIES = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
-
-    private static final String TAG_ID = "ids";
-    private static final String TAG_NAME = "category";
-    private static final String TAG_CATTHUM = "catThumb";
-    private static final String TABLE_EVENT = "Basketball";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,63 +68,62 @@ public class BallTrainingFragment extends ListFragment {
                              Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        Firebase.setAndroidContext(getActivity());
+
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
+        mDatabase = FirebaseDatabase.getInstance();
+
+        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("basketball");
+
+        mReference.addValueEventListener(new ValueEventListener() {
+
+            /*
+             * onDataChange method to read a static snapshot of the contents at given JSON object
+             * This method is triggered once when the listener is attached
+             * and again every time the data changes.
+             */
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ballTrainingModel = new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+                    ballTrainingModel.add(postSnapshot.getValue(BallTrainingModel.class));
+
+                }
+
+                adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, ballTrainingModel);
+
+                mGridview.setAdapter(adapter);
+                mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                        BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
+                        Bundle bundle = new Bundle();
+                        String postKey = ballTrainingModel.get(position).getId();
+                        bundle.putString(BallTrainingSecondFragment.EXTRA_POST_KEY, postKey);
+                        ballTrainingSecondFragment.setArguments(bundle);
+                        ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
+
+                    }
+                });
+            }
+
+            //this will called when error occur while getting data from firebase
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
         return mRootView;
-
-
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        gridview = (GridView) mRootView.findViewById(R.id.list);
-
-        dbHandler = new BallTrainingDbHandler(getActivity());
-
-        NetworkUtils utils = new NetworkUtils(getActivity());
-
-            if (utils.isConnectingToInternet()) {
-                if (savedInstanceState == null) {
-                    new LoadCategories().execute();
-                }
-                gridview.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-                                            long arg3) {
-
-                        BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
-                        Bundle bundle = new Bundle();
-
-                        String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-                        bundle.putString("category_id", category_id);
-
-                        ballTrainingSecondFragment.setArguments(bundle);
-                        ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
-                    }
-                });
-            } else {
-                result = dbHandler.getAllCategories();
-                adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
-                gridview.setAdapter(adapter);
-                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
-
-                        BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
-
-                        Bundle bundle = new Bundle();
-                        String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-
-                        bundle.putString("category_id", category_id);
-                        ballTrainingSecondFragment.setArguments(bundle);
-                        ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
-                    }
-                });
-            }
-
     }
-
 
     public static BallTrainingFragment newInstance(int sectionNumber) {
         BallTrainingFragment fragment = new BallTrainingFragment();
@@ -139,64 +135,6 @@ public class BallTrainingFragment extends ListFragment {
 
     public BallTrainingFragment() {
         // Required empty public constructor
-    }
-
-    class LoadCategories extends AsyncTask<String, String, List<BallTrainingModel>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        protected List<BallTrainingModel> doInBackground(String... args) {
-
-            List<NameValuePair> param = new ArrayList<NameValuePair>();
-
-            JSONObject json = jsonParser.makeHttpRequest(URL_CATEGORIES, "GET",
-                    param);
-
-            try {
-
-                List<BallTrainingModel> ballTrainingModelList = new ArrayList<>();
-                Gson gson = new Gson();
-                categories = json.getJSONArray(TABLE_EVENT);
-
-                Log.d(TABLE_EVENT, json.toString());
-
-                dbHandler.deleteCategoryTable();
-
-                for (int i = 0; i < categories.length(); i++) {
-                    JSONObject c = categories.getJSONObject(i);
-                    BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
-
-
-
-                    ballTrainingModel.setIds(c.getString(TAG_ID));
-                    ballTrainingModel.setCategory(c.getString(TAG_NAME));
-                    ballTrainingModel.setCatThumb(c.getString(TAG_CATTHUM));
-
-                    ballTrainingModelList.add(ballTrainingModel);
-                    dbHandler.addCategory(ballTrainingModel);
-
-                }
-                return ballTrainingModelList;
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onPostExecute(final List<BallTrainingModel> result) {
-
-                getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-                        adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, result);
-                        gridview.setAdapter(adapter);
-                    }
-                });
-        }
     }
 
     public class ListAdapter extends BaseAdapter {

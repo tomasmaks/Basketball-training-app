@@ -54,6 +54,8 @@ public class BallTrainingThirdActivity extends Activity {
     ImageButton play;
     ImageView thumbnail;
 
+    public static final String EXTRA_DETAIL_KEY = "detail_key";
+
     private InterstitialAd mInterstitialAd;
 
     private static final String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";

@@ -63,7 +63,7 @@ public class MotivationListFragment extends Fragment {
         Firebase.setAndroidContext(getActivity());
 
         // dbHandler = new ArticleDbHandler(getActivity());
-        mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 

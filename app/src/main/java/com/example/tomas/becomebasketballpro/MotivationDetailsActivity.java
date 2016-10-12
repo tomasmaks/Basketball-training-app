@@ -124,8 +124,6 @@ public class MotivationDetailsActivity extends ActionBarActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     @Override

@@ -97,15 +97,77 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         }
 
         setUpUIViews();
-    }
 
+
+        Picasso.with(getBaseContext())
+                .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                .fit()
+                .centerCrop()
+                .into(thumbnail);
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+
+        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String title = (String) dataSnapshot.child("title").getValue();
+
+                article_title.setText(title);
+
+                String body = (String) dataSnapshot.child("body").getValue();
+
+                article_body.setText(Html.fromHtml(body).toString());
+
+                String data = (String) dataSnapshot.child("published_date").getValue();
+
+                article_data.setText("Added on: " + data);
+
+                String video = (String) dataSnapshot.child("video").getValue();
+
+                exercise_video = video;
+
+                String image = (String) dataSnapshot.child("photo").getValue();
+
+                Picasso.with(getBaseContext()).load(image).into(article_image);
+
+                if (image.isEmpty()) {
+                    article_image.setVisibility(View.GONE);
+                }
+
+                if (video.isEmpty()) {
+                    play.setVisibility(View.GONE);
+                    thumbnail.setVisibility(View.GONE);
+                    rel_video.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ArticleDetailsActivity.this, "Failed to load post.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void setUpUIViews() {
         article_image = (ImageView)findViewById(R.id.article_image);
         article_title = (TextView)findViewById(R.id.article_title);
         article_body = (TextView)findViewById(R.id.article_body);
         article_data = (TextView)findViewById(R.id.article_data);
-        rel_video = (RelativeLayout)findViewById(R.id.video);
+        rel_video = (RelativeLayout)findViewById(R.id.rel_video);
 
         playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
         orientation = Orientation.AUTO;
@@ -140,69 +202,6 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArticleModel articleModel = dataSnapshot.getValue(ArticleModel.class);
-                String title = (String) dataSnapshot.child("title").getValue();
-
-                article_title.setText(title);
-
-                String body = (String) dataSnapshot.child("body").getValue();
-
-                article_body.setText(Html.fromHtml(body).toString());
-
-                String data = (String) dataSnapshot.child("published_date").getValue();
-
-                article_data.setText("Added on: " + data);
-
-                String video = (String) dataSnapshot.child("video").getValue();
-
-                exercise_video = video;
-
-                Picasso.with(getBaseContext())
-                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                        .fit()
-                        .centerCrop()
-                        .into(thumbnail);
-
-                play.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivityForResult(intent, 1);
-                    }
-                });
-
-                String image = (String) dataSnapshot.child("photo").getValue();
-
-                // Then later, when you want to display image
-                Picasso.with(getBaseContext()).load(image).into(article_image);
-
-
-                if (image.isEmpty()) {
-                    article_image.setVisibility(View.GONE);
-                }
-
-                if (video.isEmpty()) {
-                    play.setVisibility(View.GONE);
-                    thumbnail.setVisibility(View.GONE);
-                    rel_video.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(ArticleDetailsActivity.this, "Failed to load post.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
 
     }

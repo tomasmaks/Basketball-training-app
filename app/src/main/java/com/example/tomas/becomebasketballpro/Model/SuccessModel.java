@@ -7,71 +7,71 @@ import java.io.Serializable;
  */
 public class SuccessModel implements Serializable {
 
-    private String thumbnail;
-    private String articleTitle;
-    private String articleData;
-    private String articleImage;
-    private String articleBody;
-    private int id;
+    private String thumb;
+    private String title;
+    private String published_date;
+    private String photo;
+    private String body;
+    private String id;
     private String video;
 
     public SuccessModel() {
     }
 
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getThumb() {
+        return thumb;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
     }
 
     public String getTitle() {
-        return articleTitle;
+        return title;
     }
 
-    public void setTitle(String articleTitle) {
-        this.articleTitle = articleTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getData() {
-        return articleData;
+    public String getPublished_date() {
+        return published_date;
     }
 
-    public void setData(String articleData) {
-        this.articleData = articleData;
+    public void setPublished_date(String published_date) {
+        this.published_date = published_date;
     }
 
-    public String getImage() {
-        return articleImage;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setImage(String articleImage) {
-        this.articleImage = articleImage;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getBody() {
-        return articleBody;
+        return body;
     }
 
-    public void setBody(String articleBody) {
-        this.articleBody = articleBody;
+    public void setBody(String body) {
+        this.body = body;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getVideoURI() {
+    public String getVideo() {
         return video;
     }
 
-    public void setVideoURI(String video) {
+    public void setVideo(String video) {
         this.video = video;
     }
 
