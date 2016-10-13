@@ -56,20 +56,15 @@ public class ArticleListFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        Firebase.setAndroidContext(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 
         mDatabase = FirebaseDatabase.getInstance();
-
-
 
         mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("article");
 

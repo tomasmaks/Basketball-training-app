@@ -19,7 +19,7 @@ import com.example.tomas.becomebasketballpro.Fragments.NewsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.SuccessListFragment;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
