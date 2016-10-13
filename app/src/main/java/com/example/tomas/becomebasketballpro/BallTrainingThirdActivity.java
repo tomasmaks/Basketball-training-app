@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
@@ -25,6 +26,11 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.thefinestartist.ytpa.YouTubePlayerActivity;
 import com.thefinestartist.ytpa.enums.Orientation;
@@ -34,14 +40,6 @@ import com.squareup.picasso.Picasso;
 
 
 public class BallTrainingThirdActivity extends Activity {
-
-    JSONParser jsonParser = new JSONParser();
-
-    JSONArray jsonArray = null;
-    JSONArray exercises = null;
-
-    String category_id = null;
-    String exercise_id = null;
 
     String exercise_name, exercise_body;
     String exercise_video;
@@ -54,19 +52,18 @@ public class BallTrainingThirdActivity extends Activity {
     ImageButton play;
     ImageView thumbnail;
 
+    public static final String EXTRA_POST_KEY = "post_key";
     public static final String EXTRA_DETAIL_KEY = "detail_key";
 
     private InterstitialAd mInterstitialAd;
 
-    private static final String url_details = "https://raw.githubusercontent.com/tomasmaks/Basketball-training-app/master/app/json/ListOfExercises.json";
-
-    private static final String PARENT_ID = "ids";
-    private static final String TABLE_EVENT = "Basketball";
-    private static final String TAG_ARRAY = "exercises";
-    private static final String TAG_ID = "id";
-    private static final String TAG_NAME = "name";
-    private static final String TAG_BODY = "body";
-    private static final String TAG_VIDEO = "video";
+    int mPassPostKey;
+    int mPostKey;
+    int mPassDetailKey;
+    int mDetailKey;
+    DatabaseReference mReference;
+    TextView article_title;
+    TextView article_body;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,86 +85,71 @@ public class BallTrainingThirdActivity extends Activity {
             }
         });
 
-        Intent i = getIntent();
-        category_id = i.getStringExtra("category_id");
-        exercise_id = i.getStringExtra("exercise_id");
+        mPostKey = getIntent().getIntExtra(EXTRA_POST_KEY, mPassPostKey);
+//        if (mPostKey == 0) {
+//            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+//        }
+        mDetailKey = getIntent().getIntExtra(EXTRA_DETAIL_KEY, mPassDetailKey);
+//        if (mDetailKey == 0) {
+//            throw new IllegalArgumentException("Must pass EXTRA_DETAIL_KEY");
+//        }
 
-        new LoadSingleExercise().execute();
-    }
+        setupVideoView();
 
-    class LoadSingleExercise extends AsyncTask<String, String, String> {
+        // Initialize Database
+        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/basketball/").child(String.valueOf(mPostKey)).child("exercises").child(String.valueOf(mDetailKey));
 
+        mReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String name = (String) dataSnapshot.child("name").getValue();
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+                article_title.setText(name);
 
-        protected String doInBackground(String... args) {
+                String body = (String) dataSnapshot.child("body").getValue();
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+                if (body.isEmpty()) {
+                    article_body.setVisibility(View.GONE);
+                } else {
+                    article_body.setText(Html.fromHtml(body).toString());
+                }
 
-            params.add(new BasicNameValuePair(PARENT_ID, category_id));
-            params.add(new BasicNameValuePair(TAG_ID, exercise_id));
+                String video = (String) dataSnapshot.child("video").getValue();
 
+                exercise_video = video;
 
-            JSONObject json = jsonParser.makeHttpRequest(url_details, "GET",
-                    params);
+                Picasso.with(getBaseContext())
+                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                        .fit()
+                        .centerCrop()
+                        .into(thumbnail);
 
-            try {
-                Gson gson = new Gson();
-
-                jsonArray = json.getJSONArray(TABLE_EVENT);
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject details = jsonArray.getJSONObject(i);
-
-                    String categoryId = details.getString(PARENT_ID);
-
-                    if (categoryId.equals(category_id)) {
-
-
-                        exercises = details.getJSONArray(TAG_ARRAY);
-
-                        for (int j = 0; j < exercises.length(); j++) {
-                            JSONObject nzn = exercises.getJSONObject(j);
-                            String exerciseId = nzn.getString(TAG_ID);
-                            if (exerciseId.equals(exercise_id)) {
-                                BallTrainingModel ballTrainingModel = gson.fromJson(json.toString(), BallTrainingModel.class);
-
-                                ballTrainingModel.setName(exercise_name);
-                                exercise_name = nzn.getString(TAG_NAME);
-                                ballTrainingModel.setBody(exercise_body);
-                                exercise_body = Html.fromHtml(nzn.getString(TAG_BODY)).toString();
-                                ballTrainingModel.setVideoURI(exercise_video);
-                                exercise_video = nzn.getString(TAG_VIDEO);
-                                ballTrainingModel.setIds(categoryId);
-                                ballTrainingModel.setId(exerciseId);
-                            }
-                        }
+                play.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(BallTrainingThirdActivity.this, YouTubePlayerActivity.class);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivityForResult(intent, 1);
                     }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                });
+
             }
-            return null;
-        }
 
-        protected void onPostExecute(String file_url) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(BallTrainingThirdActivity.this, "Failed to load post.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
-            runOnUiThread(new Runnable() {
-                public void run() {
 
-                    TextView txt_exer_name = (TextView) findViewById(R.id.exercise_title);
-                    txt_exer_name.setText(exercise_name);
-                    TextView txt_exer_body = (TextView) findViewById(R.id.exercise_body);
-                    txt_exer_body.setText(exercise_body);
-
-                    setupVideoView();
-                }
-            });
-        }
     }
+
     private void setupVideoView() {
         playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
         orientation = Orientation.AUTO;
@@ -177,29 +159,12 @@ public class BallTrainingThirdActivity extends Activity {
         play = (ImageButton) findViewById(R.id.play_bt);
         thumbnail = (ImageView) findViewById(R.id.thumbnail);
 
-        Picasso.with(this)
-                .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                .fit()
-                .centerCrop()
-                .into(thumbnail);
-
-
-
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BallTrainingThirdActivity.this, YouTubePlayerActivity.class);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent, 1);
-            }
-        });
-
+        article_title = (TextView) findViewById(R.id.exercise_title);
+        article_title.setText(exercise_name);
+        article_body = (TextView) findViewById(R.id.exercise_body);
+        article_body.setText(exercise_body);
     }
+
     private void showInterstitial() {
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();

@@ -4,7 +4,6 @@ package com.example.tomas.becomebasketballpro.Fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
@@ -15,15 +14,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
-import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
-import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
-import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.firebase.client.Firebase;
@@ -34,15 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,28 +46,11 @@ public class BallTrainingSecondFragment extends ListFragment {
 
     private AdView mAdView;
 
+    int mPostKey;
+
     @Override
     public void onViewCreated (View view, Bundle savedInstanceState) {
         Firebase.setAndroidContext(getActivity());
-
-
-
-//            lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-//                @Override
-//                public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-//                                        long arg3) {
-//
-//                    Intent i = new Intent(getActivity().getApplicationContext(), BallTrainingThirdActivity.class);
-//
-//                    String category_id = ((TextView) view.findViewById(R.id.category_id)).getText().toString();
-//                    String exercise_id = ((TextView) view.findViewById(R.id.exercise_id)).getText().toString();
-//
-//                    i.putExtra("category_id", category_id);
-//                    i.putExtra("exercise_id", exercise_id);
-//
-//                    view.getContext().startActivity(i);
-//                }
-//            });
     }
 
     @Override
@@ -100,17 +67,22 @@ public class BallTrainingSecondFragment extends ListFragment {
 
         mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
 
+        mListView = (ListView) mRootView.findViewById(R.id.listView);
+
         mAdView = (AdView) mRootView.findViewById(R.id.adView);
 
         mAdView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-
+        mPostKey = getArguments().getInt(EXTRA_POST_KEY);
+//        if (mPostKey == 0) {
+//            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+//        }
 
         mDatabase = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("basketball");
+        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/basketball/").child(String.valueOf(mPostKey)).child("exercises");
 
         mReference.addValueEventListener(new ValueEventListener() {
 
@@ -129,15 +101,16 @@ public class BallTrainingSecondFragment extends ListFragment {
 
                 }
 
-                adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_list_items, ballTrainingModel);
+                adapter = new ListAdapter(getActivity().getApplicationContext(), ballTrainingModel);
 
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                         Intent intent = new Intent(getActivity(), BallTrainingThirdActivity.class);
-                        String postKey = ballTrainingModel.get(position).getId();
-                        intent.putExtra(BallTrainingThirdActivity.EXTRA_DETAIL_KEY, postKey);
+                        intent.putExtra(BallTrainingThirdActivity.EXTRA_POST_KEY, mPostKey);
+                        int detailKey = ballTrainingModel.get(position).getId();
+                        intent.putExtra(BallTrainingThirdActivity.EXTRA_DETAIL_KEY, detailKey);
                         getActivity().startActivity(intent);
                     }
                 });
@@ -202,8 +175,8 @@ public class BallTrainingSecondFragment extends ListFragment {
                 LayoutInflater inflater = (LayoutInflater)context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_balltraining_list_items, parent, false);
-                mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
-                mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
+               // mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
+               // mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
                 mViewHolder.name = (TextView)view.findViewById(R.id.name);
                 mViewHolder.description = (TextView)view.findViewById(R.id.description);
                 mViewHolder.thumb=(ImageView)view.findViewById(R.id.thumb_image);
@@ -217,8 +190,8 @@ public class BallTrainingSecondFragment extends ListFragment {
 
             mViewHolder.name.setText(ballTrainingModelList.get(position).getName());
             mViewHolder.description.setText(ballTrainingModelList.get(position).getDescription());
-            mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
-            mViewHolder.id.setText(ballTrainingModelList.get(position).getId());
+           // mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
+           // mViewHolder.id.setText(ballTrainingModelList.get(position).getId());
 
             return view;
         }

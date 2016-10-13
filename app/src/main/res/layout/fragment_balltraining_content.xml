@@ -4,11 +4,11 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:id="@+id/category_id"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
+    <!--<TextView-->
+        <!--android:id="@+id/category_id"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:visibility="gone" />-->
     <ImageView
         android:id="@+id/thumb"
         android:layout_width="fill_parent"

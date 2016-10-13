@@ -14,12 +14,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import org.apache.http.NameValuePair;
-
-import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
-import com.example.tomas.becomebasketballpro.DBHandler.BallTrainingDbHandler;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
@@ -32,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -54,8 +52,6 @@ public class BallTrainingFragment extends ListFragment {
     DatabaseReference mReference;
     List<BallTrainingModel> ballTrainingModel = new ArrayList<>();
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +68,8 @@ public class BallTrainingFragment extends ListFragment {
         Firebase.setAndroidContext(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
+
+        mGridview = (GridView) mRootView.findViewById(R.id.list);
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -102,8 +100,8 @@ public class BallTrainingFragment extends ListFragment {
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                         BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
                         Bundle bundle = new Bundle();
-                        String postKey = ballTrainingModel.get(position).getId();
-                        bundle.putString(BallTrainingSecondFragment.EXTRA_POST_KEY, postKey);
+                        int postKey = ballTrainingModel.get(position).getIds();
+                        bundle.putInt(BallTrainingSecondFragment.EXTRA_POST_KEY, postKey);
                         ballTrainingSecondFragment.setArguments(bundle);
                         ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
 
@@ -150,7 +148,7 @@ public class BallTrainingFragment extends ListFragment {
         }
 
         class ViewHolder {
-            private TextView ids;
+           // private TextView ids;
             private TextView category;
             private ImageView tagThumb;
         }
@@ -182,7 +180,7 @@ public class BallTrainingFragment extends ListFragment {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_balltraining_content, parent, false);
-                mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
+               //mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
                 mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
                 mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
                 view.setTag(mViewHolder);
@@ -192,7 +190,7 @@ public class BallTrainingFragment extends ListFragment {
 
             Picasso.with(getActivity()).load(ballTrainingModelList.get(position).getCatThumb()).into(mViewHolder.tagThumb);
 
-            mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
+           // mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
             mViewHolder.category.setText(ballTrainingModelList.get(position).getCategory());
 
             return view;

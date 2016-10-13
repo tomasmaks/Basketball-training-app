@@ -60,7 +60,7 @@ public class ArticleListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         Firebase.setAndroidContext(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
@@ -68,6 +68,8 @@ public class ArticleListFragment extends Fragment {
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
 
         mDatabase = FirebaseDatabase.getInstance();
+
+
 
         mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("article");
 
@@ -113,11 +115,6 @@ public class ArticleListFragment extends Fragment {
         return mRootView;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Firebase.setAndroidContext(getActivity());
-    }
 
     public class ArticleAdapter extends ArrayAdapter {
 

@@ -5,31 +5,33 @@ import android.support.v7.widget.RecyclerView;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 /**
  * Created by Tomas on 12/08/2016.
  */
-public class BallTrainingModel {
+public class BallTrainingModel implements Serializable {
+    private String catThumb;
     private String category;
-    private String ids;
-    private String tagThumb;
+    private int ids;
+    private String name;
+    private String thumb;
+    private String description;
+    private String video;
+    private String body;
+    private int id;
+
+    public BallTrainingModel() {
+    }
 
     public String getCatThumb() {
-        return tagThumb;
+        return catThumb;
     }
 
-    public void setCatThumb(String tagThumb) {
-        this.tagThumb = tagThumb;
-    }
-
-    public String getIds() {
-        return ids;
-    }
-
-    public void setIds(String ids) {
-        this.ids = ids;
+    public void setCatThumb(String catThumb) {
+        this.catThumb = catThumb;
     }
 
     public String getCategory() {
@@ -40,12 +42,13 @@ public class BallTrainingModel {
         this.category = category;
     }
 
-    private String name;
-    private String thumb;
-    private String description;
-    private String video;
-    private String body;
-    private String id;
+    public int getIds() {
+        return ids;
+    }
+
+    public void setIds(int ids) {
+        this.ids = ids;
+    }
 
     public String getName() {
         return name;
@@ -55,11 +58,11 @@ public class BallTrainingModel {
         this.name = name;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -79,11 +82,11 @@ public class BallTrainingModel {
         this.description = description;
     }
 
-    public String getVideoURI() {
+    public String getVideo() {
         return video;
     }
 
-    public void setVideoURI(String video) {
+    public void setVideo(String video) {
         this.video = video;
     }
 

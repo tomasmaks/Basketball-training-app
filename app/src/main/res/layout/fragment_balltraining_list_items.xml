@@ -7,7 +7,8 @@
     android:focusable="false"
     android:descendantFocusability="blocksDescendants"
     android:focusableInTouchMode="false"
-    android:padding="4dp">
+    android:padding="4dp"
+    android:background="#ffffff">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,19 +23,6 @@
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
             android:contentDescription="@string/title_section0"/>
-
-        <TextView
-            android:id="@+id/category_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-
-        <TextView
-            android:id="@+id/exercise_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,8 +54,6 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:paddingTop="10dp"/>
-
-
         </LinearLayout>
 
     </LinearLayout>
