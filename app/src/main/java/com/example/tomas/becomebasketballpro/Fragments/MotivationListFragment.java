@@ -20,6 +20,8 @@ import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
 
 import com.firebase.client.Firebase;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +43,7 @@ public class MotivationListFragment extends Fragment {
     FirebaseDatabase mDatabase;
     DatabaseReference mReference;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public static MotivationListFragment newInstance(int sectionNumber) {
         MotivationListFragment fragment = new MotivationListFragment();
@@ -55,6 +58,13 @@ public class MotivationListFragment extends Fragment {
     }
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FirebaseCrash.log("MotivationListFragment onCreate");
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,8 +76,6 @@ public class MotivationListFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
-
-
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -99,6 +107,9 @@ public class MotivationListFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
                         String postKey = motivationModel.get(position).getId();
                         intent.putExtra(MotivationDetailsActivity.EXTRA_POST_KEY, postKey);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         getActivity().startActivity(intent);
 
                     }
@@ -108,7 +119,7 @@ public class MotivationListFragment extends Fragment {
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
+                FirebaseCrash.log(databaseError.toString());
             }
         });
 

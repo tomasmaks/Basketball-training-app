@@ -17,20 +17,18 @@ import com.example.tomas.becomebasketballpro.Fragments.MotivationListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NavigationDrawerFragment;
 import com.example.tomas.becomebasketballpro.Fragments.NewsFragment;
 import com.example.tomas.becomebasketballpro.Fragments.SuccessListFragment;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 
 
 public class MainActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +43,10 @@ public class MainActivity extends BaseActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        FirebaseCrash.log("Activity created");
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override

@@ -25,6 +25,8 @@ import com.example.tomas.becomebasketballpro.Model.BallTrainingModel;
 import com.example.tomas.becomebasketballpro.Model.JSONParser;
 import com.example.tomas.becomebasketballpro.R;
 import com.firebase.client.Firebase;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,9 +54,12 @@ public class BallTrainingFragment extends ListFragment {
     DatabaseReference mReference;
     List<BallTrainingModel> ballTrainingModel = new ArrayList<>();
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseCrash.log("BallTrainingFragment onCreate");
 
 
     }
@@ -66,6 +71,8 @@ public class BallTrainingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
 
         Firebase.setAndroidContext(getActivity());
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
@@ -102,6 +109,8 @@ public class BallTrainingFragment extends ListFragment {
                         Bundle bundle = new Bundle();
                         int postKey = ballTrainingModel.get(position).getIds();
                         bundle.putInt(BallTrainingSecondFragment.EXTRA_POST_KEY, postKey);
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         ballTrainingSecondFragment.setArguments(bundle);
                         ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
 
@@ -112,7 +121,7 @@ public class BallTrainingFragment extends ListFragment {
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
+                FirebaseCrash.log(databaseError.toString());
             }
         });
         return mRootView;

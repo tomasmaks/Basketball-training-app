@@ -17,6 +17,8 @@ import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,16 +41,20 @@ public class FitnessTrainingFragment extends ListFragment {
     DatabaseReference mReference;
     List<FitnessTrainingModel> fitnessTrainingModel = new ArrayList<>();
 
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseCrash.log("FitnessTrainingFragment onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
 
@@ -85,6 +91,8 @@ public class FitnessTrainingFragment extends ListFragment {
                         int postKey = fitnessTrainingModel.get(position).getIds();
                         bundle.putInt(FitnessTrainingSecondFragment.EXTRA_POST_KEY, postKey);
                         fitnessTrainingSecondFragment.setArguments(bundle);
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
 
                     }
@@ -94,8 +102,8 @@ public class FitnessTrainingFragment extends ListFragment {
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
-            }
+                FirebaseCrash.log(databaseError.toString());
+        }
         });
 
         return mRootView;

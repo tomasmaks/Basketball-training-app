@@ -23,6 +23,8 @@ import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.firebase.client.Firebase;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +52,8 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
 
     int mPostKey;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     public void onViewCreated (View view, Bundle savedInstanceState) {
         Firebase.setAndroidContext(getActivity());
@@ -59,12 +63,16 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseCrash.log("FitnessTrainingSecondFragment onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+
         mRootView = inflater.inflate(R.layout.fragment_fitnesstraining_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.listView);
@@ -101,6 +109,9 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
                         intent.putExtra(FitnessTrainingThirdActivity.EXTRA_POST_KEY, mPostKey);
                         int detailKey = fitnessTrainingModel.get(position).getId();
                         intent.putExtra(FitnessTrainingThirdActivity.EXTRA_DETAIL_KEY, detailKey);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         getActivity().startActivity(intent);
 
                     }
@@ -110,7 +121,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
+                FirebaseCrash.log(databaseError.toString());
             }
         });
 

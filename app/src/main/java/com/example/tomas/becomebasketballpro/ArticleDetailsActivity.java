@@ -19,6 +19,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.youtube.player.YouTubePlayer;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -154,10 +155,12 @@ public class ArticleDetailsActivity extends ActionBarActivity {
                 }
             }
 
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(ArticleDetailsActivity.this, "Failed to load post.",
                         Toast.LENGTH_SHORT).show();
+                FirebaseCrash.log(databaseError.toString());
             }
         });
     }

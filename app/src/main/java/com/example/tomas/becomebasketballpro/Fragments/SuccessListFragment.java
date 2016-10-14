@@ -19,6 +19,8 @@ import com.example.tomas.becomebasketballpro.Model.SuccessModel;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
 import com.firebase.client.Firebase;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,6 +43,8 @@ public class SuccessListFragment extends Fragment {
     DatabaseReference mReference;
     ListView mListView;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     public static SuccessListFragment newInstance(int sectionNumber) {
         SuccessListFragment fragment = new SuccessListFragment();
         Bundle args = new Bundle();
@@ -57,6 +61,7 @@ public class SuccessListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseCrash.log("SuccessListFragment onCreate");
 
     }
 
@@ -102,6 +107,9 @@ public class SuccessListFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
                         String postKey = successModel.get(position).getId();
                         intent.putExtra(SuccessDetailsActivity.EXTRA_SUCCESS_KEY, postKey);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         getActivity().startActivity(intent);
 
                     }
@@ -111,7 +119,8 @@ public class SuccessListFragment extends Fragment {
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
+
+                FirebaseCrash.log(databaseError.toString());
             }
         });
 

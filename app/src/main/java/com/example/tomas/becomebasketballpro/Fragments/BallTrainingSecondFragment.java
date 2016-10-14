@@ -21,6 +21,8 @@ import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.firebase.client.Firebase;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +50,8 @@ public class BallTrainingSecondFragment extends ListFragment {
 
     int mPostKey;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     public void onViewCreated (View view, Bundle savedInstanceState) {
         Firebase.setAndroidContext(getActivity());
@@ -57,6 +61,7 @@ public class BallTrainingSecondFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        FirebaseCrash.log("BallTrainingSecondFragment onCreate");
     }
 
     @Override
@@ -64,6 +69,8 @@ public class BallTrainingSecondFragment extends ListFragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Firebase.setAndroidContext(getActivity());
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_balltraining_list, container, false);
 
@@ -111,6 +118,9 @@ public class BallTrainingSecondFragment extends ListFragment {
                         intent.putExtra(BallTrainingThirdActivity.EXTRA_POST_KEY, mPostKey);
                         int detailKey = ballTrainingModel.get(position).getId();
                         intent.putExtra(BallTrainingThirdActivity.EXTRA_DETAIL_KEY, detailKey);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         getActivity().startActivity(intent);
                     }
                 });
@@ -119,7 +129,7 @@ public class BallTrainingSecondFragment extends ListFragment {
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
+                FirebaseCrash.log(databaseError.toString());
             }
         });
 

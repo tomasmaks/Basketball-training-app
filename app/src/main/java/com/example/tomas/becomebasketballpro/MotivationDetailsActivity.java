@@ -14,6 +14,7 @@ import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -122,6 +123,8 @@ public class MotivationDetailsActivity extends ActionBarActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(MotivationDetailsActivity.this, "Failed to load post.",
                         Toast.LENGTH_SHORT).show();
+
+                FirebaseCrash.log(databaseError.toString());
             }
         });
     }

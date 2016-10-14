@@ -16,6 +16,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -43,6 +45,8 @@ public class ArticleListFragment extends Fragment {
     DatabaseReference mReference;
     ListView mListView;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     public static ArticleListFragment newInstance(int sectionNumber) {
         ArticleListFragment fragment = new ArticleListFragment();
         Bundle args = new Bundle();
@@ -59,6 +63,9 @@ public class ArticleListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FirebaseCrash.log("ArticleListFragment onCreate");
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
 
@@ -94,6 +101,9 @@ public class ArticleListFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
                         String postKey = articleModel.get(position).getId();
                         intent.putExtra(ArticleDetailsActivity.EXTRA_POST_KEY, postKey);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         getActivity().startActivity(intent);
 
                     }
@@ -103,7 +113,8 @@ public class ArticleListFragment extends Fragment {
             //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                throw databaseError.toException();
+                FirebaseCrash.log(databaseError.toString());
+
             }
         });
 
