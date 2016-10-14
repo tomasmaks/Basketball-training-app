@@ -160,6 +160,7 @@ public class SuccessDetailsActivity extends ActionBarActivity {
                         Toast.LENGTH_SHORT).show();
 
                 FirebaseCrash.log(databaseError.toString());
+
             }
         });
 
