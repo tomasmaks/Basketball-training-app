@@ -27,13 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.thefinestartist.ytpa.YouTubePlayerActivity;
-import com.thefinestartist.ytpa.enums.Orientation;
-import com.thefinestartist.ytpa.enums.Quality;
-import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Tomas on 06/08/2016.
@@ -44,15 +37,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private TextView article_title;
     private TextView article_body;
     private TextView article_data;
-    private RelativeLayout rel_video;
-
-    YouTubePlayer.PlayerStyle playerStyle;
-    Orientation orientation;
-    boolean showAudioUi;
-    boolean showFadeAnim;
-    ImageButton play;
-    ImageView thumbnail;
-    String exercise_video;
+ 
     private InterstitialAd mInterstitialAd;
 
     String mPostKey;
@@ -64,6 +49,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_detail);
+
 
 
         mInterstitialAd = new InterstitialAd(this);
@@ -99,28 +85,6 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
         setUpUIViews();
 
-
-        Picasso.with(getBaseContext())
-                .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
-                .fit()
-                .centerCrop()
-                .into(thumbnail);
-
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ArticleDetailsActivity.this, YouTubePlayerActivity.class);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
-                intent.putExtra(YouTubePlayerActivity.EXTRA_HANDLE_ERROR, true);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivityForResult(intent, 1);
-            }
-        });
-
-
         mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -136,29 +100,16 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
                 article_data.setText("Added on: " + data);
 
-                String video = (String) dataSnapshot.child("video").getValue();
-
-                exercise_video = video;
-
                 String image = (String) dataSnapshot.child("photo").getValue();
 
                 Picasso.with(getBaseContext()).load(image).into(article_image);
 
-                if (image.isEmpty()) {
-                    article_image.setVisibility(View.GONE);
-                }
-
-                if (video.isEmpty()) {
-                    play.setVisibility(View.GONE);
-                    thumbnail.setVisibility(View.GONE);
-                    rel_video.setVisibility(View.GONE);
-                }
             }
 
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(ArticleDetailsActivity.this, "Failed to load post.",
+                Toast.makeText(ArticleDetailsActivity.this, "Failed to load...",
                         Toast.LENGTH_SHORT).show();
                 FirebaseCrash.log(databaseError.toString());
             }
@@ -170,16 +121,6 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         article_title = (TextView)findViewById(R.id.article_title);
         article_body = (TextView)findViewById(R.id.article_body);
         article_data = (TextView)findViewById(R.id.article_data);
-        rel_video = (RelativeLayout)findViewById(R.id.rel_video);
-
-        playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
-        orientation = Orientation.AUTO;
-        showAudioUi = true;
-        showFadeAnim = true;
-
-        play = (ImageButton) findViewById(R.id.play_bt);
-        thumbnail = (ImageView) findViewById(R.id.thumbnail);
-
     }
 
     @Override

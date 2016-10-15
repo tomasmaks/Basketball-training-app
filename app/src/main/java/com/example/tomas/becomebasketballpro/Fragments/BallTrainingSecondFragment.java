@@ -61,7 +61,6 @@ public class BallTrainingSecondFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        FirebaseCrash.log("BallTrainingSecondFragment onCreate");
     }
 
     @Override

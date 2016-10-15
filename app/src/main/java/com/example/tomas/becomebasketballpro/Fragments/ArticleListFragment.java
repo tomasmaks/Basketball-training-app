@@ -55,7 +55,6 @@ public class ArticleListFragment extends Fragment {
         return fragment;
     }
 
-
     public ArticleListFragment() {
         // Required empty public constructor
     }
@@ -63,7 +62,8 @@ public class ArticleListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FirebaseCrash.log("ArticleListFragment onCreate");
+
+
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
@@ -93,6 +93,7 @@ public class ArticleListFragment extends Fragment {
                 }
 
                 adapter = new ArticleAdapter(getActivity().getApplicationContext(), R.layout.fragment_article_list_items, articleModel);
+
 
                 mListView.setAdapter(adapter);
                 mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

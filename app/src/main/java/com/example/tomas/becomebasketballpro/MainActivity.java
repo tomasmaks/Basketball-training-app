@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.tomas.becomebasketballpro.Fragments.ArticleListFragment;
 import com.example.tomas.becomebasketballpro.Fragments.BallTrainingFragment;
 import com.example.tomas.becomebasketballpro.Fragments.FitnessTrainingFragment;
 import com.example.tomas.becomebasketballpro.Fragments.HomeFragment;
@@ -70,6 +71,9 @@ public class MainActivity extends BaseActivity
                 break;
             case 6:
                 mFragment = MotivationListFragment.newInstance(5);
+                break;
+            case 7:
+                mFragment = ArticleListFragment.newInstance(6);
                 break;
 
         }

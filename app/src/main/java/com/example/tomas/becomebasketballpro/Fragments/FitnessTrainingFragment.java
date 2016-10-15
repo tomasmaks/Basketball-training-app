@@ -46,7 +46,6 @@ public class FitnessTrainingFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseCrash.log("FitnessTrainingFragment onCreate");
     }
 
     @Override

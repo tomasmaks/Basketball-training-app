@@ -61,8 +61,6 @@ public class MotivationListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseCrash.log("MotivationListFragment onCreate");
-
     }
 
 
@@ -72,7 +70,6 @@ public class MotivationListFragment extends Fragment {
 
         Firebase.setAndroidContext(getActivity());
 
-        // dbHandler = new ArticleDbHandler(getActivity());
         mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
         mListView = (ListView) mRootView.findViewById(R.id.mListView);
@@ -116,7 +113,6 @@ public class MotivationListFragment extends Fragment {
                 });
             }
 
-            //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.log(databaseError.toString());
@@ -172,8 +168,4 @@ public class MotivationListFragment extends Fragment {
         }
 
     }
-
-
-
-
 }

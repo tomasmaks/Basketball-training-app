@@ -59,9 +59,6 @@ public class BallTrainingFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseCrash.log("BallTrainingFragment onCreate");
-
-
     }
 
     @Override
@@ -96,7 +93,6 @@ public class BallTrainingFragment extends ListFragment {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
                     ballTrainingModel.add(postSnapshot.getValue(BallTrainingModel.class));
-
                 }
 
                 adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, ballTrainingModel);

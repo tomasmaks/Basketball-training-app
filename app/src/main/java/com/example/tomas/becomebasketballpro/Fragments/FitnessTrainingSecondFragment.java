@@ -63,7 +63,6 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseCrash.log("FitnessTrainingSecondFragment onCreate");
     }
 
     @Override

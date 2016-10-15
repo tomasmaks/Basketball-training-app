@@ -62,9 +62,6 @@ public class MotivationDetailsActivity extends ActionBarActivity {
         });
 
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        if (mPostKey == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
-        }
 
         // Initialize Database
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/motivation/");
@@ -87,9 +84,7 @@ public class MotivationDetailsActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
@@ -123,7 +118,6 @@ public class MotivationDetailsActivity extends ActionBarActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(MotivationDetailsActivity.this, "Failed to load post.",
                         Toast.LENGTH_SHORT).show();
-
                 FirebaseCrash.log(databaseError.toString());
             }
         });

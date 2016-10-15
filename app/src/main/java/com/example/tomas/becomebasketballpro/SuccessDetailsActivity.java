@@ -79,9 +79,6 @@ public class SuccessDetailsActivity extends ActionBarActivity {
         });
 
         mPostKey = getIntent().getStringExtra(EXTRA_SUCCESS_KEY);
-        if (mPostKey == null) {
-            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
-        }
 
         // Initialize Database
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/success/");
@@ -158,7 +155,6 @@ public class SuccessDetailsActivity extends ActionBarActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(SuccessDetailsActivity.this, "Failed to load post.",
                         Toast.LENGTH_SHORT).show();
-
                 FirebaseCrash.log(databaseError.toString());
 
             }

@@ -20,10 +20,6 @@
         android:dividerHeight="1dp"
         android:cacheColorHint="#00000000"/>
 
-    <TextView
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
 
 </LinearLayout>
 
