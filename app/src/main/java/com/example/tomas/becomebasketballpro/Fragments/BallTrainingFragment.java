@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
@@ -120,6 +121,13 @@ public class BallTrainingFragment extends ListFragment {
                 FirebaseCrash.log(databaseError.toString());
             }
         });
+
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+            Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
+                    Toast.LENGTH_SHORT).show();
+        }
+
         return mRootView;
     }
 

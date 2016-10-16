@@ -16,9 +16,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
@@ -78,13 +80,6 @@ public class MotivationListFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
-        return mRootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -135,6 +130,14 @@ public class MotivationListFragment extends Fragment {
                 FirebaseCrash.log(databaseError.toString());
             }
         });
+
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+            Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        return mRootView;
     }
 
     @Override
@@ -142,46 +145,6 @@ public class MotivationListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Firebase.setAndroidContext(getActivity());
     }
-
-//    public class MotivationAdapter extends ArrayAdapter {
-//
-//        private List<MotivationModel> motivationModelList;
-//        private int resource;
-//        private LayoutInflater inflater;
-//
-//        public MotivationAdapter(Context context, int resource, List<MotivationModel> objects) {
-//            super(context, resource, objects);
-//            motivationModelList = objects;
-//            this.resource = resource;
-//            inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//
-//            ViewHolder holder = null;
-//
-//            if (convertView == null) {
-//                holder = new ViewHolder();
-//                convertView = inflater.inflate(resource, null);
-//                holder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
-//
-//                convertView.setTag(holder);
-//            } else {
-//                holder = (ViewHolder) convertView.getTag();
-//            }
-//
-//            Picasso.with(getActivity()).load(motivationModelList.get(position).getThumb()).into(holder.thumbnail);
-//
-//            return convertView;
-//        }
-//
-//
-//        class ViewHolder {
-//            private ImageView thumbnail;
-//        }
-//
-//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView thumbnail;

@@ -12,9 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.SuccessModel;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
@@ -122,6 +124,11 @@ public class SuccessListFragment extends Fragment {
             }
         });
 
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+            Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
+                    Toast.LENGTH_SHORT).show();
+        }
 
         return mRootView;
     }

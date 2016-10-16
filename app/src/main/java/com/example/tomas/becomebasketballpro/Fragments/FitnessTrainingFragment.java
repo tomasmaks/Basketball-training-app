@@ -12,8 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.R;
@@ -104,6 +106,12 @@ public class FitnessTrainingFragment extends ListFragment {
                 FirebaseCrash.log(databaseError.toString());
         }
         });
+
+        NetworkUtils utils = new NetworkUtils(getActivity());
+        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+            Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
+                    Toast.LENGTH_SHORT).show();
+        }
 
         return mRootView;
     }
