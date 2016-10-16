@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
+import com.example.tomas.becomebasketballpro.utils.RecyclerItemClickListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 import com.squareup.picasso.NetworkPolicy;
@@ -43,7 +46,7 @@ public class ArticleListFragment extends Fragment {
     List<ArticleModel> articleModel = new ArrayList<>();
     FirebaseDatabase mDatabase;
     DatabaseReference mReference;
-    ListView mListView;
+    RecyclerView mRecyclerView;
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -63,13 +66,12 @@ public class ArticleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
         mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
 
-        mListView = (ListView) mRootView.findViewById(R.id.mListView);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -77,11 +79,6 @@ public class ArticleListFragment extends Fragment {
 
         mReference.addValueEventListener(new ValueEventListener() {
 
-            /*
-             * onDataChange method to read a static snapshot of the contents at given JSON object
-             * This method is triggered once when the listener is attached
-             * and again every time the data changes.
-             */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -94,24 +91,25 @@ public class ArticleListFragment extends Fragment {
 
                 adapter = new ArticleAdapter(getActivity().getApplicationContext(), R.layout.fragment_article_list_items, articleModel);
 
+                mRecyclerView.setAdapter(adapter);
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
+                                String postKey = articleModel.get(position).getId();
+                                intent.putExtra(ArticleDetailsActivity.EXTRA_POST_KEY, postKey);
+                                getActivity().startActivity(intent);
 
-                mListView.setAdapter(adapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                        Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
-                        String postKey = articleModel.get(position).getId();
-                        intent.putExtra(ArticleDetailsActivity.EXTRA_POST_KEY, postKey);
-                        Bundle bundle = new Bundle();
-                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                        getActivity().startActivity(intent);
+                            }
+                            @Override public void onLongItemClick(View view, int position) {
+                                // do whatever
+                            }
 
-                    }
-                });
+                        })
+                );
             }
 
-            //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.log(databaseError.toString());
@@ -122,65 +120,61 @@ public class ArticleListFragment extends Fragment {
         return mRootView;
     }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView thumbnail;
+        private TextView articleTitle;
+        private TextView articleData;
 
-    public class ArticleAdapter extends ArrayAdapter {
+        public ViewHolder(View view) {
+            super(view);
+            //getting XML object
+            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            articleTitle = (TextView) view.findViewById(R.id.article_title);
+            articleData = (TextView) view.findViewById(R.id.article_data);
+        }
+    }
+
+    public class ArticleAdapter extends RecyclerView.Adapter<ViewHolder> {
+        private static final String TAG = "ArticleAdapter";
 
         private List<ArticleModel> articleModelList;
         private int resource;
         private LayoutInflater inflater;
+        private Context context;
 
         public ArticleAdapter(Context context, int resource, List<ArticleModel> objects) {
-            super(context, resource, objects);
-            articleModelList = objects;
+            this.articleModelList = objects;
             this.resource = resource;
+            this.context = context;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
-        public int getCount() {
-            return articleModelList.size();
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_article_list_items, parent, false);
+            return new ViewHolder(itemView);
         }
 
         @Override
-        public Object getItem(int position) {
-            return articleModelList.get(position);
+        public void onBindViewHolder(ViewHolder holder, int position)
+        {
+            ArticleModel articleModel = articleModelList.get(position);
+            Picasso.with(getActivity()).load(articleModelList.get(position).getThumb()).into(holder.thumbnail);
+
+            holder.articleTitle.setText(articleModelList.get(position).getTitle());
+            holder.articleData.setText("Added on: " + articleModelList.get(position).getPublished_date());
+        }
+
+        @Override
+        public int getItemCount()
+        {
+            return articleModelList.size();
         }
 
         @Override
         public long getItemId(int position) {
             return position;
         }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            ViewHolder holder = null;
-
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(resource, null);
-                holder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
-                holder.articleTitle = (TextView) convertView.findViewById(R.id.article_title);
-                holder.articleData = (TextView) convertView.findViewById(R.id.article_data);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-           // Picasso.with(getActivity()).load(articleModelList.get(position).getThumb()).networkPolicy(NetworkPolicy.OFFLINE).into(holder.thumbnail);
-           Picasso.with(getActivity()).load(articleModelList.get(position).getThumb()).into(holder.thumbnail);
-
-            holder.articleTitle.setText(articleModelList.get(position).getTitle());
-            holder.articleData.setText("Added on: " + articleModelList.get(position).getPublished_date());
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            private ImageView thumbnail;
-            private TextView articleTitle;
-            private TextView articleData;
-        }
     }
 }
+

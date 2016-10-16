@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.example.tomas.becomebasketballpro.ArticleDetailsActivity;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
+import com.example.tomas.becomebasketballpro.Model.ArticleModel;
 import com.example.tomas.becomebasketballpro.Model.MotivationModel;
 import com.example.tomas.becomebasketballpro.MotivationDetailsActivity;
 import com.example.tomas.becomebasketballpro.R;
 
+import com.example.tomas.becomebasketballpro.utils.RecyclerItemClickListener;
 import com.firebase.client.Firebase;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
@@ -37,7 +43,7 @@ import java.util.List;
 public class MotivationListFragment extends Fragment {
 
     View mRootView;
-    ListView mListView;
+    RecyclerView mRecyclerView;
     MotivationAdapter adapter;
     List<MotivationModel> motivationModel = new ArrayList<>();
     FirebaseDatabase mDatabase;
@@ -72,7 +78,16 @@ public class MotivationListFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
-        mListView = (ListView) mRootView.findViewById(R.id.mListView);
+        return mRootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -97,20 +112,22 @@ public class MotivationListFragment extends Fragment {
 
                 adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, motivationModel);
 
-                mListView.setAdapter(adapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                        Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
-                        String postKey = motivationModel.get(position).getId();
-                        intent.putExtra(MotivationDetailsActivity.EXTRA_POST_KEY, postKey);
-                        Bundle bundle = new Bundle();
-                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                        getActivity().startActivity(intent);
+                mRecyclerView.setAdapter(adapter);
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
+                                String postKey = motivationModel.get(position).getId();
+                                intent.putExtra(MotivationDetailsActivity.EXTRA_POST_KEY, postKey);
+                                getActivity().startActivity(intent);
 
-                    }
-                });
+                            }
+                            @Override public void onLongItemClick(View view, int position) {
+                                // do whatever
+                            }
+                        })
+                );
             }
 
             @Override
@@ -118,9 +135,6 @@ public class MotivationListFragment extends Fragment {
                 FirebaseCrash.log(databaseError.toString());
             }
         });
-
-
-        return mRootView;
     }
 
     @Override
@@ -129,43 +143,93 @@ public class MotivationListFragment extends Fragment {
         Firebase.setAndroidContext(getActivity());
     }
 
-    public class MotivationAdapter extends ArrayAdapter {
+//    public class MotivationAdapter extends ArrayAdapter {
+//
+//        private List<MotivationModel> motivationModelList;
+//        private int resource;
+//        private LayoutInflater inflater;
+//
+//        public MotivationAdapter(Context context, int resource, List<MotivationModel> objects) {
+//            super(context, resource, objects);
+//            motivationModelList = objects;
+//            this.resource = resource;
+//            inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            ViewHolder holder = null;
+//
+//            if (convertView == null) {
+//                holder = new ViewHolder();
+//                convertView = inflater.inflate(resource, null);
+//                holder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
+//
+//                convertView.setTag(holder);
+//            } else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
+//
+//            Picasso.with(getActivity()).load(motivationModelList.get(position).getThumb()).into(holder.thumbnail);
+//
+//            return convertView;
+//        }
+//
+//
+//        class ViewHolder {
+//            private ImageView thumbnail;
+//        }
+//
+//    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView thumbnail;
+
+        public ViewHolder(View view) {
+            super(view);
+            //getting XML object
+            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+        }
+    }
+
+    public class MotivationAdapter extends RecyclerView.Adapter<ViewHolder> {
+        private static final String TAG = "ArticleAdapter";
 
         private List<MotivationModel> motivationModelList;
         private int resource;
         private LayoutInflater inflater;
+        private Context context;
 
         public MotivationAdapter(Context context, int resource, List<MotivationModel> objects) {
-            super(context, resource, objects);
-            motivationModelList = objects;
+            this.motivationModelList = objects;
             this.resource = resource;
+            this.context = context;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_motivation_list_items, parent, false);
+            return new ViewHolder(itemView);
+        }
 
-            ViewHolder holder = null;
-
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(resource, null);
-                holder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            MotivationModel motivationModel = motivationModelList.get(position);
             Picasso.with(getActivity()).load(motivationModelList.get(position).getThumb()).into(holder.thumbnail);
-
-            return convertView;
         }
 
-
-        class ViewHolder {
-            private ImageView thumbnail;
+        @Override
+        public int getItemCount()
+        {
+            return motivationModelList.size();
         }
 
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
     }
+
 }
