@@ -1,6 +1,5 @@
 package com.example.tomas.becomebasketballpro.Helpers;
 
-import com.example.tomas.becomebasketballpro.BuildConfig;
 
 /**
  * Created by Valentine on 4/10/2015.

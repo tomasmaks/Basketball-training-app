@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.tomas.becomebasketballpro">
+    package="com.example.tomas.becomebasketballpro" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,12 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/basketball"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:theme"
-        android:largeHeap="true"
-        >
-
+        tools:replace="android:theme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -26,47 +24,39 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ArticleDetailsActivity">
+        <activity android:name=".ArticleDetailsActivity" >
         </activity>
-        <activity
-            android:name=".SuccessDetailsActivity">
+        <activity android:name=".SuccessDetailsActivity" >
         </activity>
-        <activity
-            android:name=".MotivationDetailsActivity">
+        <activity android:name=".MotivationDetailsActivity" >
         </activity>
-        <activity
-            android:name=".BallTrainingThirdActivity">
+        <activity android:name=".BallTrainingThirdActivity" >
         </activity>
-        <activity
-            android:name=".FitnessTrainingThirdActivity">
+        <activity android:name=".FitnessTrainingThirdActivity" >
         </activity>
-
         <activity
             android:name="com.thefinestartist.ytpa.YouTubePlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 
-        <!--Need Your Google API Key-->
+        <!-- Need Your Google API Key -->
         <meta-data
             android:name="com.thefinestartist.ytpa.YouTubePlayerActivity.ApiKey"
             android:value="AIzaSyAWZjZZ472h-YN0svFqSgbWoWmG7QTuIGs" />
-
 
         <!-- AdActivity - required to show ad overlays -->
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent"
-            />
-
+            android:theme="@android:style/Theme.Translucent" />
     </application>
 
 </manifest>

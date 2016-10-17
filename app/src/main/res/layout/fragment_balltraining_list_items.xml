@@ -3,20 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="120dp"
+    android:minHeight="30dp"
+    android:maxHeight="50dp"
     android:clickable="false"
     android:layout_margin="@dimen/material_component_cards_space_between_cards"
     android:focusable="false"
     android:descendantFocusability="blocksDescendants"
     android:focusableInTouchMode="false"
-    android:padding="4dp"
-    android:background="#ffffff">
+    android:padding="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        >
 
-        <com.example.tomas.becomebasketballpro.utils.DynamicHeightNetworkImageView
+        <ImageView
             android:id="@+id/thumb_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -25,11 +27,14 @@
             android:scaleType="fitXY"
             android:contentDescription="@string/title_section0"/>
 
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            android:background="#ffffff">
+
             <TextView
                 android:id="@+id/name"
                 style="@style/TextAppearance.AppCompat.Small"
@@ -55,7 +60,9 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:paddingTop="10dp"/>
-        </LinearLayout>
 
+
+        </LinearLayout>
     </LinearLayout>
+
 </android.support.v7.widget.CardView>

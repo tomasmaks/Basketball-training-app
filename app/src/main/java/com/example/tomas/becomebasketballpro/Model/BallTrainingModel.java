@@ -1,12 +1,6 @@
 package com.example.tomas.becomebasketballpro.Model;
 
-import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
-
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
-import java.util.List;
 
 
 /**

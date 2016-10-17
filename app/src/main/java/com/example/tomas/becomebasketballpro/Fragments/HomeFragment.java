@@ -1,7 +1,5 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,12 +19,7 @@ import com.google.android.gms.ads.AdView;
  */
 public class HomeFragment extends Fragment {
 
-
-    Context context;
-
     View mRootView;
-   // ListView mListView;
-    private ProgressDialog dialog;
     private RelativeLayout btn_lay;
     private RelativeLayout btn_lay2;
     private RelativeLayout btn_lay3;
@@ -61,7 +54,7 @@ public class HomeFragment extends Fragment {
         mRootView  = inflater.inflate(R.layout.fragment_home, container, false);
 
         mAdView = (AdView) mRootView.findViewById(R.id.adView);
-        // Set the AdListener before building or loading the AdRequest.
+
         mAdView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

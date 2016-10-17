@@ -15,10 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tomas.becomebasketballpro.BallTrainingThirdActivity;
 import com.example.tomas.becomebasketballpro.FitnessTrainingThirdActivity;
 import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
-import com.example.tomas.becomebasketballpro.MainActivity;
 import com.example.tomas.becomebasketballpro.Model.FitnessTrainingModel;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.utils.ToastAdListener;

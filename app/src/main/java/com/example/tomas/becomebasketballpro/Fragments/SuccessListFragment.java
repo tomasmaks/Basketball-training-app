@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +19,7 @@ import com.example.tomas.becomebasketballpro.Helpers.NetworkUtils;
 import com.example.tomas.becomebasketballpro.Model.SuccessModel;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.SuccessDetailsActivity;
+import com.example.tomas.becomebasketballpro.utils.RecyclerItemClickListener;
 import com.firebase.client.Firebase;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
@@ -33,9 +33,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Tomas on 09/08/2016.
- */
 public class SuccessListFragment extends Fragment {
 
     View mRootView;
@@ -43,7 +40,7 @@ public class SuccessListFragment extends Fragment {
     List<SuccessModel> successModel = new ArrayList<>();
     FirebaseDatabase mDatabase;
     DatabaseReference mReference;
-    ListView mListView;
+    RecyclerView mRecyclerView;
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -75,7 +72,8 @@ public class SuccessListFragment extends Fragment {
 
         mRootView = inflater.inflate(R.layout.fragment_success_list, container, false);
 
-        mListView = (ListView) mRootView.findViewById(R.id.mListView);
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -100,20 +98,23 @@ public class SuccessListFragment extends Fragment {
 
                 adapter = new SuccessAdapter(getActivity().getApplicationContext(), R.layout.fragment_success_list_items, successModel);
 
-                mListView.setAdapter(adapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                        Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
-                        String postKey = successModel.get(position).getId();
-                        intent.putExtra(SuccessDetailsActivity.EXTRA_SUCCESS_KEY, postKey);
-                        Bundle bundle = new Bundle();
-                        bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-                        getActivity().startActivity(intent);
+                mRecyclerView.setAdapter(adapter);
+                mRecyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
+                                String postKey = successModel.get(position).getId();
+                                intent.putExtra(SuccessDetailsActivity.EXTRA_SUCCESS_KEY, postKey);
+                                getActivity().startActivity(intent);
 
-                    }
-                });
+                            }
+                            @Override public void onLongItemClick(View view, int position) {
+                                // do whatever
+                            }
+
+                        })
+                );
             }
 
             //this will called when error occur while getting data from firebase
@@ -133,50 +134,58 @@ public class SuccessListFragment extends Fragment {
         return mRootView;
     }
 
-    public class SuccessAdapter extends ArrayAdapter {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView thumbnail;
+        private TextView articleTitle;
+        private TextView articleData;
+
+        public ViewHolder(View view) {
+            super(view);
+            //getting XML object
+            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            articleTitle = (TextView) view.findViewById(R.id.article_title);
+            articleData = (TextView) view.findViewById(R.id.article_data);
+        }
+    }
+
+    public class SuccessAdapter extends RecyclerView.Adapter<ViewHolder> {
+        private static final String TAG = "SuccesAdapter";
 
         private List<SuccessModel> successModelList;
         private int resource;
         private LayoutInflater inflater;
+        private Context context;
+
         public SuccessAdapter(Context context, int resource, List<SuccessModel> objects) {
-            super(context, resource, objects);
-            successModelList = objects;
+            this.successModelList = objects;
             this.resource = resource;
+            this.context = context;
             inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_success_list_items, parent, false);
+            return new ViewHolder(itemView);
+        }
 
-            ViewHolder holder = null;
-
-            if(convertView == null){
-                holder = new ViewHolder();
-                convertView = inflater.inflate(resource, null);
-                holder.thumbnail = (ImageView)convertView.findViewById(R.id.thumbnail);
-                holder.articleTitle = (TextView)convertView.findViewById(R.id.article_title);
-                holder.articleData = (TextView)convertView.findViewById(R.id.article_data);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            SuccessModel successModel = successModelList.get(position);
             Picasso.with(getActivity()).load(successModelList.get(position).getThumb()).into(holder.thumbnail);
 
             holder.articleTitle.setText(successModelList.get(position).getTitle());
             holder.articleData.setText("Added on: " + successModelList.get(position).getPublished_date());
-
-            return convertView;
         }
 
-
-        class ViewHolder{
-            private ImageView thumbnail;
-            private TextView articleTitle;
-            private TextView articleData;
+        @Override
+        public int getItemCount() {
+            return successModelList.size();
         }
 
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
     }
-
 }
