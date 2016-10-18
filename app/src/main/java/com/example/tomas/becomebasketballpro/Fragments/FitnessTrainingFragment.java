@@ -36,14 +36,14 @@ import java.util.List;
  */
 public class FitnessTrainingFragment extends ListFragment {
 
-    View mRootView;
-    GridView mGridview;
+    View rootView;
+    GridView gridview;
     ListAdapter adapter;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mReference;
+    FirebaseDatabase database;
+    DatabaseReference reference;
     List<FitnessTrainingModel> fitnessTrainingModel = new ArrayList<>();
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,17 +55,17 @@ public class FitnessTrainingFragment extends ListFragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-        mRootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
+        rootView = inflater.inflate(R.layout.fragment_fitnesstraining, container, false);
 
-        mGridview = (GridView) mRootView.findViewById(R.id.list);
+        gridview = (GridView) rootView.findViewById(R.id.grid_view);
 
-        mDatabase = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("fitness");
+        reference = database.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("fitness");
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -78,8 +78,8 @@ public class FitnessTrainingFragment extends ListFragment {
 
                 adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_fitnesstraining_content, fitnessTrainingModel);
 
-                mGridview.setAdapter(adapter);
-                mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                gridview.setAdapter(adapter);
+                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                         FitnessTrainingSecondFragment fitnessTrainingSecondFragment = new FitnessTrainingSecondFragment();
@@ -88,7 +88,7 @@ public class FitnessTrainingFragment extends ListFragment {
                         bundle.putInt(FitnessTrainingSecondFragment.EXTRA_POST_KEY, postKey);
                         fitnessTrainingSecondFragment.setArguments(bundle);
                         bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         ((MainActivity) getActivity()).switchFragment(fitnessTrainingSecondFragment, false);
 
                     }
@@ -107,7 +107,7 @@ public class FitnessTrainingFragment extends ListFragment {
                     Toast.LENGTH_SHORT).show();
         }
 
-        return mRootView;
+        return rootView;
     }
 
     @Override
@@ -174,8 +174,8 @@ public class FitnessTrainingFragment extends ListFragment {
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_fitnesstraining_content, parent, false);
 
-                mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
-                mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
+                mViewHolder.category = (TextView) view.findViewById(R.id.text_category_name);
+                mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.image_thumb);
                 view.setTag(mViewHolder);
             } else {
                 mViewHolder = (ViewHolder) view.getTag();

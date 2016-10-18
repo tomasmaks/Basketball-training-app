@@ -37,14 +37,14 @@ import java.util.List;
  * Created by Tomas on 11/08/2016.
  */
 public class BallTrainingFragment extends ListFragment {
-    View mRootView;
-    GridView mGridview;
+    View rootView;
+    GridView gridview;
     ListAdapter adapter;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mReference;
+    FirebaseDatabase database;
+    DatabaseReference reference;
     List<BallTrainingModel> ballTrainingModel = new ArrayList<>();
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,17 +59,17 @@ public class BallTrainingFragment extends ListFragment {
 
         Firebase.setAndroidContext(getActivity());
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-        mRootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
+        rootView = inflater.inflate(R.layout.fragment_balltraining, container, false);
 
-        mGridview = (GridView) mRootView.findViewById(R.id.list);
+        gridview = (GridView) rootView.findViewById(R.id.grid_view);
 
-        mDatabase = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("basketball");
+        reference = database.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("basketball");
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             /*
              * onDataChange method to read a static snapshot of the contents at given JSON object
@@ -87,8 +87,8 @@ public class BallTrainingFragment extends ListFragment {
 
                 adapter = new ListAdapter(getActivity().getApplicationContext(), R.layout.fragment_balltraining_content, ballTrainingModel);
 
-                mGridview.setAdapter(adapter);
-                mGridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                gridview.setAdapter(adapter);
+                gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                         BallTrainingSecondFragment ballTrainingSecondFragment = new BallTrainingSecondFragment();
@@ -96,7 +96,7 @@ public class BallTrainingFragment extends ListFragment {
                         int postKey = ballTrainingModel.get(position).getIds();
                         bundle.putInt(BallTrainingSecondFragment.EXTRA_POST_KEY, postKey);
                         bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         ballTrainingSecondFragment.setArguments(bundle);
                         ((MainActivity) getActivity()).switchFragment(ballTrainingSecondFragment, false);
 
@@ -117,8 +117,8 @@ public class BallTrainingFragment extends ListFragment {
                     Toast.LENGTH_SHORT).show();
         }
 
-        return mRootView;
-    }
+        return rootView;
+}
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -182,8 +182,8 @@ public class BallTrainingFragment extends ListFragment {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_balltraining_content, parent, false);
-                mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
-                mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
+                mViewHolder.category = (TextView) view.findViewById(R.id.text_category_name);
+                mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.image_thumb);
                 view.setTag(mViewHolder);
             } else {
                 mViewHolder = (ViewHolder) view.getTag();

@@ -14,12 +14,12 @@
             android:layout_height="350dp">
 
             <ImageView
-                android:id="@+id/thumbnail"
+                android:id="@+id/image_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <ImageButton
-                android:id="@+id/play_bt"
+                android:id="@+id/image_play"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
@@ -30,7 +30,7 @@
 
 
         <TextView
-            android:id="@+id/exercise_title"
+            android:id="@+id/text_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="10dip"
@@ -40,7 +40,7 @@
 
 
         <TextView
-            android:id="@+id/exercise_body"
+            android:id="@+id/text_body"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:minLines="15"

@@ -19,12 +19,12 @@ import com.google.android.gms.ads.AdView;
 public class NewsFragment extends Fragment {
 
 
-    private PagerSlidingTabStrip tabs;
-    private ViewPager pager;
+    private PagerSlidingTabStrip pagerSlidingTabStrip;
+    private ViewPager viewPager;
     private MyPagerAdapter adapter;
-    private View root;
+    private View rootView;
 
-    private AdView mAdView;
+    private AdView adView;
 
     public NewsFragment() {
         // Required empty public constructor
@@ -50,25 +50,25 @@ public class NewsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_tab_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_tab_list, container, false);
 
-        mAdView = (AdView) root.findViewById(R.id.adView);
+        adView = (AdView) rootView.findViewById(R.id.ad_view);
         // Set the AdListener before building or loading the AdRequest.
-        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        adView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
         // Initialize the ViewPager and set an adapter
-        pager = (ViewPager) root.findViewById(R.id.pager);
+        viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
         adapter = new MyPagerAdapter(getChildFragmentManager());
 
-        pager.setAdapter(adapter);
+        viewPager.setAdapter(adapter);
 
         // Bind the tabs to the ViewPager
-        tabs = (PagerSlidingTabStrip) root.findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
+        pagerSlidingTabStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.pager_tabs);
+        pagerSlidingTabStrip.setViewPager(viewPager);
 
-        return root;
+        return rootView;
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {

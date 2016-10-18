@@ -24,15 +24,15 @@ import com.squareup.picasso.Picasso;
  */
 public class ArticleDetailsActivity extends ActionBarActivity {
 
-    private ImageView article_image;
-    private TextView article_title;
-    private TextView article_body;
-    private TextView article_data;
+    private ImageView articleImage;
+    private TextView articleTitle;
+    private TextView articleBody;
+    private TextView articleData;
 
-    private InterstitialAd mInterstitialAd;
+    private InterstitialAd interstitialAd;
 
-    String mPostKey;
-    DatabaseReference mReference;
+    String postKey;
+    DatabaseReference reference;
 
     public static final String EXTRA_POST_KEY = "post_key";
 
@@ -42,30 +42,30 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         setContentView(R.layout.article_detail);
 
 
-        mInterstitialAd = new InterstitialAd(this);
+        interstitialAd = new InterstitialAd(this);
         // set the ad unit ID
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
 
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
         // Load ads into Interstitial Ads
-        mInterstitialAd.loadAd(adRequest);
+        interstitialAd.loadAd(adRequest);
 
-        mInterstitialAd.setAdListener(new AdListener() {
+        interstitialAd.setAdListener(new AdListener() {
             public void onAdLoaded() {
                 showInterstitial();
             }
         });
 
 
-        mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
-        if (mPostKey == null) {
+        postKey = getIntent().getStringExtra(EXTRA_POST_KEY);
+        if (postKey == null) {
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
 
         // Initialize Database
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article/");
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article/");
 
         // Showing and Enabling clicks on the Home/Up button
         if (getSupportActionBar() != null) {
@@ -75,24 +75,24 @@ public class ArticleDetailsActivity extends ActionBarActivity {
 
         setUpUIViews();
 
-        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
+        reference.child(postKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String title = (String) dataSnapshot.child("title").getValue();
 
-                article_title.setText(title);
+                articleTitle.setText(title);
 
                 String body = (String) dataSnapshot.child("body").getValue();
 
-                article_body.setText(Html.fromHtml(body).toString());
+                articleBody.setText(Html.fromHtml(body).toString());
 
                 String data = (String) dataSnapshot.child("published_date").getValue();
 
-                article_data.setText("Added on: " + data);
+                articleData.setText("Added on: " + data);
 
                 String image = (String) dataSnapshot.child("photo").getValue();
 
-                Picasso.with(getBaseContext()).load(image).into(article_image);
+                Picasso.with(getBaseContext()).load(image).into(articleImage);
 
             }
 
@@ -107,10 +107,10 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     }
 
     private void setUpUIViews() {
-        article_image = (ImageView) findViewById(R.id.article_image);
-        article_title = (TextView) findViewById(R.id.article_title);
-        article_body = (TextView) findViewById(R.id.article_body);
-        article_data = (TextView) findViewById(R.id.article_data);
+        articleImage = (ImageView) findViewById(R.id.image_article);
+        articleTitle = (TextView) findViewById(R.id.text_title);
+        articleBody = (TextView) findViewById(R.id.text_body);
+        articleData = (TextView) findViewById(R.id.text_data);
     }
 
     @Override
@@ -126,8 +126,8 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
         }
     }
 

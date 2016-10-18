@@ -23,29 +23,29 @@ import com.google.firebase.crash.FirebaseCrash;
 public class MainActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private NavigationDrawerFragment navigationDrawerFragment;
 
-    private CharSequence mTitle;
+    private CharSequence title;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
+        navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        title = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
+        navigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         FirebaseCrash.log("Activity created");
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.container, mFragment)
+                .replace(R.id.frame_container, mFragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -85,22 +85,22 @@ public class MainActivity extends BaseActivity
     public void onSectionAttached(int number) {
         switch (number) {
             case 0:
-                mTitle = getString(R.string.title_section0);
+                title = getString(R.string.title_section0);
                 break;
             case 1:
-                mTitle = getString(R.string.title_section1);
+                title = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                title = getString(R.string.title_section2);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                title = getString(R.string.title_section3);
                 break;
             case 4:
-                mTitle = getString(R.string.title_section4);
+                title = getString(R.string.title_section4);
                 break;
             case 5:
-                mTitle = getString(R.string.title_section5);
+                title = getString(R.string.title_section5);
                 break;
         }
     }
@@ -109,13 +109,13 @@ public class MainActivity extends BaseActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(title);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+        if (!navigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -144,8 +144,8 @@ public class MainActivity extends BaseActivity
         super.onBackPressed();
         NavigationDrawerFragment navFrag = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        navFrag.mDrawerToggle.setDrawerIndicatorEnabled(true);
-        onSectionAttached(navFrag.mCurrentSelectedPosition);
+        navFrag.drawerToggle.setDrawerIndicatorEnabled(true);
+        onSectionAttached(navFrag.currentSelectedPosition);
     }
 
     public void switchFragment(Fragment fragment, boolean clearBackStack) {
@@ -155,7 +155,7 @@ public class MainActivity extends BaseActivity
         if (clearBackStack)
             getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        transaction.replace(R.id.frame_container, fragment);
         if (!clearBackStack) transaction.addToBackStack(null);
         try {
             transaction.commit();

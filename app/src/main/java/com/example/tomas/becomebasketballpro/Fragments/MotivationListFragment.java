@@ -39,14 +39,14 @@ import java.util.List;
  */
 public class MotivationListFragment extends Fragment {
 
-    View mRootView;
-    RecyclerView mRecyclerView;
+    View rootView;
+    RecyclerView recyclerView;
     MotivationAdapter adapter;
     List<MotivationModel> motivationModel = new ArrayList<>();
-    FirebaseDatabase mDatabase;
-    DatabaseReference mReference;
+    FirebaseDatabase database;
+    DatabaseReference reference;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     public static MotivationListFragment newInstance(int sectionNumber) {
         MotivationListFragment fragment = new MotivationListFragment();
@@ -73,17 +73,17 @@ public class MotivationListFragment extends Fragment {
 
         Firebase.setAndroidContext(getActivity());
 
-        mRootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_motivation_list, container, false);
 
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mDatabase = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("motivation");
+        reference = database.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("motivation");
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -97,9 +97,9 @@ public class MotivationListFragment extends Fragment {
 
                 adapter = new MotivationAdapter(getActivity().getApplicationContext(), R.layout.fragment_motivation_list_items, motivationModel);
 
-                mRecyclerView.setAdapter(adapter);
-                mRecyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                recyclerView.setAdapter(adapter);
+                recyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
@@ -129,7 +129,7 @@ public class MotivationListFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
 
-        return mRootView;
+        return rootView;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class MotivationListFragment extends Fragment {
         public ViewHolder(View view) {
             super(view);
             //getting XML object
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            thumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
         }
     }
 

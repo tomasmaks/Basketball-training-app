@@ -19,12 +19,12 @@ import com.google.android.gms.ads.AdView;
  */
 public class HomeFragment extends Fragment {
 
-    View mRootView;
-    private RelativeLayout btn_lay;
-    private RelativeLayout btn_lay2;
-    private RelativeLayout btn_lay3;
+    View rootView;
+    private RelativeLayout btn_basketball_stories;
+    private RelativeLayout btn_basketball_training;
+    private RelativeLayout btn_fitness_training;
 
-    private AdView mAdView;
+    private AdView adView;
 
     public static HomeFragment newInstance(int sectionNumber) {
         HomeFragment fragment = new HomeFragment();
@@ -50,17 +50,17 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRootView = inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mAdView = (AdView) mRootView.findViewById(R.id.adView);
+        adView = (AdView) rootView.findViewById(R.id.ad_view);
 
-        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        adView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
-        btn_lay = (RelativeLayout) mRootView.findViewById(R.id.btn_lay);
+        btn_basketball_stories = (RelativeLayout) rootView.findViewById(R.id.button_basketball_stories);
 
-        btn_lay.setOnClickListener(new View.OnClickListener() {
+        btn_basketball_stories.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -71,9 +71,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btn_lay2 = (RelativeLayout) mRootView.findViewById(R.id.btn_lay2);
+        btn_basketball_training = (RelativeLayout) rootView.findViewById(R.id.button_basketball_training);
 
-        btn_lay2.setOnClickListener(new View.OnClickListener() {
+        btn_basketball_training.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -84,9 +84,9 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btn_lay3 = (RelativeLayout) mRootView.findViewById(R.id.btn_lay3);
+        btn_fitness_training = (RelativeLayout) rootView.findViewById(R.id.button_fitness_training);
 
-        btn_lay3.setOnClickListener(new View.OnClickListener() {
+        btn_fitness_training.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment {
         });
 
 
-        return mRootView;
+        return rootView;
     }
 
 }

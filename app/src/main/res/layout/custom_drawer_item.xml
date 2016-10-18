@@ -4,7 +4,7 @@
     android:layout_height="fill_parent">
 
     <LinearLayout
-        android:id="@+id/itemLayout"
+        android:id="@+id/linear_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -19,13 +19,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/drawer_icon"
+                android:id="@+id/image_icon"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/drawer_itemName"
+                android:id="@+id/text_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"

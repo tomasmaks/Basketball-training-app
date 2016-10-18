@@ -39,21 +39,21 @@ import java.util.List;
  * Created by Tomas on 05/09/2016.
  */
 public class FitnessTrainingSecondFragment extends ListFragment {
-    View mRootView;
+    View rootView;
 
-    ListView mListView;
+    ListView listView;
     ListAdapter adapter;
-    FirebaseDatabase mDatabase;
-    DatabaseReference mReference;
+    FirebaseDatabase database;
+    DatabaseReference reference;
     List<FitnessTrainingModel> fitnessTrainingModel = new ArrayList<>();
 
     public static final String EXTRA_POST_KEY = "post_key";
 
-    private AdView mAdView;
+    private AdView adView;
 
-    int mPostKey;
+    int postKey;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -70,24 +70,24 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-        mRootView = inflater.inflate(R.layout.fragment_fitnesstraining_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_fitnesstraining_list, container, false);
 
-        mListView = (ListView) mRootView.findViewById(R.id.listView);
+        listView = (ListView) rootView.findViewById(R.id.list_view);
 
-        mAdView = (AdView) mRootView.findViewById(R.id.adView);
-        mAdView.setAdListener(new ToastAdListener(getActivity()));
+        adView = (AdView) rootView.findViewById(R.id.ad_view);
+        adView.setAdListener(new ToastAdListener(getActivity()));
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
 
-        mPostKey = getArguments().getInt(EXTRA_POST_KEY);
+        postKey = getArguments().getInt(EXTRA_POST_KEY);
 
-        mDatabase = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/fitness/").child(String.valueOf(mPostKey)).child("exercises");
+        reference = database.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/fitness/").child(String.valueOf(postKey)).child("exercises");
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -100,17 +100,17 @@ public class FitnessTrainingSecondFragment extends ListFragment {
 
                 adapter = new ListAdapter(getActivity().getApplicationContext(), fitnessTrainingModel);
 
-                mListView.setAdapter(adapter);
-                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                         Intent intent = new Intent(getActivity(), FitnessTrainingThirdActivity.class);
-                        intent.putExtra(FitnessTrainingThirdActivity.EXTRA_POST_KEY, mPostKey);
+                        intent.putExtra(FitnessTrainingThirdActivity.EXTRA_POST_KEY, postKey);
                         int detailKey = fitnessTrainingModel.get(position).getId();
                         intent.putExtra(FitnessTrainingThirdActivity.EXTRA_DETAIL_KEY, detailKey);
                         Bundle bundle = new Bundle();
                         bundle.putLong(FirebaseAnalytics.Param.ITEM_ID, id);
-                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+                        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
                         getActivity().startActivity(intent);
 
                     }
@@ -129,7 +129,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                     Toast.LENGTH_SHORT).show();
         }
 
-        return mRootView;
+        return rootView;
     }
 
     public class ListAdapter extends BaseAdapter {
@@ -175,9 +175,9 @@ public class FitnessTrainingSecondFragment extends ListFragment {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_fitnesstraining_list_items, parent, false);
-                mViewHolder.name = (TextView) view.findViewById(R.id.name);
-                mViewHolder.description = (TextView) view.findViewById(R.id.description);
-                mViewHolder.thumb = (ImageView) view.findViewById(R.id.thumb_image);
+                mViewHolder.name = (TextView) view.findViewById(R.id.text_name);
+                mViewHolder.description = (TextView) view.findViewById(R.id.text_description);
+                mViewHolder.thumb = (ImageView) view.findViewById(R.id.image_thumb);
                 view.setTag(mViewHolder);
             } else {
                 mViewHolder = (ViewHolder) view.getTag();

@@ -36,14 +36,14 @@ import java.util.List;
 
 public class ArticleListFragment extends Fragment {
 
-    View mRootView;
+    View rootView;
     ArticleAdapter adapter;
     List<ArticleModel> articleModel = new ArrayList<>();
-    FirebaseDatabase mDatabase;
-    DatabaseReference mReference;
-    RecyclerView mRecyclerView;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+    RecyclerView recyclerView;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     public static ArticleListFragment newInstance(int sectionNumber) {
         ArticleListFragment fragment = new ArticleListFragment();
@@ -61,18 +61,18 @@ public class ArticleListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
 
-        mRootView = inflater.inflate(R.layout.fragment_article_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_article_list, container, false);
 
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mDatabase = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("article");
+        reference = database.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("article");
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,9 +85,9 @@ public class ArticleListFragment extends Fragment {
                 }
                 adapter = new ArticleAdapter(getActivity().getApplicationContext(), R.layout.fragment_article_list_items, articleModel);
 
-                mRecyclerView.setAdapter(adapter);
-                mRecyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                recyclerView.setAdapter(adapter);
+                recyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
@@ -117,7 +117,7 @@ public class ArticleListFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
 
-        return mRootView;
+        return rootView;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -128,9 +128,9 @@ public class ArticleListFragment extends Fragment {
         public ViewHolder(View view) {
             super(view);
             //getting XML object
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
-            articleTitle = (TextView) view.findViewById(R.id.article_title);
-            articleData = (TextView) view.findViewById(R.id.article_data);
+            thumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
+            articleTitle = (TextView) view.findViewById(R.id.text_title);
+            articleData = (TextView) view.findViewById(R.id.text_data);
         }
     }
 

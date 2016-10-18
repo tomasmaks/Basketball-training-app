@@ -10,11 +10,11 @@ import com.google.android.gms.ads.AdRequest;
  */
 public class ToastAdListener extends AdListener {
 
-    private Context mContext;
-    private String mErrorReason;
+    private Context context;
+    private String errorReason;
 
     public ToastAdListener(Context context) {
-        this.mContext = context;
+        this.context = context;
     }
 
     @Override
@@ -26,19 +26,19 @@ public class ToastAdListener extends AdListener {
     public void onAdFailedToLoad(int errorCode) {
         super.onAdFailedToLoad(errorCode);
 
-        mErrorReason = "";
+        errorReason = "";
         switch (errorCode) {
             case AdRequest.ERROR_CODE_INTERNAL_ERROR:
-                mErrorReason = "Internal error";
+                errorReason = "Internal error";
                 break;
             case AdRequest.ERROR_CODE_INVALID_REQUEST:
-                mErrorReason = "Invalid request";
+                errorReason = "Invalid request";
                 break;
             case AdRequest.ERROR_CODE_NETWORK_ERROR:
-                mErrorReason = "Network error";
+                errorReason = "Network error";
                 break;
             case AdRequest.ERROR_CODE_NO_FILL:
-                mErrorReason = "No fill";
+                errorReason = "No fill";
                 break;
         }
     }

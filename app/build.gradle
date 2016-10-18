@@ -19,6 +19,7 @@ android {
 
     signingConfigs {
         release {
+
            }
     }
 

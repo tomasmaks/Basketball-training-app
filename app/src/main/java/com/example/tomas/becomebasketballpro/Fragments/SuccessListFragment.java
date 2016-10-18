@@ -35,14 +35,14 @@ import java.util.List;
 
 public class SuccessListFragment extends Fragment {
 
-    View mRootView;
+    View rootView;
     SuccessAdapter adapter;
     List<SuccessModel> successModel = new ArrayList<>();
-    FirebaseDatabase mDatabase;
-    DatabaseReference mReference;
-    RecyclerView mRecyclerView;
+    FirebaseDatabase database;
+    DatabaseReference reference;
+    RecyclerView recyclerView;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics firebaseAnalytics;
 
     public static SuccessListFragment newInstance(int sectionNumber) {
         SuccessListFragment fragment = new SuccessListFragment();
@@ -68,16 +68,16 @@ public class SuccessListFragment extends Fragment {
                              Bundle savedInstanceState) {
         Firebase.setAndroidContext(getActivity());
 
-        mRootView = inflater.inflate(R.layout.fragment_success_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_success_list, container, false);
 
-        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.mRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mDatabase = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
-        mReference = mDatabase.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("success");
+        reference = database.getReferenceFromUrl("https://basketball-training-app.firebaseio.com/").child("success");
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -91,9 +91,9 @@ public class SuccessListFragment extends Fragment {
 
                 adapter = new SuccessAdapter(getActivity().getApplicationContext(), R.layout.fragment_success_list_items, successModel);
 
-                mRecyclerView.setAdapter(adapter);
-                mRecyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                recyclerView.setAdapter(adapter);
+                recyclerView.addOnItemTouchListener(
+                        new RecyclerItemClickListener(getContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
@@ -125,7 +125,7 @@ public class SuccessListFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         }
 
-        return mRootView;
+        return rootView;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -136,9 +136,9 @@ public class SuccessListFragment extends Fragment {
         public ViewHolder(View view) {
             super(view);
             //getting XML object
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
-            articleTitle = (TextView) view.findViewById(R.id.article_title);
-            articleData = (TextView) view.findViewById(R.id.article_data);
+            thumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);
+            articleTitle = (TextView) view.findViewById(R.id.text_title);
+            articleData = (TextView) view.findViewById(R.id.text_data);
         }
     }
 

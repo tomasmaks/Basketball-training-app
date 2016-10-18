@@ -6,7 +6,7 @@
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/scrollView"
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -23,7 +23,7 @@
             android:padding="10dp">
 
             <RelativeLayout
-                android:id="@+id/btn_lay"
+                android:id="@+id/button_basketball_stories"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@drawable/ic_basketball_stories">
@@ -42,7 +42,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/btn_lay2"
+                android:id="@+id/button_basketball_training"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="15dp"
@@ -62,7 +62,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/btn_lay3"
+                android:id="@+id/button_fitness_training"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginTop="15dp"
@@ -83,7 +83,7 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/placeholder"
+                android:id="@+id/text_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />
 
@@ -91,7 +91,7 @@
     </ScrollView>
 
     <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
+        android:id="@+id/ad_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

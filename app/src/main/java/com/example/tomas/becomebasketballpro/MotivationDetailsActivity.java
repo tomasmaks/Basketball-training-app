@@ -22,12 +22,12 @@ import com.squareup.picasso.Picasso;
  */
 public class MotivationDetailsActivity extends ActionBarActivity {
 
-    private ImageView article_image;
+    private ImageView articleImage;
 
-    private InterstitialAd mInterstitialAd;
+    private InterstitialAd interstitialAd;
 
-    String mPostKey;
-    DatabaseReference mReference;
+    String postKey;
+    DatabaseReference reference;
 
     public static final String EXTRA_POST_KEY = "post_key";
 
@@ -36,26 +36,26 @@ public class MotivationDetailsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.motivation_detail);
 
-        mInterstitialAd = new InterstitialAd(this);
+        interstitialAd = new InterstitialAd(this);
         // set the ad unit ID
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
 
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
         // Load ads into Interstitial Ads
-        mInterstitialAd.loadAd(adRequest);
+        interstitialAd.loadAd(adRequest);
 
-        mInterstitialAd.setAdListener(new AdListener() {
+        interstitialAd.setAdListener(new AdListener() {
             public void onAdLoaded() {
                 showInterstitial();
             }
         });
 
-        mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
+        postKey = getIntent().getStringExtra(EXTRA_POST_KEY);
 
         // Initialize Database
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/motivation/");
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/motivation/");
 
         // Showing and Enabling clicks on the Home/Up button
         if (getSupportActionBar() != null) {
@@ -70,7 +70,7 @@ public class MotivationDetailsActivity extends ActionBarActivity {
     }
 
     private void setUpUIViews() {
-        article_image = (ImageView) findViewById(R.id.article_image);
+        articleImage = (ImageView) findViewById(R.id.image_article);
     }
 
     @Override
@@ -86,15 +86,15 @@ public class MotivationDetailsActivity extends ActionBarActivity {
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mReference.child(mPostKey).addValueEventListener(new ValueEventListener() {
+        reference.child(postKey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -102,7 +102,7 @@ public class MotivationDetailsActivity extends ActionBarActivity {
                 String image = (String) dataSnapshot.child("photo").getValue();
 
                 // Then later, when you want to display image
-                Picasso.with(getBaseContext()).load(image).into(article_image);
+                Picasso.with(getBaseContext()).load(image).into(articleImage);
             }
 
             @Override

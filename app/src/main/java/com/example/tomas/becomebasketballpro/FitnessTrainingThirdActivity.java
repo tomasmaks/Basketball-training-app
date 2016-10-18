@@ -32,7 +32,7 @@ import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
  */
 public class FitnessTrainingThirdActivity extends Activity {
 
-    String exercise_name, exercise_body, exercise_video;
+    String exerciseName, exerciseBody, exerciseVideo;
 
     YouTubePlayer.PlayerStyle playerStyle;
     Orientation orientation;
@@ -44,66 +44,66 @@ public class FitnessTrainingThirdActivity extends Activity {
     public static final String EXTRA_POST_KEY = "post_key";
     public static final String EXTRA_DETAIL_KEY = "detail_key";
 
-    private InterstitialAd mInterstitialAd;
+    private InterstitialAd interstitialAd;
 
-    int mPassPostKey;
-    int mPostKey;
-    int mPassDetailKey;
-    int mDetailKey;
-    DatabaseReference mReference;
-    TextView article_title;
-    TextView article_body;
+    int passPostKey;
+    int postKey;
+    int passDetailKey;
+    int detailKey;
+    DatabaseReference reference;
+    TextView articleTitle;
+    TextView articleBody;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_fitnesstraining_details);
 
-        mInterstitialAd = new InterstitialAd(this);
+        interstitialAd = new InterstitialAd(this);
 
-        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
+        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
 
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
-        mInterstitialAd.loadAd(adRequest);
+        interstitialAd.loadAd(adRequest);
 
-        mInterstitialAd.setAdListener(new AdListener() {
+        interstitialAd.setAdListener(new AdListener() {
             public void onAdLoaded() {
                 showInterstitial();
             }
         });
 
-        mPostKey = getIntent().getIntExtra(EXTRA_POST_KEY, mPassPostKey);
+        postKey = getIntent().getIntExtra(EXTRA_POST_KEY, passPostKey);
 
-        mDetailKey = getIntent().getIntExtra(EXTRA_DETAIL_KEY, mPassDetailKey);
+        detailKey = getIntent().getIntExtra(EXTRA_DETAIL_KEY, passDetailKey);
 
         setupVideoView();
 
         // Initialize Database
-        mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/fitness/").child(String.valueOf(mPostKey)).child("exercises").child(String.valueOf(mDetailKey));
+        reference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/fitness/").child(String.valueOf(postKey)).child("exercises").child(String.valueOf(detailKey));
 
-        mReference.addValueEventListener(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String name = (String) dataSnapshot.child("name").getValue();
 
-                article_title.setText(name);
+                articleTitle.setText(name);
 
                 String body = (String) dataSnapshot.child("body").getValue();
 
                 if (body.isEmpty()) {
-                    article_body.setVisibility(View.GONE);
+                    articleBody.setVisibility(View.GONE);
                 } else {
-                    article_body.setText(Html.fromHtml(body).toString());
+                    articleBody.setText(Html.fromHtml(body).toString());
                 }
 
                 String video = (String) dataSnapshot.child("video").getValue();
 
-                exercise_video = video;
+                exerciseVideo = video;
 
                 Picasso.with(getBaseContext())
-                        .load(YouTubeThumbnail.getUrlFromVideoId(exercise_video, Quality.HIGH))
+                        .load(YouTubeThumbnail.getUrlFromVideoId(exerciseVideo, Quality.HIGH))
                         .fit()
                         .centerCrop()
                         .into(thumbnail);
@@ -112,7 +112,7 @@ public class FitnessTrainingThirdActivity extends Activity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(FitnessTrainingThirdActivity.this, YouTubePlayerActivity.class);
-                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exercise_video);
+                        intent.putExtra(YouTubePlayerActivity.EXTRA_VIDEO_ID, exerciseVideo);
                         intent.putExtra(YouTubePlayerActivity.EXTRA_PLAYER_STYLE, playerStyle);
                         intent.putExtra(YouTubePlayerActivity.EXTRA_ORIENTATION, orientation);
                         intent.putExtra(YouTubePlayerActivity.EXTRA_SHOW_AUDIO_UI, showAudioUi);
@@ -139,18 +139,18 @@ public class FitnessTrainingThirdActivity extends Activity {
         showAudioUi = true;
         showFadeAnim = true;
 
-        play = (ImageButton) findViewById(R.id.play_bt);
-        thumbnail = (ImageView) findViewById(R.id.thumbnail);
+        play = (ImageButton) findViewById(R.id.image_play);
+        thumbnail = (ImageView) findViewById(R.id.image_thumbnail);
 
-        article_title = (TextView) findViewById(R.id.exercise_title);
-        article_title.setText(exercise_name);
-        article_body = (TextView) findViewById(R.id.exercise_body);
-        article_body.setText(exercise_body);
+        articleTitle = (TextView) findViewById(R.id.text_title);
+        articleTitle.setText(exerciseName);
+        articleBody = (TextView) findViewById(R.id.text_body);
+        articleBody.setText(exerciseBody);
     }
 
     private void showInterstitial() {
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+        if (interstitialAd.isLoaded()) {
+            interstitialAd.show();
         }
     }
 }
