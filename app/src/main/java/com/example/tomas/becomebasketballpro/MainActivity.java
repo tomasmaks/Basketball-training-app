@@ -20,7 +20,6 @@ import com.example.tomas.becomebasketballpro.Fragments.SuccessListFragment;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
-
 public class MainActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
