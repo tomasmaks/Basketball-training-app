@@ -1,34 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
-    <!--<TextView-->
-        <!--android:id="@+id/category_id"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:visibility="gone" />-->
     <ImageView
         android:id="@+id/thumb"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/title_section0"/>
+        android:contentDescription="@string/title_section0"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/category_name"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#bfbfbf"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp"
         android:background="#C8000000"
         android:padding="3dp"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_marginTop="160dp"
         android:textAllCaps="true"
-        />
+        android:textColor="#bfbfbf"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>

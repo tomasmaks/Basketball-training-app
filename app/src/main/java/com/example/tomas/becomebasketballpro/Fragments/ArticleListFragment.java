@@ -78,7 +78,7 @@ public class ArticleListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 articleModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     articleModel.add(postSnapshot.getValue(ArticleModel.class));
 
@@ -87,7 +87,7 @@ public class ArticleListFragment extends Fragment {
 
                 mRecyclerView.setAdapter(adapter);
                 mRecyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                        new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Intent intent = new Intent(getActivity(), ArticleDetailsActivity.class);
@@ -96,10 +96,11 @@ public class ArticleListFragment extends Fragment {
                                 getActivity().startActivity(intent);
 
                             }
-                            @Override public void onLongItemClick(View view, int position) {
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
                                 // do whatever
                             }
-
                         })
                 );
             }
@@ -107,12 +108,11 @@ public class ArticleListFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.log(databaseError.toString());
-
             }
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }
@@ -156,8 +156,7 @@ public class ArticleListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position)
-        {
+        public void onBindViewHolder(ViewHolder holder, int position) {
             ArticleModel articleModel = articleModelList.get(position);
             Picasso.with(getActivity()).load(articleModelList.get(position).getThumb()).into(holder.thumbnail);
 
@@ -166,8 +165,7 @@ public class ArticleListFragment extends Fragment {
         }
 
         @Override
-        public int getItemCount()
-        {
+        public int getItemCount() {
             return articleModelList.size();
         }
 
@@ -175,6 +173,6 @@ public class ArticleListFragment extends Fragment {
         public long getItemId(int position) {
             return position;
         }
-}
+    }
 }
 

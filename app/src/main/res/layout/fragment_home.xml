@@ -1,107 +1,101 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rel_lay"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/scrollView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="false"
-
-    android:focusable="false"
-    android:descendantFocusability="blocksDescendants"
-    android:focusableInTouchMode="false"
-    android:padding="10dp"
-    android:orientation="vertical"
-    >
-
-    <RelativeLayout
-        android:id="@+id/btn_lay"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/front1">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Basketball Stories"
-            android:textColor="#bfbfbf"
-            android:textSize="30dp"
-            android:maxLines="1"
-            android:textStyle="bold"
-            android:background="#64000000"
-            />
-    </RelativeLayout>
+            android:clickable="false"
 
-    <RelativeLayout
-        android:id="@+id/btn_lay2"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/front3"
-        android:layout_marginTop="15dp">
+            android:descendantFocusability="blocksDescendants"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <TextView
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Basketball Training"
-            android:textColor="#bfbfbf"
-            android:textSize="30dp"
-            android:maxLines="2"
-            android:textStyle="bold"
-            android:background="#64000000"
-            />
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/btn_lay"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/ic_basketball_stories">
 
-    <RelativeLayout
-        android:id="@+id/btn_lay3"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/front2"
-        android:layout_marginTop="15dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:background="#64000000"
+                    android:maxLines="1"
+                    android:text="Basketball Stories"
+                    android:textColor="#bfbfbf"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-        <TextView
+            <RelativeLayout
+                android:id="@+id/btn_lay2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/ic_basketball_training">
 
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Fitness Training"
-            android:textColor="#bfbfbf"
-            android:textSize="30dp"
-            android:maxLines="1"
-            android:textStyle="bold"
-            android:background="#64000000"
-            />
-    </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:background="#64000000"
+                    android:maxLines="2"
+                    android:text="Basketball Training"
+                    android:textColor="#bfbfbf"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-    <TextView
-        android:id="@+id/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        />
+            <RelativeLayout
+                android:id="@+id/btn_lay3"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/ic_fitness_training">
 
-</LinearLayout>
-</ScrollView>
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:background="#64000000"
+                    android:maxLines="1"
+                    android:text="Fitness Training"
+                    android:textColor="#bfbfbf"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id" />
 </RelativeLayout>

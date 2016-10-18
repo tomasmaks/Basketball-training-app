@@ -21,8 +21,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_drawer"
             android:contentDescription="@string/title_section0"
-            android:visibility="visible"
-            />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/article_title"

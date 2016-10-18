@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#ffffff">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="350dp">
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/thumbnail"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="350dp">
 
-        <ImageButton
-            android:id="@+id/play_bt"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_play" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/play_bt"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_play" />
+        </RelativeLayout>
 
 
-    <TextView android:id="@+id/exercise_title"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:padding="10dip"
-        android:textColor="#444444"
-        android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/exercise_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:textColor="#444444"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
-    <TextView android:id="@+id/exercise_body"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:padding="10dip"
-        android:textColor="#444444"
-        android:minLines="15"/>
+        <TextView
+            android:id="@+id/exercise_body"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:minLines="15"
+            android:padding="10dip"
+            android:textColor="#444444"
+            android:textSize="15dp" />
 
-</LinearLayout>
-   </ScrollView>
+    </LinearLayout>
+</ScrollView>

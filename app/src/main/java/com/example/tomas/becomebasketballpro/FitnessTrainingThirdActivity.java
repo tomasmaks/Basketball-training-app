@@ -32,14 +32,12 @@ import com.thefinestartist.ytpa.utils.YouTubeThumbnail;
  */
 public class FitnessTrainingThirdActivity extends Activity {
 
-    String exercise_name, exercise_body;
-    String exercise_video;
+    String exercise_name, exercise_body, exercise_video;
 
     YouTubePlayer.PlayerStyle playerStyle;
     Orientation orientation;
     boolean showAudioUi;
     boolean showFadeAnim;
-    private boolean advertised = false;
     ImageButton play;
     ImageView thumbnail;
 

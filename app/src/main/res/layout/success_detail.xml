@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -15,57 +14,53 @@
             android:id="@+id/article_image"
             android:layout_width="match_parent"
             android:layout_height="350dp"
+            android:contentDescription="@string/title_section0"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_drawer"
-            android:contentDescription="@string/title_section0"
-            android:visibility="visible"
-            />
+            android:visibility="visible" />
 
         <RelativeLayout
+            android:id="@+id/rel_video"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:id="@+id/rel_video"
-            android:visibility="visible"
-            >
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/play_bt"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_play"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
         </RelativeLayout>
 
         <TextView
             android:id="@+id/article_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:textColor="@color/material_light_black"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_marginTop="10dp"
             android:padding="4dp"
-            android:layout_marginTop="10dp"/>
+            android:text="Title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/material_light_black" />
 
         <TextView
             android:id="@+id/article_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Body"
-            android:textColor="@color/material_light_black"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginTop="5dp"
             android:padding="4dp"
-            android:layout_marginTop="5dp"/>
+            android:text="Body"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/material_light_black" />
 
         <TextView
             android:id="@+id/article_data"
@@ -74,8 +69,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/material_grey_400"
-            android:padding="4dp"/>
+            android:padding="4dp"
+            android:textColor="@color/material_grey_400" />
 
 
     </LinearLayout>
