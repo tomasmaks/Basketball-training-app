@@ -1,6 +1,5 @@
 package com.example.tomas.becomebasketballpro.Fragments;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,13 +8,13 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.astuetz.PagerSlidingTabStrip;
 import com.example.tomas.becomebasketballpro.Helpers.Constants;
 import com.example.tomas.becomebasketballpro.R;
 import com.example.tomas.becomebasketballpro.utils.ToastAdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
 
 public class NewsFragment extends Fragment {
 
@@ -97,6 +96,7 @@ public class NewsFragment extends Fragment {
 
             return fragment;
         }
+
         @Override
         public int getCount() {
             return 3;
@@ -114,9 +114,5 @@ public class NewsFragment extends Fragment {
                 return super.getPageTitle(position2);
             }
         }
-
-
-
-
     }
 }

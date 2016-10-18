@@ -63,8 +63,6 @@ public class SuccessListFragment extends Fragment {
     }
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -81,16 +79,11 @@ public class SuccessListFragment extends Fragment {
 
         mReference.addValueEventListener(new ValueEventListener() {
 
-            /*
-             * onDataChange method to read a static snapshot of the contents at given JSON object
-             * This method is triggered once when the listener is attached
-             * and again every time the data changes.
-             */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 successModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     successModel.add(postSnapshot.getValue(SuccessModel.class));
 
@@ -100,7 +93,7 @@ public class SuccessListFragment extends Fragment {
 
                 mRecyclerView.setAdapter(adapter);
                 mRecyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                        new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Intent intent = new Intent(getActivity(), SuccessDetailsActivity.class);
@@ -109,7 +102,9 @@ public class SuccessListFragment extends Fragment {
                                 getActivity().startActivity(intent);
 
                             }
-                            @Override public void onLongItemClick(View view, int position) {
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
                                 // do whatever
                             }
 
@@ -117,7 +112,6 @@ public class SuccessListFragment extends Fragment {
                 );
             }
 
-            //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -126,7 +120,7 @@ public class SuccessListFragment extends Fragment {
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }

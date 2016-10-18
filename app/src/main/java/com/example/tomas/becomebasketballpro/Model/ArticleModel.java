@@ -42,7 +42,6 @@ public class ArticleModel {
     }
 
 
-
     public String getBody() {
         return body;
     }

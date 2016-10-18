@@ -33,7 +33,7 @@ public class BallTrainingThirdActivity extends Activity {
     String exercise_name, exercise_body, exercise_video;
 
     YouTubePlayer.PlayerStyle playerStyle;
-   Orientation orientation;
+    Orientation orientation;
     boolean showAudioUi;
     boolean showFadeAnim;
     ImageButton play;

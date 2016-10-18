@@ -7,19 +7,18 @@ import android.net.NetworkInfo;
 
 public class NetworkUtils {
     private Context context;
-    public NetworkUtils(Context context){
+
+    public NetworkUtils(Context context) {
         this.context = context;
     }
 
-    public boolean isConnectingToInternet(){
+    public boolean isConnectingToInternet() {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null)
-        {
+        if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null)
                 for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
 

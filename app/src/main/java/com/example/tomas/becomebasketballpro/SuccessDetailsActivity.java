@@ -46,7 +46,8 @@ public class SuccessDetailsActivity extends ActionBarActivity {
     boolean showAudioUi;
     boolean showFadeAnim;
     ImageButton play;
-    ImageView thumbnail;;
+    ImageView thumbnail;
+    ;
     String exercise_video;
     private InterstitialAd mInterstitialAd;
 
@@ -82,7 +83,7 @@ public class SuccessDetailsActivity extends ActionBarActivity {
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/success/");
 
         // Showing and Enabling clicks on the Home/Up button
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -162,12 +163,12 @@ public class SuccessDetailsActivity extends ActionBarActivity {
     }
 
     private void setUpUIViews() {
-        article_image = (ImageView)findViewById(R.id.article_image);
-        article_title = (TextView)findViewById(R.id.article_title);
-        article_body = (TextView)findViewById(R.id.article_body);
-        article_data = (TextView)findViewById(R.id.article_data);
+        article_image = (ImageView) findViewById(R.id.article_image);
+        article_title = (TextView) findViewById(R.id.article_title);
+        article_body = (TextView) findViewById(R.id.article_body);
+        article_data = (TextView) findViewById(R.id.article_data);
 
-        rel_video = (RelativeLayout)findViewById(R.id.rel_video);
+        rel_video = (RelativeLayout) findViewById(R.id.rel_video);
 
         playerStyle = YouTubePlayer.PlayerStyle.DEFAULT;
         orientation = Orientation.AUTO;
@@ -180,9 +181,7 @@ public class SuccessDetailsActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         if (id == android.R.id.home) {

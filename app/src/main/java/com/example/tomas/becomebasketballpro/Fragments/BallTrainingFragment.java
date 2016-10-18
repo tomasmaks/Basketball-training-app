@@ -80,7 +80,7 @@ public class BallTrainingFragment extends ListFragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ballTrainingModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     ballTrainingModel.add(postSnapshot.getValue(BallTrainingModel.class));
                 }
@@ -112,7 +112,7 @@ public class BallTrainingFragment extends ListFragment {
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }
@@ -142,6 +142,7 @@ public class BallTrainingFragment extends ListFragment {
         Context context;
         private List<BallTrainingModel> ballTrainingModelList;
         int resource;
+
         public ListAdapter(Context context, int resource, List<BallTrainingModel> ballTrainingModelList) {
             this.context = context;
             this.resource = resource;
@@ -150,7 +151,6 @@ public class BallTrainingFragment extends ListFragment {
         }
 
         class ViewHolder {
-           // private TextView ids;
             private TextView category;
             private ImageView tagThumb;
         }
@@ -158,7 +158,7 @@ public class BallTrainingFragment extends ListFragment {
         @Override
         public int getCount() {
             // TODO Auto-generated method stub
-           return ballTrainingModelList.size();
+            return ballTrainingModelList.size();
         }
 
         @Override
@@ -182,7 +182,6 @@ public class BallTrainingFragment extends ListFragment {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_balltraining_content, parent, false);
-               //mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
                 mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
                 mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
                 view.setTag(mViewHolder);
@@ -192,7 +191,6 @@ public class BallTrainingFragment extends ListFragment {
 
             Picasso.with(getActivity()).load(ballTrainingModelList.get(position).getCatThumb()).into(mViewHolder.tagThumb);
 
-           // mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
             mViewHolder.category.setText(ballTrainingModelList.get(position).getCategory());
 
             return view;

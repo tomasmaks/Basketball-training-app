@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,16 +85,11 @@ public class MotivationListFragment extends Fragment {
 
         mReference.addValueEventListener(new ValueEventListener() {
 
-            /*
-             * onDataChange method to read a static snapshot of the contents at given JSON object
-             * This method is triggered once when the listener is attached
-             * and again every time the data changes.
-             */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 motivationModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     motivationModel.add(postSnapshot.getValue(MotivationModel.class));
 
@@ -103,7 +99,7 @@ public class MotivationListFragment extends Fragment {
 
                 mRecyclerView.setAdapter(adapter);
                 mRecyclerView.addOnItemTouchListener(
-                        new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                        new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Intent intent = new Intent(getActivity(), MotivationDetailsActivity.class);
@@ -112,7 +108,9 @@ public class MotivationListFragment extends Fragment {
                                 getActivity().startActivity(intent);
 
                             }
-                            @Override public void onLongItemClick(View view, int position) {
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
                                 // do whatever
                             }
                         })
@@ -126,7 +124,7 @@ public class MotivationListFragment extends Fragment {
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }
@@ -178,8 +176,7 @@ public class MotivationListFragment extends Fragment {
         }
 
         @Override
-        public int getItemCount()
-        {
+        public int getItemCount() {
             return motivationModelList.size();
         }
 

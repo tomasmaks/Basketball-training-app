@@ -56,7 +56,7 @@ public class BallTrainingSecondFragment extends ListFragment {
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
-    public void onViewCreated (View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         Firebase.setAndroidContext(getActivity());
     }
 
@@ -85,9 +85,6 @@ public class BallTrainingSecondFragment extends ListFragment {
         mAdView.loadAd(adRequest);
 
         mPostKey = getArguments().getInt(EXTRA_POST_KEY);
-//        if (mPostKey == 0) {
-//            throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
-//        }
 
         mDatabase = FirebaseDatabase.getInstance();
 
@@ -95,16 +92,12 @@ public class BallTrainingSecondFragment extends ListFragment {
 
         mReference.addValueEventListener(new ValueEventListener() {
 
-            /*
-             * onDataChange method to read a static snapshot of the contents at given JSON object
-             * This method is triggered once when the listener is attached
-             * and again every time the data changes.
-             */
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 ballTrainingModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     ballTrainingModel.add(postSnapshot.getValue(BallTrainingModel.class));
 
@@ -128,7 +121,6 @@ public class BallTrainingSecondFragment extends ListFragment {
                 });
             }
 
-            //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.log(databaseError.toString());
@@ -136,7 +128,7 @@ public class BallTrainingSecondFragment extends ListFragment {
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }
@@ -149,7 +141,7 @@ public class BallTrainingSecondFragment extends ListFragment {
         Context context;
         private List<BallTrainingModel> ballTrainingModelList;
 
-        public ListAdapter(Context context,List<BallTrainingModel> ballTrainingModelList){
+        public ListAdapter(Context context, List<BallTrainingModel> ballTrainingModelList) {
             this.context = context;
             this.ballTrainingModelList = ballTrainingModelList;
         }
@@ -188,19 +180,17 @@ public class BallTrainingSecondFragment extends ListFragment {
         public View getView(int position, View view, ViewGroup parent) {
             // TODO Auto-generated method stub
             ViewHolder mViewHolder = null;
-            if(view == null){
+            if (view == null) {
                 mViewHolder = new ViewHolder();
-                LayoutInflater inflater = (LayoutInflater)context.getSystemService
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_balltraining_list_items, parent, false);
-               // mViewHolder.ids = (TextView)view.findViewById(R.id.category_id);
-               // mViewHolder.id = (TextView)view.findViewById(R.id.exercise_id);
-                mViewHolder.name = (TextView)view.findViewById(R.id.name);
-                mViewHolder.description = (TextView)view.findViewById(R.id.description);
-                mViewHolder.thumb=(ImageView)view.findViewById(R.id.thumb_image);
+
+                mViewHolder.name = (TextView) view.findViewById(R.id.name);
+                mViewHolder.description = (TextView) view.findViewById(R.id.description);
+                mViewHolder.thumb = (ImageView) view.findViewById(R.id.thumb_image);
                 view.setTag(mViewHolder);
-            }
-            else {
+            } else {
                 mViewHolder = (ViewHolder) view.getTag();
             }
 
@@ -208,8 +198,6 @@ public class BallTrainingSecondFragment extends ListFragment {
 
             mViewHolder.name.setText(ballTrainingModelList.get(position).getName());
             mViewHolder.description.setText(ballTrainingModelList.get(position).getDescription());
-           // mViewHolder.ids.setText(ballTrainingModelList.get(position).getIds());
-           // mViewHolder.id.setText(ballTrainingModelList.get(position).getId());
 
             return view;
         }

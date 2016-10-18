@@ -28,7 +28,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     private TextView article_title;
     private TextView article_body;
     private TextView article_data;
- 
+
     private InterstitialAd mInterstitialAd;
 
     String mPostKey;
@@ -40,7 +40,6 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_detail);
-
 
 
         mInterstitialAd = new InterstitialAd(this);
@@ -69,7 +68,7 @@ public class ArticleDetailsActivity extends ActionBarActivity {
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/article/");
 
         // Showing and Enabling clicks on the Home/Up button
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -108,17 +107,15 @@ public class ArticleDetailsActivity extends ActionBarActivity {
     }
 
     private void setUpUIViews() {
-        article_image = (ImageView)findViewById(R.id.article_image);
-        article_title = (TextView)findViewById(R.id.article_title);
-        article_body = (TextView)findViewById(R.id.article_body);
-        article_data = (TextView)findViewById(R.id.article_data);
+        article_image = (ImageView) findViewById(R.id.article_image);
+        article_title = (TextView) findViewById(R.id.article_title);
+        article_body = (TextView) findViewById(R.id.article_body);
+        article_data = (TextView) findViewById(R.id.article_data);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         if (id == android.R.id.home) {

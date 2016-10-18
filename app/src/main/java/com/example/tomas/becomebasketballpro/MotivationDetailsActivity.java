@@ -58,7 +58,7 @@ public class MotivationDetailsActivity extends ActionBarActivity {
         mReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://basketball-training-app.firebaseio.com/motivation/");
 
         // Showing and Enabling clicks on the Home/Up button
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -70,7 +70,7 @@ public class MotivationDetailsActivity extends ActionBarActivity {
     }
 
     private void setUpUIViews() {
-        article_image = (ImageView)findViewById(R.id.article_image);
+        article_image = (ImageView) findViewById(R.id.article_image);
     }
 
     @Override

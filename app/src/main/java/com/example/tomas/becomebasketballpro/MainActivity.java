@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         Fragment mFragment = null;
-        switch (position){
+        switch (position) {
             case 0:
                 mFragment = HomeFragment.newInstance(0);
                 break;
@@ -128,12 +128,9 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -166,6 +163,4 @@ public class MainActivity extends BaseActivity
             e.printStackTrace();
         }
     }
-
-
 }

@@ -46,12 +46,11 @@ public class HomeFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRootView  = inflater.inflate(R.layout.fragment_home, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         mAdView = (AdView) mRootView.findViewById(R.id.adView);
 

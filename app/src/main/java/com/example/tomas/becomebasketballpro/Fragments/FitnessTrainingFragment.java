@@ -67,16 +67,11 @@ public class FitnessTrainingFragment extends ListFragment {
 
         mReference.addValueEventListener(new ValueEventListener() {
 
-            /*
-             * onDataChange method to read a static snapshot of the contents at given JSON object
-             * This method is triggered once when the listener is attached
-             * and again every time the data changes.
-             */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 fitnessTrainingModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     fitnessTrainingModel.add(postSnapshot.getValue(FitnessTrainingModel.class));
                 }
@@ -100,15 +95,14 @@ public class FitnessTrainingFragment extends ListFragment {
                 });
             }
 
-            //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.log(databaseError.toString());
-        }
+            }
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }
@@ -118,9 +112,6 @@ public class FitnessTrainingFragment extends ListFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-
-
 
     }
 
@@ -141,6 +132,7 @@ public class FitnessTrainingFragment extends ListFragment {
         Context context;
         private List<FitnessTrainingModel> fitnessTrainingModelList;
         int resource;
+
         public ListAdapter(Context context, int resource, List<FitnessTrainingModel> fitnessTrainingModelList) {
             this.context = context;
             this.resource = resource;
@@ -149,7 +141,6 @@ public class FitnessTrainingFragment extends ListFragment {
         }
 
         class ViewHolder {
-            private TextView ids;
             private TextView category;
             private ImageView tagThumb;
         }
@@ -182,7 +173,7 @@ public class FitnessTrainingFragment extends ListFragment {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_fitnesstraining_content, parent, false);
-               // mViewHolder.ids = (TextView) view.findViewById(R.id.category_id);
+
                 mViewHolder.category = (TextView) view.findViewById(R.id.category_name);
                 mViewHolder.tagThumb = (ImageView) view.findViewById(R.id.thumb);
                 view.setTag(mViewHolder);
@@ -192,7 +183,6 @@ public class FitnessTrainingFragment extends ListFragment {
 
             Picasso.with(getActivity()).load(fitnessTrainingModelList.get(position).getCatThumb()).into(mViewHolder.tagThumb);
 
-           // mViewHolder.ids.setText(fitnessTrainingModelList.get(position).getIds());
             mViewHolder.category.setText(fitnessTrainingModelList.get(position).getCategory());
 
             return view;

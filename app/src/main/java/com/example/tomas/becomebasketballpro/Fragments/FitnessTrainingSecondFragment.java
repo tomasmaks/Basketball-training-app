@@ -38,7 +38,8 @@ import java.util.List;
 /**
  * Created by Tomas on 05/09/2016.
  */
-public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
+public class FitnessTrainingSecondFragment extends ListFragment {
+    View mRootView;
 
     ListView mListView;
     ListAdapter adapter;
@@ -55,7 +56,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
-    public void onViewCreated (View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         Firebase.setAndroidContext(getActivity());
     }
 
@@ -88,16 +89,11 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
 
         mReference.addValueEventListener(new ValueEventListener() {
 
-            /*
-             * onDataChange method to read a static snapshot of the contents at given JSON object
-             * This method is triggered once when the listener is attached
-             * and again every time the data changes.
-             */
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 fitnessTrainingModel = new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     fitnessTrainingModel.add(postSnapshot.getValue(FitnessTrainingModel.class));
                 }
@@ -121,7 +117,6 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
                 });
             }
 
-            //this will called when error occur while getting data from firebase
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 FirebaseCrash.log(databaseError.toString());
@@ -129,7 +124,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
         });
 
         NetworkUtils utils = new NetworkUtils(getActivity());
-        if(!utils.isConnectingToInternet() && savedInstanceState == null) {
+        if (!utils.isConnectingToInternet() && savedInstanceState == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No internet connection... Please connect to load posts",
                     Toast.LENGTH_SHORT).show();
         }
@@ -141,7 +136,7 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
         Context context;
         private List<FitnessTrainingModel> fitnessTrainingModelList;
 
-        public ListAdapter(Context context,List<FitnessTrainingModel> fitnessTrainingModelList){
+        public ListAdapter(Context context, List<FitnessTrainingModel> fitnessTrainingModelList) {
             this.context = context;
             this.fitnessTrainingModelList = fitnessTrainingModelList;
         }
@@ -175,17 +170,16 @@ public class FitnessTrainingSecondFragment extends ListFragment {View mRootView;
         public View getView(int position, View view, ViewGroup parent) {
             // TODO Auto-generated method stub
             ViewHolder mViewHolder = null;
-            if(view == null){
+            if (view == null) {
                 mViewHolder = new ViewHolder();
-                LayoutInflater inflater = (LayoutInflater)context.getSystemService
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService
                         (Activity.LAYOUT_INFLATER_SERVICE);
                 view = inflater.inflate(R.layout.fragment_fitnesstraining_list_items, parent, false);
-                mViewHolder.name = (TextView)view.findViewById(R.id.name);
-                mViewHolder.description = (TextView)view.findViewById(R.id.description);
-                mViewHolder.thumb=(ImageView)view.findViewById(R.id.thumb_image);
+                mViewHolder.name = (TextView) view.findViewById(R.id.name);
+                mViewHolder.description = (TextView) view.findViewById(R.id.description);
+                mViewHolder.thumb = (ImageView) view.findViewById(R.id.thumb_image);
                 view.setTag(mViewHolder);
-            }
-            else {
+            } else {
                 mViewHolder = (ViewHolder) view.getTag();
             }
             Picasso.with(getActivity()).load(fitnessTrainingModelList.get(position).getThumb()).into(mViewHolder.thumb);
