@@ -7,6 +7,10 @@ This repository has two branches, please check both of them!
 
 This is an app where users are able to see basketball and fitness training video according to categories. Also this app has sections such as recent news, motivational memes and success stories.
 
+### Screenshots
+
+![alt tag](https://firebasestorage.googleapis.com/v0/b/basketball-training-app.appspot.com/o/basketball_training_app%2F14348864_1285121154834376_454792812_n.png?alt=media&token=ff0c1bd2-0b1f-493f-a0a8-b6b740872eaa)
+
 ### Tools
 
 * Picasso
