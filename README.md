@@ -5,7 +5,7 @@ This repository has two branches, please check both of them!
 
 ### About
 
-This is an app where users are able to see basketball and fitness training video according to categories. Also this app has sections such as recent news, motivational memes and success stories.
+Become basketball pro application is android application where you can find the best basketball training programs and stories! This is an app where users are able to see basketball and fitness training video according to categories. Also this app has sections such as recent news, motivational memes and success stories. Please check branches to see this app made in two ways!
 
 ### Screenshots
 
